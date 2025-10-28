@@ -1,0 +1,26 @@
+\fbox{
+  \begin{minipage}[t]{1\linewidth}
+    \textbf{Merge Sort}\\
+      \begin{minipage}[t]{0.6\textwidth}
+   1. \textbf{Divide}: Split the array evenly into two smaller subarrays, and continue dividing recursively.\\
+   2. \textbf{Sort (Recursively)}: Apply merge sort recursively on each subarray until each has only one element (base case).\\[-10px]
+   \begin{minipage}[t]{0.6\textwidth}
+   \algocode{merge-sort}
+   \end{minipage}\\[-22px]
+   3. \textbf{Merge}: Combine the two sorted subarrays into a single sorted array:
+          \begin{enumerate}[noitemsep, topsep=0pt, leftmargin=3pt, rightmargin=0pt]
+              \item[]a) Initializing pointers at the start of each subarray.
+              \item[]b) Comparing the elements pointed to, and appending the smaller one into a new array.
+              \item[]c) Advancing the pointer in the subarray from which the element was chosen.
+              \item[]d) Repeating this process until all elements in both subarrays are merged into the sorted array.
+          \end{enumerate}
+      \textit{Merge Cost Complexity:} \(O(n)\) per merge operation.\\
+  \textit{Time Complexity:} \(O(n \log n)\) \\ \textit{Space Complexity:} \(O(n)\)
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.39\textwidth}
+    \algocode{merge}
+      \end{minipage}
+      \vspace*{-10px}
+      \end{minipage}
+  }

@@ -1,0 +1,24 @@
+\begin{algorithmic}
+\Function{MEMOIZED-FIB}{n}
+\State Let \(r = [0 \dots n]\) be a new array
+\For{\(i = 0\) to \(n\)}
+  \State \(r[i] \leftarrow -\infty\)
+\EndFor
+\State \Return \Call{MEMOIZED-FIB-AUX}{n, r}
+\EndFunction
+\end{algorithmic}
+
+\begin{algorithmic}
+\Function{MEMOIZED-FIB-AUX}{n, r}
+\If{\(r[n] \ge 0\)}
+  \State \Return \(r[n]\)
+\EndIf
+\If{\(n = 0\) or \(n = 1\)}
+  \State \(ans \leftarrow 1\)
+\Else
+  \State \(ans \leftarrow \Call{MEMOIZED-FIB-AUX}{n-1, r} + \Call{MEMOIZED-FIB-AUX}{n-2, r}\)
+\EndIf
+\State \(r[n] \leftarrow ans\)
+\State \Return \(r[n]\)
+\EndFunction
+\end{algorithmic}

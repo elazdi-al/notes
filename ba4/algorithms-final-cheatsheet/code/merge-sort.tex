@@ -1,0 +1,10 @@
+\begin{algorithmic}
+\Function{MERGE-SORT}{A, p, r}
+  \If{p < r}
+    \State $q \gets \lfloor (p + r) / 2 \rfloor$
+    \State \Call{MERGE-SORT}{A, p, q}
+    \State \Call{MERGE-SORT}{A, q + 1, r}
+    \State \Call{MERGE}{A, p, q, r}
+  \EndIf
+\EndFunction
+\end{algorithmic}

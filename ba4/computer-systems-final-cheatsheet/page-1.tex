@@ -1,0 +1,171 @@
+
+\vspace*{-10px}
+\hspace*{-20px}
+\begin{minipage}[htp]{0.5\textwidth}
+\begin{minipage}[htp]{0.6\textwidth}
+    \noindent\textbf{Program.} Passive entity. A sequence of instructions stored in a file, not currently executing.
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+        \item[-] \textbf{Storage:} Stored on persistent storage (e.g., disk). Loadable into main memory by the OS.
+        \item[-] \textbf{Access:} Static file. Contains instructions, data, and metadata used during execution.
+    \end{itemize}
+    \vspace{10px}
+    \noindent\textbf{Process.} Active execution of a program. Managed by the OS. Each process has its own isolated virtual address space.
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Storage:} Occupies main memory during execution.
+        \item[-] \textbf{Memory Image:} Text (code), data, heap, and one stack per thread.
+        \item[-] \textbf{Process ID (PID)}, assigned and tracked by the OS, unique system-wide.
+        \item[-] \textbf{Status:} OS tracks current status (e.g., running, waiting, terminated).
+        \item[-] \textbf{Virtualization:} Each process has the illusion of exclusive access to memory.
+        \item[-] \textbf{OS-allocated Resources:} File descriptors, sockets, I/O handles, etc.
+        \item[-] \textbf{Pointer to Page Table.} The \textbf{Kernel} tracks the process-specific page table pointer.
+        \item[-] \textbf{Access:} Operates in isolated virtual memory. No direct access to other processes. Interacts with hardware via system calls. OS handles scheduling and resource management.
+    \end{itemize}  
+    \vspace{10px}
+    \noindent\textbf{If a process has a single thread, we may refer to the \emph{thread's CPU context} as the \emph{process's CPU context.}}
+\end{minipage}
+\begin{minipage}[htp]{0.4\textwidth}
+    \begin{center}
+        \includegraphics[width=1\textwidth]{images/mem_img.png}
+    \end{center}
+\end{minipage}\\[5px]
+\hrule
+\vspace{2px}
+\begin{minipage}[htp]{1\textwidth}\vspace{5px}
+    \noindent\textbf{Limited Direct Execution.} OS design allowing user programs to execute instructions directly on the CPU, with restrictions.
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Goal:} Maximize performance while maintaining control and protection.
+        \item[-] \textbf{User Code Execution:} CPU runs user programs natively (not emulated) in \textbf{user mode}.
+        \item[-] \textbf{OS Control:} OS retains control over hardware via \textbf{privileged instructions} and mode switching.
+    \end{itemize}
+    \vspace{15px}
+    \noindent\textbf{User Mode vs Kernel Mode.} Two CPU execution modes stored as a state bit in a protected CPU register (0 = user mode, 1 = kernel mode) controlling access to hardware and instructions.
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{User Mode:} Restricted. User code cannot execute privileged instructions or directly access hardware/memory management.
+        \item[-] \textbf{Kernel Mode:} Mode in which is ran a central part of the operating system, the \textbf{Kernel}.
+        \item[-] \textbf{Switching:} A transition from user mode to kernel mode is triggered by:
+        \begin{itemize}[noitemsep,nolistsep]
+            \item System Calls (e.g., file I/O, memory allocation)
+            \item Hardware Interrupts (keyboard, timer,\dots)
+            \item Software Traps (divide-by-zero, invalid memory access), \\
+            \textit{If an exception happens in kernel mode, an internal routine is called but no mode switch occurs.}
+        \end{itemize}
+        After handling the event, the OS switches the CPU back to user mode to resume application execution.
+    \end{itemize}\vspace{15px}
+    \noindent\textbf{Privileged Instructions.} CPU instructions that can only execute in \textbf{kernel mode}. If attempted in user mode, the CPU raises a trap to the OS. Prevent user programs from interfering with other processes or the OS.\\
+    \textbf{To do something that requires high privilege, a thread makes a \textbf{syscall}, invoking the kernel.} \\[-4px]
+    \hrule
+    \vspace{4px}
+    \noindent\textbf{Exception/trap - synchronous signal.} The CPU itself raises an exception/trap. \\
+    \noindent\textbf{Interrupt - asynchronous signal.} Some external entity raises an interrupt. If an external entity needs attention, it raises an \textbf{interrupt}, invokes the kernel. \\
+    \noindent\textbf{Even if nothing external needs attention, the timer interrupt regularly invokes the kernel to run the \textbf{OS scheduler}.} \\[-5px]
+    \end{minipage}
+\end{minipage}
+\hspace{2px}
+\vline
+\hspace{2px}
+\begin{minipage}[htp]{0.5\textwidth}
+\begin{minipage}[htp]{1\textwidth}
+\noindent\textbf{Thread.} The smallest unit of CPU execution within a process. Multiple threads can exist within one process.
+\begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+    \item[-] \textbf{Memory:} Shares the parent process's virtual address space:
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] Shared: Code (text), heap, global/static data, open files.
+        \item[-] Private: Each thread has its own stack (for local variables and function calls).
+    \end{itemize}
+    \item[-] \textbf{Execution context (per thread), values of all the CPU registers 
+    at the \emph{last moment} the thread was running:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Instruction Pointer (IP) / Program Counter (PC):} Physical register pointing to the next instruction.Private per thread.
+        \item[-] \textbf{Stack Pointer (SP):} Points to the top of the thread's private stack.
+        \item[-] \textbf{General-purpose Registers:} Include temporary registers (e.g., RAX, RBX), status, and flags. \textbf{All private per thread.}
+        \item[-] \textbf{Thread ID (TID).} The Thread ID is unique within a process, but not necessarily system-wide, assigned and tracked by the OS.\\
+        \begin{minipage}[htp]{0.5\textwidth}
+        \item[-] \textbf{Status:} OS tracks each thread's status (Running, Ready, Blocked).
+        \item[-] \textbf{Virtualization:} Each thread has the illusion it exclusively occupies the CPU.
+        \item[-] \textbf{Context switching:} OS saves/restores full register set (IP, SP, general-purpose regs). The CPU switches from one thread to another. Thread switches are faster than process switches.
+        It saves to memory the CPU context of the current thread; it restores from memory the CPU context of the new thread.
+        \item[-] \textbf{Thread management:} A main thread may create and manage others. In some models, a dedicated manager thread exists.
+        \end{minipage}
+        \hspace{-10px}
+        \begin{minipage}[htp]{0.5\textwidth}
+            \begin{center}
+                \includegraphics[width=0.85\textwidth]{images/thread_state.png}
+            \end{center}
+        \end{minipage}\\[2px]
+    \item[-] \textbf{Managed by OS:} The OS kernel schedules threads individually and tracks them.
+    \end{itemize}
+\end{itemize}
+\end{minipage}\\[5px]   
+\hrule
+\vspace{2px}
+\begin{minipage}[htp]{1\textwidth}\vspace{5px}
+    \noindent \textbf{OS Components.}
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+        \item[-] \textbf{Kernel (core of the OS):} Loaded at boot, runs in \textbf{kernel mode}, and manages hardware, memory, processes, and system calls. It is the only part of the OS that runs in kernel mode.\\
+        Three important routines inside of the kernel:
+        \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+            \item \textbf{Interrupt Handler or Interrupt Service Routine (ISR):} Handles interrupts from hardware devices.
+            \item \textbf{Exception / Trap Handler:} Handles exceptions and traps from user programs.
+            \item \textbf{System Call Handler:} Handles system calls from user programs.
+        \end{itemize}
+        \vspace{10px}
+        The three routines use two tables (\textbf{Trap/Interrupt Table} and \textbf{System Call Table}) to resolve the event type to a specific memory address of the handler routine managing the event.
+        \item[-] \textbf{Loader (part of the OS):} Prepares executables to run:
+        \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+            \item Loads program code/data into memory.
+            \item Maps required libraries (e.g., libc).
+            \item Sets up the process stack and heap.
+            \item Places command-line arguments and environment variables on the stack.
+            \item Sets the \texttt{\%rsp} (stack pointer) and \texttt{\%rdi} (argc), \texttt{\%rsi} (argv) registers so the program can access arguments.
+            \item \textit{Because the kernel manages processes and initiates execution, it is responsible for placing arguments in registers so the loader (running in user mode) can access them.}
+            \item Jumps to the program's entry point to begin execution in \textbf{user mode}.
+        \end{itemize}
+        \item[-] \textbf{User-level Programs:} Applications like shells, editors, browsers, etc. These are \textbf{part of the OS} but run entirely in \textbf{user mode}, relying on system calls to request kernel services.
+        \item[-] \textbf{System Libraries:} Shared libraries (e.g., libc) used by user programs. Loaded and linked by the loader, but executed in user mode. Provide wrappers around system calls.
+    \end{itemize}
+    \end{minipage}
+\end{minipage}\\[5px]
+\hrule
+\hspace{-20px}
+\begin{minipage}[t]{0.4\textwidth}
+    \textbf{fork()} — \textit{Clone the current process}
+    \begin{enumerate}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+        \item The operating system creates a new process (child) by \\duplicating the calling process.
+        \item The child initially shares all memory pages with the parent:\\
+           - Pages are marked read-only and shared (Copy-On-Write).\\
+           - If either process attempts to write to a page, it is copied privately for that process.
+        \item The child also receives:\\
+       - Duplicated file descriptors (pointing to the same open files). \\
+       - Identical program counter and stack pointer.
+        \item Returns:\\
+        - In the parent process: the PID of the child.\\
+        - In the child process: \texttt{0}.
+        \item Both processes resume execution at the instruction following \texttt{fork()}.
+    \end{enumerate}    
+\end{minipage}
+\begin{minipage}[t]{0.2\textwidth}
+ \textbf{exec()} — \textit{Mutate the child into a new program}
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+        \item Typically called by the child process immediately after \texttt{fork()}.
+        \item Replaces the child’s memory space with a new program image.
+        \item Stack, heap, code, and data segments are replaced.
+        \item If successful: the new program starts execution from \texttt{main()}.
+        \item If failed: \texttt{exec()} returns \texttt{-1}, child continues old code.
+    \end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.2\textwidth}
+ \textbf{exit()} — \textit{Terminate a process cleanly}
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+        \item Frees system resources allocated to the process.
+        \item Sends termination status to the parent.
+        \item If main function of a program returns, \texttt{exit()} is implicitly called.
+    \end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.21\textwidth}
+ \textbf{wait()} — \textit{Wait for a child process to terminate}
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]  
+        \item Blocks the calling process until one of its child processes terminates.
+        \item Returns the PID of the terminated child.
+        \item If no child processes exist, it waits indefinitely.
+    \end{itemize}
+\end{minipage}

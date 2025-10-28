@@ -1,0 +1,19 @@
+\begin{algorithmic}
+\Function{FIND-MAX-SUBARRAY}{A, low, high}
+  \If{high == low}
+    \State \Return (low, high, A[low])
+  \Else
+    \State mid = $\lfloor (low + high) / 2 \rfloor$
+    \State (left-low, left-high, left-sum) = \Call{FIND-MAX-SUBARRAY}{A, low, mid}
+    \State (right-low, right-high, right-sum) = \Call{FIND-MAX-SUBARRAY}{A, mid + 1, high}
+    \State (cross-low, cross-high, cross-sum) =  \Call{FIND-MAX-CROSSING-SUBARRAY}{A, low, mid, high}
+    \If{left-sum $\ge$ right-sum \textbf{and} left-sum $\ge$ cross-sum}
+      \State \Return (left-low, left-high, left-sum)
+    \ElsIf{right-sum $\ge$ left-sum \textbf{and} right-sum $\ge$ cross-sum}
+      \State \Return (right-low, right-high, right-sum)
+    \Else
+      \State \Return (cross-low, cross-high, cross-sum)
+    \EndIf
+  \EndIf
+\EndFunction
+\end{algorithmic}

@@ -1,0 +1,14 @@
+\begin{algorithmic}
+    \Function{DFS}{$G$}
+        \ForAll{$u \in G.V$}
+          \State $u.\text{color} \gets \text{WHITE}$
+        \EndFor
+        \State $time \gets 0$
+        \ForAll{$u \in G.V$}
+          \If{$u.\text{color} = \text{WHITE}$}
+            \State \Call{DFS-Visit}{$G, u$}
+          \EndIf
+        \EndFor
+      \EndFunction
+  \end{algorithmic}
+  

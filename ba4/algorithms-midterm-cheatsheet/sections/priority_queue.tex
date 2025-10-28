@@ -1,0 +1,25 @@
+\fbox{
+    \algoblock{0.4}{\scriptsize Priority Queue}{
+        \scriptsize
+        Maintains a dynamic set of elements with associated priority values (keys).\\
+        
+        \textbf{Maximum(S):} Return element of S with highest priority (return A[1], complexity $O(1)$)\\
+        
+        \textbf{Insert(S,x):} Insert element x into set S\\
+        1. Increment the heap size\\
+        2. Insert a new node in the last position in the heap, with key $-\infty$\\
+        3. Increase the $-\infty$ value to key using Heap-Increase-Key\\
+        
+        \textbf{Extract-Max(S):} Remove and return element of S with highest priority\\
+        1. Make sure heap is not empty\\
+        2. Make a copy of the maximum element (the root)\\
+        3. Make the last node in the tree the new root\\
+        4. Re-heapify the heap, with one fewer node\\
+        5. Return the copy of the maximum element\\
+        
+        \textbf{Increase-Key(S,x,k):} Increase the value of element x's key to the new value k\\
+        1. Make sure key $\geq$ A[i]\\
+        2. Update A[i]'s value to key\\
+        3. Traverse the tree upward comparing new key to the parent and swapping if necessary\\
+        \textit{Time Complexity:} Insert, Extract-Max, Increase-Key: $O(\log n)$ \quad Maximum: $O(1)$
+        \textit{Space Complexity:} $O(n)$}} 

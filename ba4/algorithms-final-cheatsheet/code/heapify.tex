@@ -1,0 +1,18 @@
+\begin{algorithmic}
+\Function{Max-Heapify}{A, i, n}
+\State $l \gets \Call{Left}{i}$
+\State $r \gets \Call{Right}{i}$
+\If{$l \le n \land A[l] > A[i]$}
+  \State $largest \gets l$
+\Else
+  \State $largest \gets i$
+\EndIf
+\If{$r \le n \land A[r] > A[largest]$}
+  \State $largest \gets r$
+\EndIf
+\If{$largest \neq i$}
+  \State exchange $A[i]$ with $A[largest]$
+  \State \Call{Max-Heapify}{A, largest, n}
+\EndIf
+\EndFunction
+\end{algorithmic}

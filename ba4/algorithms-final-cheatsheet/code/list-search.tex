@@ -1,0 +1,9 @@
+\begin{algorithmic}
+\Function{List-Search}{L, k}
+  \State $x \gets L.\mathrm{head}$
+  \While{$x \neq \mathrm{nil} \land x.\mathrm{key} \neq k$}
+    \State $x \gets x.\mathrm{next}$
+  \EndWhile
+  \Return $x$
+\EndFunction
+\end{algorithmic}

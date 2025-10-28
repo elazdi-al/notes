@@ -1,0 +1,235 @@
+\documentclass[11pt,openany]{book}
+
+%% -------------------- Input and Microtypography --------------------
+\usepackage[utf8]{inputenc}          % Unicode input
+\usepackage{microtype}               % Improved typography
+\usepackage{subfiles}                % For subfiles compilation
+
+%% -------------------- Page Layout and Hyperlinks --------------------
+\usepackage{geometry}
+\geometry{a4paper, left=20mm, right=20mm, top=25mm, bottom=30mm}
+\usepackage{hyperref}                % For clickable links
+\usepackage{tocbibind}               % Include bibliography in TOC
+\usepackage{titlesec}
+%% -------------------- Math, Fonts, and Symbols --------------------
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{bm}
+\usepackage{tabularx}
+\usepackage{array}
+
+% Define custom column types: C for centered and L for left-justified
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+
+%% -------------------- Lists, Colors, and Graphics --------------------
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+
+%% -------------------- Tables, Code Listings, and Miscellaneous --------------------
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[normalem]{ulem}
+\usepackage[document]{ragged2e}
+
+%% -------------------- Page Headers and Footers --------------------
+\pagestyle{fancy}
+\fancyhf{} % clear all header/footer fields
+\fancyhead[RE]{\leftmark}             % Left header on even pages: chapter info
+\fancyhead[RO]{Notes by Ali EL AZDI}   % Right header on odd pages: custom text
+\fancyfoot[CE,CO]{\thepage}            % Center page number on all pages
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%% -------------------- Custom Commands --------------------
+\newcommand*\xor{\oplus}
+\newcommand{\minidash}{\text{-}}
+
+% A custom vertical spacing command
+\usepackage{etoolbox}
+\makeatletter
+\newcommand{\vspacer}[1]{%
+  \ifvmode
+    \vskip#1\relax
+  \else
+    \@bsphack
+    \vadjust{\vskip#1\relax}
+    \@esphack
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%% Verilog CODE STYLING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{keywordcolor}{rgb}{0.5,0.0,0.33}
+\definecolor{backgroundcolor}{rgb}{0.95,0.95,1.0}
+\definecolor{commentcolor}{rgb}{0.129,0.384,0.529}
+\definecolor{stringcolor}{rgb}{0.16,0.00,1.00}
+\definecolor{rulecolor}{rgb}{0.46,0.43,0.5}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstdefinestyle{verilogstyle}{
+  language=Verilog,
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{backgroundcolor},
+  commentstyle=\color{commentcolor}\ttfamily, % Add \ttfamily to ensure comments are in typewriter font
+  morecomment=[l][\color{commentcolor}\ttfamily]{//}, % Line comment in Verilog
+  morecomment=[s][\color{commentcolor}\ttfamily]{/*}{*/}, % Block comments in Verilog
+  morekeywords={module, input, output, wire, endmodule, endcase, default, tri, assign, always, if, else, begin, end, case, endcase, parameter}, % Add Verilog keywords
+  keywordstyle=\color{keywordcolor},
+  stringstyle=\color{stringcolor},
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{rulecolor}, % Frame color
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{codegray},
+  tabsize=2
+}
+
+\lstnewenvironment{verilog}
+  {\lstset{style=verilogstyle}}
+  {}
+
+
+%%%%%%%%%%%%%%%%%%% C CODE STYLING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Define custom colors for C syntax highlighting
+\definecolor{CKeyWord}{rgb}{0.8,0.1,0.1}      % For C keywords (e.g., int, return)
+\definecolor{CBackground}{rgb}{0.95,0.95,0.95} % Background color for code blocks
+\definecolor{CComment}{rgb}{0.0,0.5,0.0}        % Comment color
+\definecolor{CString}{rgb}{0.1,0.1,0.8}         % String literal color
+\definecolor{CRule}{rgb}{0.5,0.5,0.5}           % Frame rule color
+\definecolor{CNumber}{rgb}{0.6,0.6,0.6}         % Line number color
+
+% Define a custom listing style for C code
+\lstdefinestyle{CStyle}{
+  language=C,
+  basicstyle=\footnotesize\ttfamily,
+  backgroundcolor=\color{CBackground},
+  commentstyle=\color{CComment}\itshape,
+  keywordstyle=\color{CKeyWord}\bfseries,
+  stringstyle=\color{CString},
+  numbers=left,
+  numberstyle=\tiny\color{CNumber},
+  stepnumber=1,
+  numbersep=10pt,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{CRule},
+  tabsize=2,
+  captionpos=b,
+  columns=fullflexible,
+  keepspaces=true,
+}
+
+% Define a new environment for C code blocks using the custom style.
+% Optional arguments can be passed to adjust settings further.
+\lstnewenvironment{cc}[1][]{
+  \lstset{style=CStyle, #1}
+}{}
+%%%%%%%%%%%%%%%%%%% Assembly CODE STYLING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{akeywordcolor}{rgb}{0.0, 0.2, 0.4}
+\definecolor{abackgroundcolor}{rgb}{0.98, 0.99, 1.0}
+\definecolor{acommentcolor}{rgb}{0.0, 0.4, 0.6}
+\definecolor{astringcolor}{rgb}{0.2, 0.4, 0.8}
+\definecolor{arulecolor}{rgb}{0.6, 0.7, 0.8}
+\definecolor{acodegray}{rgb}{0.3, 0.4, 0.5}
+
+\lstdefinestyle{assembly}{
+  language=[x86masm]Assembler,
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{abackgroundcolor},
+  commentstyle=\color{acommentcolor}\ttfamily,
+  keywordstyle=\color{akeywordcolor},
+  stringstyle=\color{astringcolor},
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{arulecolor},
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{acodegray},
+  tabsize=2,
+  morekeywords={li, and, add, addi, srli, bne}
+}
+
+\lstnewenvironment{assembly}
+  {\lstset{style=assembly}}
+  {}
+
+%%%%%%%%%%%%%%%%%%% JAVA CODE STYLING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{javakeywordcolor}{rgb}{0.0, 0.0, 0.5}
+\definecolor{javabackgroundcolor}{rgb}{0.95, 0.95, 0.95}
+\definecolor{javacommentcolor}{rgb}{0.0, 0.5, 0.0}
+\definecolor{javastringcolor}{rgb}{0.6, 0.0, 0.0}
+\definecolor{javarulecolor}{rgb}{0.5, 0.5, 0.5}
+\definecolor{javagray}{rgb}{0.6, 0.6, 0.6}
+
+\lstdefinestyle{javastyle}{
+  language=Java,
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{javabackgroundcolor},
+  commentstyle=\color{javacommentcolor}\ttfamily,
+  keywordstyle=\color{javakeywordcolor},
+  stringstyle=\color{javastringcolor},
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{javarulecolor},
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{javagray},
+  tabsize=2,
+  morekeywords={class, public, private, protected, extends, implements, interface, import, package, new, return, void, static}
+}
+
+\lstnewenvironment{java}
+  {\lstset{style=javastyle}}
+  {}
+
+
+
+
+%% -------------------- Custom Definition Environment --------------------
+\makeatletter
+\newenvironment{definition}[1][]{%
+  % Add an entry to the TOC: if a title is provided, include it.
+  \ifstrempty{#1}%
+    {\addcontentsline{toc}{subsection}{Definition}}%
+    {\addcontentsline{toc}{subsection}{Definition: #1}}%
+  % Print the heading: include the title if given.
+  \par\noindent\textbf{Definition\ifstrempty{#1}{}{ (#1)}.}\quad\itshape%
+}{\par}
+\makeatother
+% Other theorem-like environments
+\newtheorem{example}{Example}[subsection]
+\newtheorem{theorem}{Theorem}[subsection]
+\titlespacing{\section}{0pt}{10pt}{5pt} % {left}{before}{after}
+%% -------------------- Document Begins --------------------
+\begin{document}
+\flushbottom
+\subfile{chapters/front/front} 
+\subfile{chapters/L1/L1} 
+\subfile{chapters/L2/L2} 
+\subfile{chapters/L3/L3} 
+\subfile{chapters/L4/L4}
+\subfile{chapters/L5/L5}
+\subfile{chapters/L6/L6}
+\subfile{chapters/L7/L7}
+\subfile{chapters/L8/L8}
+\subfile{chapters/L9/L9}
+\subfile{chapters/L10/L10}
+\subfile{chapters/L11/L11}
+\subfile{chapters/L12/L12}
+\subfile{chapters/L13/L13}
+\subfile{chapters/L14/L14}
+\subfile{chapters/L15/L15}
+\subfile{chapters/L16/L16}
+\subfile{chapters/L17/L17}
+\subfile{chapters/L18/L18}
+\end{document}

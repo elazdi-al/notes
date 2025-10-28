@@ -1,0 +1,12 @@
+\begin{algorithmic}
+\Function{Heap-Increase-Key}{A, $i$, key}
+\If{key < $A[i]$}
+\State error ``new key is smaller than current key''
+\EndIf
+\State $A[i] \gets key$
+\While{$i > 1$ and $A[\mathrm{Parent}(i)] < A[i]$}
+\State exchange $A[i]$ with $A[\mathrm{Parent}(i)]$
+\State $i \gets \mathrm{Parent}(i)$
+\EndWhile
+\EndFunction
+\end{algorithmic}

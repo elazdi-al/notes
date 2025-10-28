@@ -1,0 +1,12 @@
+\begin{algorithmic}
+\Function{LIST-DELETE}{L, x}
+  \If{$x.\mathit{prev} \neq \text{nil}$}
+    \State $x.\mathit{prev}.\mathit{next} \gets x.\mathit{next}$
+  \Else
+    \State $L.\mathit{head} \gets x.\mathit{next}$
+  \EndIf
+  \If{$x.\mathit{next} \neq \text{nil}$}
+    \State $x.\mathit{next}.\mathit{prev} \gets x.\mathit{prev}$
+  \EndIf
+\EndFunction
+\end{algorithmic}

@@ -1,0 +1,22 @@
+\begin{algorithmic}
+\Function{TREE-INSERT}{T, z}
+\State $y \leftarrow \text{NIL}$
+\State $x \leftarrow T.\mathrm{root}$
+\While{$x \neq \text{NIL}$}
+  \State $y \leftarrow x$
+  \If{$z.\mathrm{key} < x.\mathrm{key}$}
+    \State $x \leftarrow x.\mathrm{left}$
+  \Else
+    \State $x \leftarrow x.\mathrm{right}$
+  \EndIf
+\EndWhile
+\State $z.p \leftarrow y$
+\If{$y = \text{NIL}$}
+  \State $T.\mathrm{root} \leftarrow z$ \Comment{tree $T$ was empty}
+\ElsIf{$z.\mathrm{key} < y.\mathrm{key}$}
+  \State $y.\mathrm{left} \leftarrow z$
+\Else
+  \State $y.\mathrm{right} \leftarrow z$
+\EndIf
+\EndFunction
+\end{algorithmic}

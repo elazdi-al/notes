@@ -1,0 +1,237 @@
+\hspace{-20px}
+\begin{minipage}[htp]{0.495\textwidth}
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+        \noindent\textbf{Network Layers (1-5):}\\
+ \textbf{Layer 1 (Physical):} Raw bit transmission over physical medium (cables, radio waves)\\
+ \textbf{Layer 2 (Data Link):} Frame transmission between directly connected nodes using MAC addresses\\
+ \textbf{Layer 3 (Network):} Packet routing between networks using IP addresses\\
+ \textbf{Layer 4 (Transport):} End-to-end delivery (TCP/UDP) with port numbers\\
+ \textbf{Layer 5 (Application):} User applications and protocols (HTTP, FTP, DNS)
+        \end{minipage}}\\[4px]
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Core Networking Concepts:}\\
+ \textbf{Network Interface (NIC):} Hardware endpoint with an assigned IP address that sends/receives frames on a link; identified by a MAC address.\\
+ \textbf{Subnet:} Set of IP addresses sharing a common prefix; network interfaces with IPs in the same subnet can communicate directly without routing.\\
+ \textbf{IP Prefix:} First $k$ bits of an IP address written as \/$k$ (e.g., 192.168.1.0/24) defining a subnet.\\
+ \textbf{Mask:} 32-bit value with $k$ leading 1s followed by 0s indicating prefix length (e.g., 255.255.255.0 for /24).\\
+ \textbf{Router:} Device that links subnets together; each router interface belongs to a different subnet and holds a forwarding table.\\
+ \textbf{Forwarding Table:} Router table mapping destination prefixes to outgoing interfaces / next-hop addresses. Built by routing algorithms (Dijkstra, Bellman-Ford) or manual configuration.\\[-12px]
+        \begin{center}
+        \begin{tabular}{|c|c|}
+        \hline
+        Dest IP Prefix & Output Interface \\
+        \hline
+        192.168.1.0/24 & eth0 \\
+        \hline
+        10.0.0.0/8 & eth1 \\
+        \hline
+        0.0.0.0/0 & eth2 (default) \\
+        \hline
+        \end{tabular}
+        \end{center}
+    \textbf{Prefix Merging:} Multiple prefixes can be merged if: \\(1) Same output interface, \\(2) Contiguous address ranges, \\(3) Count is power of 2.\\ \textbf{Quick check:} Group by interface → sort by IP → merge consecutive ranges with same prefix length.\\
+   \textbf{Longest Prefix Match (LPM):} Forwarding rule selecting the table entry with the longest matching prefix for a destination IP.\\
+   \textbf{Routing vs Forwarding:}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Routing:} Control plane process of computing paths and building forwarding tables using routing protocols.
+            \item \textbf{Forwarding:} Data plane process of looking up destination in table and sending packet to appropriate output interface.
+        \end{itemize}
+      \textbf{Switch vs Router:}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Switch:} Layer-2 device that can be contained within a subnet, forwards frames using MAC addresses. Does not have IP addresses.
+            \item \textbf{Router:} Layer-3 device that cannot be contained in a subnet; connects different subnets using IP addresses.
+        \end{itemize}
+      \textbf{Packet Switch:} General term for devices that receive, store, and forward packets (includes switches and routers).
+    \end{minipage}}\\[4px]
+
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Routing Algorithms (Building Forwarding Tables):}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Dijkstra's Algorithm (Link-State):}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Base Table Template:}
+            \begin{center}
+            \begin{tabular}{|c|l|c|c|c|c|}
+            \hline
+            Step & Nodes Visited & C(u), p(u) & C(v), p(v) & C(w), p(w) & ... \\
+            \hline
+            0 & $\emptyset$ & $\infty$, – & $\infty$, – & $\infty$, – & ... \\
+            \hline
+            1 & ... & ... & ... & ... & ... \\
+            \hline
+            ... & ... & ... & ... & ... & ... \\
+            \hline
+            \end{tabular}
+            \end{center}
+            \item \textbf{Initialize (Step 0):}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                \item Nodes Visited = empty set
+                \item Set source node: C(S) = 0, p(S) = –
+                \item \textbf{For} each other node i: \\
+                \hspace{10px} \textbf{If} direct link S$\leftrightarrow$i exists with cost c: set C(i)=c, p(i)=S \\
+                \hspace{10px} \textbf{Else}: C(i)=$\infty$, p(i)=–
+            \end{itemize}
+            \item \textbf{At each Step k $\geq$ 1:}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                \item Choose unvisited node u with smallest C(u)
+                \item Add u to Nodes Visited
+                \item \textbf{For} each neighbor v of u not yet visited: \\
+                \hspace{10px} alt = C(u) + cost(u,v) \\
+                \hspace{10px} \textbf{If} alt $<$ C(v): update C(v)=alt and p(v)=u
+                \item Record new C(·), p(·) values in Step k row
+            \end{itemize}
+            \item \textbf{Terminate:} When all nodes visited or remaining C(·)=$\infty$
+        \end{enumerate}
+        \item[-] \textbf{Bellman-Ford (Distance-Vector):}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Base Table Template:}
+            \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            From $\backslash$ To & u & v & w & z \\
+            \hline
+            v & & & & \\
+            \hline
+            w & & & & \\
+            \hline
+            z & & & & \\
+            \hline
+            \end{tabular}
+            \end{center}
+            \item \textbf{Initialize (Iteration 0):}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                \item For each neighbor row: put direct link costs to each destination via that neighbor ($\infty$ if no link)
+                \item For self row: put 0 to self, $\infty$ to all others
+            \end{itemize}
+            \item \textbf{Each Iteration k $\geq$ 1:}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                \item Copy neighbors' rows from their latest announcements
+                \item For each destination column: 
+                \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                    \item Take your direct cost to neighbor + neighbor's cost to destination
+                    \item Do this for every neighbor, pick the smallest total
+                    \item Example: To reach node X, compare: (cost to v) + (v's cost to X) vs (cost to w) + (w's cost to X)
+                    \item Put the smallest result in your row for destination X
+                \end{itemize}
+                \item Repeat for all destinations, update your entire row
+            \end{itemize}
+            \item \textbf{Convergence:} When self row doesn't change between iterations
+        \end{enumerate}
+    \end{itemize}
+
+    \noindent\textbf{Algorithm Comparison:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Dijkstra:} \\Fast convergence (O(n²)), but requires global topology flooding
+        \item[-] \textbf{Bellman-Ford:} \\No flooding (distributed), but slower (max n-1 iterations, where n = \# nodes)
+    \end{itemize}
+    \end{minipage}}\\[4px]
+
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.495\textwidth}
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Powers of 2:}\\ $2(2^1), 4 (2^2), 8 (2^3), 16 (2^4), 32 (2^5), 64 (2^6), 128 (2^7), 256 (2^8), 512 (2^9), \\1024 (2^{10}), 2048 (2^{11}), 4096 (2^{12}), 8192 (2^{13}), 16384 (2^{14}), 32768 (2^{15})$
+    \end{minipage}}\\[4px]
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Network Trace Analysis Guide:}
+    \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item \textbf{(Optional) DNS resolution}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item Do you already know the server's IP? If not: UDP DNS query (Src: your host, Dst: DNS server, Src Port: ephemeral 2000, Dst Port: 53)
+            \item \textbf{ARP-resolve your gateway's MAC before sending DNS packet}
+        \end{enumerate}
+        \item \textbf{ARP for your default gateway}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item Check ARP cache for gateway IP→MAC mapping
+            \item If missing: Broadcast ARP Request (Eth Dst: ff:ff:ff:ff:ff:ff, ARP target: gateway IP) → Receive Reply → cache MAC
+        \end{enumerate}
+        \item \textbf{Encapsulate and send packet}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item Ethernet: Src MAC (your NIC), Dst MAC (gateway)
+            \item IP: Src IP (your host), Dst IP (target server), TTL (e.g., 64), compute checksum
+            \item TCP SYN: Src Port (ephemeral ~3000), Dst Port (80)
+        \end{enumerate}
+        \item \textbf{Router processing} Strip Ethernet → verify IP checksum \& TTL $>$ 1 → decrement TTL → recalc checksum → routing table lookup
+        \item \textbf{Router ARP for next hop} If next-hop MAC not cached: ARP Request → Reply → store MAC
+        \item \textbf{Router re-encapsulation} New Ethernet header (Src: router interface MAC, Dst: next-hop MAC), same IP packet
+        \item \textbf{Multi-hop repeat} Steps 4-6 at each router: TTL decrement, routing lookup, ARP if needed
+        \item \textbf{Final-hop ARP} Router ARPs for server IP → gets server MAC
+        \item \textbf{Server receives SYN} Strips Ethernet → TCP handshake: server replies SYN-ACK
+        \item \textbf{Client completes handshake} Send ACK → TCP connection established.\\ \textbf{Note:} Can send ACK and GET simultaneously
+        \item \textbf{HTTP exchange} Send GET over TCP → server processes → HTTP response (same encapsulation/routing)
+    \end{enumerate}
+    \end{minipage}}\\[4px]
+    
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Layer 2 Concepts:}\\
+ \textbf{MAC Address:} 48-bit globally unique hardware identifier. First 24 bits = OUI (Organizationally Unique Identifier), last 24 bits = device-specific.\\
+ \textbf{L2 vs L3 Forwarding:}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Intra-subnet (L2):} Host A sends frame directly to Host B using B's MAC as destination. Switch receives frame → looks up dest MAC in table → forwards out appropriate port. If MAC unknown, floods to all ports.
+            \item \textbf{Inter-subnet (L3):} Host A sends frame to router's MAC. Router strips frame, creates new frame with router's MAC as source, next-hop's MAC as destination. IP addresses stay unchanged. Process: Receives frame → extracts IP packet → looks up dest IP in routing table → encapsulates in new frame for next hop.
+        \end{itemize}
+\textbf{Self-Configuring Networks (MAC Learning):}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Initial State:} Switch starts with empty MAC address table
+            \item \textbf{Learning Process:} For every received frame on port X with source MAC = M: records "MAC M is reachable via port X" in table
+            \item \textbf{Forwarding Decisions:}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+              \item \textbf{Known destination:} Looks up dest MAC in table → forwards frame out specific port
+                \item \textbf{Unknown destination:} Floods frame to ALL ports except incoming port
+            \end{itemize}
+            \item \textbf{Table Management:} Entries age out (default ~5 minutes) to handle device moves. Source learning happens on every frame, destination lookup on every frame.
+        \end{itemize}
+ \textbf{Spanning Tree Protocol (STP):}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Problem:} Redundant switch connections create broadcast loops
+            \item \textbf{Solution:} Elects root bridge (lowest Bridge ID), calculates shortest path tree, blocks redundant ports
+            \item \textbf{States:} Blocking (drops frames) → Listening → Learning → Forwarding
+            \item Reconverges automatically when topology changes (link/switch failure)
+        \end{itemize}
+    \end{minipage}}\\[4px]
+    
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Address Resolution \& Ethernet Fundamentals:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Address Resolution Protocol (ARP):}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Purpose:} Resolves IP address to MAC address (like DNS resolves domain to IP)
+            \item \textbf{Process:} Host broadcasts "Who has IP X?" → Target responds "IP X is at MAC Y" → Sender caches mapping
+            \item \textbf{ARP Table:}
+            \begin{center}
+            \begin{tabular}{|c|c|c|}
+            \hline
+            IP Address & MAC Address & Timeout \\
+            \hline
+            192.168.1.1 & aa:bb:cc:dd:ee:ff & 300s \\
+            \hline
+            192.168.1.5 & 11:22:33:44:55:66 & 180s \\
+            \hline
+            \end{tabular}
+            \end{center}
+        \end{itemize}
+        \item[-] \textbf{Network Address Translation (NAT) Gateway:}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Purpose:} Allows multiple private IP devices to share a single public IP address for Internet access
+            \item \textbf{Operation:} Translates private IP addresses (192.168.x.x, 10.x.x.x) to public IP when packets leave the network, reverse translation on return
+            \item \textbf{Translation Table:} Maps (private IP, private port) $\leftrightarrow$ (public IP, public port) to track active connections
+            \item \textbf{Benefits:} IP address conservation, adds security layer (hides internal network), enables home/office Internet sharing
+        \end{itemize}
+    \end{itemize}
+    \end{minipage}}
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+        \noindent\textbf{Internet Routing Architecture:}\\
+ \textbf{Autonomous System (AS):} Administrative domain containing routers under single policy control (ISP, university, company). Each AS has unique number (ASN) and can choose internal routing protocols.\\
+ \textbf{Two-Level Routing Hierarchy:}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                \item \textbf{Intra-AS:} Fast convergence within AS using link-state or distance-vector.
+                \item \textbf{Inter-AS:} Policy-based routing between ASes using BGP. Scalability through hierarchy.
+            \end{itemize}
+ \textbf{Border Gateway Protocol (BGP):}
+            \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+                \item \textbf{Like Bellman-Ford:} Exchanges path vectors with neighbors, applies best path selection
+                \item \textbf{Operation:} AS announces "I can reach prefix X via path [AS1, AS2, AS3]"
+                \item \textbf{Enables:} Policy control (traffic engineering, business relationships), loop prevention (AS-path), Internet-scale routing
+            \end{itemize}
+        \end{minipage}}\\[4px]
+\end{minipage}  

@@ -1,0 +1,14 @@
+\begin{algorithmic}
+\Function{TRANSPLANT}{T, u, v}
+  \If{$u.p = \mathrm{NIL}$}
+    \State $T.\text{root} \gets v$
+  \ElsIf{$u = u.p.\text{left}$}
+    \State $u.p.\text{left} \gets v$
+  \Else
+    \State $u.p.\text{right} \gets v$
+  \EndIf
+  \If{$v \neq \mathrm{NIL}$}
+    \State $v.p \gets u.p$
+  \EndIf
+\EndFunction
+\end{algorithmic}

@@ -1,0 +1,26 @@
+\begin{algorithmic}
+\Function{MERGE}{$A, p, q, r$}
+\State $n_{1} \gets q - p + 1$
+\State $n_{2} \gets r - q$
+\State let $L[1 \dots n_{1}+1]$ and $R[1 \dots n_{2}+1]$ be new arrays
+\For{$i \gets 1$ \textbf{to} $n_{1}$}
+  \State $L[i] \gets A[p + i - 1]$
+\EndFor
+\For{$j \gets 1$ \textbf{to} $n_{2}$}
+  \State $R[j] \gets A[q + j]$
+\EndFor
+\State $L[n_{1} + 1] \gets \infty$
+\State $R[n_{2} + 1] \gets \infty$
+\State $i \gets 1$
+\State $j \gets 1$
+\For{$k \gets p$ \textbf{to} $r$}
+  \If{$L[i] \le R[j]$}
+    \State $A[k] \gets L[i]$
+    \State $i \gets i + 1$
+  \Else
+    \State $A[k] \gets R[j]$
+    \State $j \gets j + 1$
+  \EndIf
+\EndFor
+\EndFunction
+\end{algorithmic}

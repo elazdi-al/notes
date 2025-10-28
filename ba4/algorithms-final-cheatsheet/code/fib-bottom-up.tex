@@ -1,0 +1,11 @@
+\begin{algorithmic}
+\Function{Bottom-Up-Fib}{n}
+\State Let $r$ be a new array of size $n+1$
+\State $r[0]\gets 1$
+\State $r[1]\gets 1$
+\For{$i=2$ to $n$}
+  \State $r[i]\gets r[i-1]+r[i-2]$
+\EndFor
+\State \Return $r[n]$
+\EndFunction
+\end{algorithmic}

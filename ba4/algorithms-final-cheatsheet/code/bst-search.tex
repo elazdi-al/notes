@@ -1,0 +1,11 @@
+\begin{algorithmic}
+\Function{TREE-SEARCH}{$x,k$}
+    \If{$x = \mathrm{NIL}$ \textbf{or} $k = \mathrm{key}[x]$}
+        \State \Return $x$
+    \ElsIf{$k < x.\mathrm{key}$}
+        \State \Return \Call{TREE-SEARCH}{$x.\mathrm{left},k$}
+    \Else
+        \State \Return \Call{TREE-SEARCH}{$x.\mathrm{right},k$}
+    \EndIf
+\EndFunction
+\end{algorithmic}

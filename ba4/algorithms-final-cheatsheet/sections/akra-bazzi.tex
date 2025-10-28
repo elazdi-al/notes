@@ -1,0 +1,18 @@
+\fbox{
+    \begin{minipage}[t]{1\linewidth}
+        \textbf{Akra--Bazzi, Ali Najib Variation:}\\
+        For recurrence $T(n)=\alpha\,T(a\,n)+\beta\,T(b\,n)+\Theta(n^d),$\\where $\alpha,\beta>0$, $a,b\in(0,1)$, $d\ge0$, and unique $p$ with $\alpha\,a^p+\beta\,b^p=1$\\
+        Then:
+        \begin{center}
+        $p>d \Rightarrow T(n)=\Theta(n^p),$\\
+        $p=d \Rightarrow T(n)=\Theta(n^d\log n),$\\
+        $p<d \Rightarrow T(n)=\Theta(n^d).$\\[2px]
+        \end{center}
+        \textbf{If $p$ is not easily found, compare $\alpha\,a^d+\beta\,b^d$ with 1:}\\[2px]
+        \begin{center}
+        $\alpha\,a^d+\beta\,b^d<1 \Rightarrow T(n)=\Theta(n^d),$\\
+        $\alpha\,a^d+\beta\,b^d=1 \Rightarrow T(n)=\Theta(n^d\log n),$\\
+        $\alpha\,a^d+\beta\,b^d>1 \Rightarrow T(n)=\Theta(n^p),$\\[2px]
+        \end{center}
+        with $p$ determined by $\alpha\,a^p+\beta\,b^p=1$.
+        \end{minipage}}

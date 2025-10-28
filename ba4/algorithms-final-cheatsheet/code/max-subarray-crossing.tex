@@ -1,0 +1,19 @@
+\begin{algorithmic}
+\Function{Find-Max-Crossing-Subarray}{$A, low, mid, high$}
+\State $left\text{-}sum \gets -\infty, \quad sum \gets 0$
+\For{$i = mid\ \mathbf{to}\ low$}
+  \State $sum \gets sum + A[i]$
+  \If{$sum > left\text{-}sum$}
+    \State $left\text{-}sum \gets sum$, \quad $max\text{-}left \gets i$
+  \EndIf
+\EndFor
+  \State $right\text{-}sum \gets -\infty, \quad sum \gets 0$
+\For{$j = mid + 1\ \mathbf{to}\ high$}
+  \State $sum \gets sum + A[j]$
+  \If{$sum > right\text{-}sum$}
+    \State $right\text{-}sum \gets sum$, \quad $max\text{-}right \gets j$
+  \EndIf
+\EndFor
+\State \Return $(max\text{-}left,\;max\text{-}right,\;left\text{-}sum + right\text{-}sum)$
+\EndFunction
+\end{algorithmic}

@@ -1,0 +1,26 @@
+\noindent\fbox{\begin{minipage}[t]{1\linewidth}
+        \textbf{Disjoint Set.}\\
+        A disjoint set is a collection of sets where each set is disjoint from the others.\\
+        \textbf{Disjoint Set Operations.}\\ 
+        - \textbf{Make-Set(x):} Create a new set with a single element x.\\
+        - \textbf{Find(x):} Return the representative of the set containing x.\\
+        - \textbf{Union(x,y):} Merge the sets containing x and y into a single set.\\   
+       \hspace*{2cm}if $x \in S_x , y \in S_y , \text{then} \; \textbf{S} = S - S_x - S_y \cup {S_x \cup S_y }$\\
+       \textbf{Linked List Representation.}\\
+       Each set is a single linked list represented by a set object that has\\
+       - a pointer to the head of the list (assumed to be the representative)\\
+       - a pointer to the tail of the list\\
+       - Each object in the list has attributes for the set member, pointer to the set object and next\\
+        \textbf{Operations:}\\
+       - Make-Set(x): Create a singleton list in time $\Theta(1)$\\
+       - Find(x): follow the pointer back to the list object, and then follow the head pointer to the representative (time $\Theta(1))$\\
+       - Union(x,y): \\
+    \textbf{Method 1} - Append y’s list onto the end of x’s list. Use x’s tail pointer to find the end.\\
+    Cons:\\
+       a. Need to update the pointer back to the set object for every node on y’s list.\\
+       b. If appending a large list onto a small list, it can take a while\\
+    \hspace*{3cm} \textbf{or} \\ 
+    \textbf{Method 2} - Weighted-union heuristic. \\Always append the smaller list to the
+    larger list (break ties arbitrarily, for m operations on n elements, time $\Theta(m + n \log n)$)\\
+   
+\end{minipage}}

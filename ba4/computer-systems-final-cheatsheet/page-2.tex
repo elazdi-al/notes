@@ -1,0 +1,173 @@
+
+\hspace*{-20px}
+\begin{minipage}[htp]{0.5\textwidth}
+\begin{minipage}[htp]{1\textwidth}
+\noindent\textbf{Memory Management Unit (MMU) - Address Translation.}  \\
+\textbf{Hardware component} managed by the \textbf{operating system} that translates \textbf{virtual addresses} into \textbf{physical addresses} using \textbf{per-process page tables}. \textbf{Each process has its own page table, and the currently active one is referenced in a special CPU register.} \\
+\fbox{\begin{minipage}[htp]{1\textwidth}
+\noindent\textbf{Translation Lookaside Buffer (TLB).} \\
+\begin{minipage}[htp]{0.45\textwidth}
+\small
+A small, fast \textbf{cache inside the MMU} that stores recent \textbf{virtual-to-physical page mappings}. The TLB reduces the need to access the page table on every memory reference, significantly speeding up address translation.
+\end{minipage}
+\begin{minipage}[htp]{0.55\textwidth}
+\begin{center}
+    \includegraphics[width=1\textwidth]{images/tlb.png}
+\end{center}
+\end{minipage}
+\end{minipage}}\\[2px]
+    \noindent\textbf{Virtual Address Translation:}
+    \begin{enumerate}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item The \textbf{CPU executes an instruction} (e.g., \texttt{load}, \texttt{store}, or \texttt{fetch}) that references a memory location using a \textbf{virtual address}.
+        \item The \textbf{MMU extracts} the \textbf{virtual page number (VPN)} and \textbf{page offset} from the virtual address.
+        \item The MMU first checks the \textbf{TLB} for a cached translation of the VPN.
+        \item \textbf{If the translation is found in the TLB (TLB hit):}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0pt]
+            \item The corresponding \textbf{physical frame number} is retrieved directly.
+        \end{enumerate}
+\item \textbf{If the translation is not found (TLB miss $\rightarrow$ page table walk):}
+    \begin{enumerate}[noitemsep,nolistsep,topsep=0pt]
+        \item The MMU uses the active \textbf{page table} to look up the VPN and obtain the PFN.
+        \item The new mapping is inserted into the TLB for future accesses.
+    \end{enumerate}
+    \item \textbf{If the page table entry is invalid or \texttt{present = 0} (page fault):}
+    \begin{enumerate}[noitemsep,nolistsep,topsep=0pt]
+        \item The CPU triggers a \textbf{trap into the OS kernel}.
+        \item The \textbf{page fault handler} in the OS's \textbf{memory management subsystem} is invoked.
+        \item The handler checks whether the page is:
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0pt]
+            \item \textbf{Never allocated before} $\rightarrow$ allocate a new physical page and zero-initialize it.
+            \item \textbf{Swapped out to disk} $\rightarrow$
+            \begin{enumerate}[noitemsep,nolistsep,topsep=0pt]
+                \item Check the \textbf{swap cache} for the page.
+                \item If found in the swap cache, use the cached page directly.
+                \item If not in the cache, read the page from the \textbf{swap space} on disk into a free physical frame, and insert it into the swap cache.
+            \end{enumerate}
+        \end{enumerate}
+        \item The newly loaded or allocated page is mapped in the page table, and \texttt{present} is set to \texttt{1}.
+        \item The TLB entry for the VPN is updated if needed.
+        \item The faulting instruction is retried.
+    \end{enumerate}
+    \item The final \textbf{physical address} is then used to \textbf{access RAM}.
+\end{enumerate}
+\vspace{1em}
+\noindent\textbf{Swapping}\\
+Transfer of memory pages between physical RAM and disk-based swap space to free up RAM.\\
+- \textbf{Swap Space} Disk region reserved for evicted pages; holds non-resident memory to extend usable RAM.\\ 
+- \textbf{Swap Cache} In-memory buffer of recently swapped-out pages; enables fast lookup and avoids redundant disk I/O during swap-in. \\
+-\noindent\textbf{Swap-Outs:}
+\begin{enumerate}[noitemsep,nolistsep,topsep=-5px,partopsep=0pt,parsep=0pt]
+    \item The OS detects that the number of free physical pages has fallen below a predefined threshold.
+    \item A background kernel thread is triggered to reclaim memory.
+    \item The kernel scans memory to identify candidate pages for eviction, typically using an aging or Least Recently Used algorithm.
+    \item A candidate page is selected if:
+    \begin{enumerate}[noitemsep,nolistsep,topsep=0pt]
+        \item It is not currently in use (i.e., not recently accessed),
+        \item It is not locked, pinned, or shared with kernel-critical structures.
+    \end{enumerate}
+    \item If the selected page is dirty (i.e., has been modified), its contents are written to the swap space on disk.
+    \item The page is inserted into the \textbf{swap cache} so it can be quickly retrieved if needed again.
+    \item The page table entry is updated: \texttt{present = 0}, and the swap location is recorded.
+    \item The physical frame is freed and returned to the pool of available memory.
+\end{enumerate}
+\end{minipage}\\
+\vspace{3px}
+\hrule
+\vspace{3px}
+\begin{minipage}[htp]{1\textwidth}
+
+    \noindent\textbf{CPU Cache.} \\
+    The \textbf{CPU cache} is a small, fast memory located on or near the processor that stores copies of frequently accessed data from main memory (RAM). Its purpose is to reduce memory access latency and improve overall performance by exploiting \textbf{temporal} and \textbf{spatial locality}.\\
+    \noindent\textbf{Cache Levels:}
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item \textbf{L1 Cache (Level 1):} The smallest and fastest cache, located right on the CPU core. 64 KB, but takes $< 1 nsec$ to access.
+        \item \textbf{L2 Cache (Level 2):} Larger and slightly slower than L1, still located on the CPU core.256-512 KB, takes $< 4 nsec$ to access.
+        \item \textbf{L3 Cache (Level 3):} Shared among multiple cores, larger but slower than L1 and L2. Located on the CPU die. 6-32 MB, takes $10s \;of \;nsec$ to access.  
+    \end{itemize}
+    \noindent\textbf{Hierarchy Behavior:} \\
+    Caches form a \textbf{hierarchy}: the CPU checks L1 first, then L2, then L3, and finally main memory if needed. This optimizes for latency and hit rate.
+    \end{minipage}
+\end{minipage}
+\hspace{5px}
+\vline
+\hspace{5px}
+\begin{minipage}[htp]{0.48\textwidth}
+\vspace*{-10px}
+\begin{minipage}[htp]{1\textwidth}
+\noindent\textbf{Paging.} \\
+Paging divides virtual memory into fixed-size \textbf{pages}, mapped to physical \textbf{frames} via a \textbf{page table}. It avoids \textbf{ext. fragmentation}, but may cause \textbf{internal fragmentation} if a page is only partially used.\\
+
+\noindent\textbf{Address Representation.} \\
+\textbf{Virtual Addresss Size is not always equal to Physical Address Size!}\\ 
+Let $m$ be the number of bits in the \textbf{virtual address} (i.e., $m = \log_2(\text{virtual address space size})$). \\
+This also corresponds to the number of bits required to uniquely address every byte in the virtual memory. If the virtual memory consists of $2^k$ pages and each page is $2^n$ bytes, then the total virtual address space is $2^k \times 2^n = 2^m$ bytes, and thus $m = k + n$.
+\begin{center}
+    \includegraphics[width=0.65\textwidth]{images/paging.png}
+\end{center}
+A virtual address is split into:
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item[-] \textbf{Offset} ($n$ bits): identifies a byte within a page of size $2^n$ bytes, where $n = \log_2(\text{page size})$.
+    \item[-] \textbf{Virtual Page Number (VPN)} ($m - n$ bits): selects the page entry from the page table.
+\end{itemize}
+\end{minipage}\\[2px]
+\hrule
+\vspace{3px}
+\begin{minipage}[htp]{1\textwidth}
+    \noindent\textbf{Page Table.} \\
+    A process's \textbf{page table} maps each \textbf{Virtual Page Number (VPN)} to a \textbf{Physical Frame Number (PFN)}. The page table is indexed by the VPN and stores \textbf{Page Table Entries (PTEs)}.\\[5px]
+    \noindent\textbf{Linear Page Table.} \\
+    A single-level table with $2^{m - n}$ entries. Each VPN directly indexes a PTE. Simple but potentially large: $\Rightarrow$ Table size = $2^{m - n} \times \text{PTE size}$ (may span multiple memory pages).\\[5px]
+    \noindent\textbf{PTE Content (Typical Metadata Bits):}
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item[-] \textbf{Present bit (P):} Valid address translation exists
+        \item[-] \textbf{Protection bits (R/W/X):} Read, write, execute permissions
+        \item[-] \textbf{User/Supervisor (U/S):} Access control (user vs. kernel)
+        \item[-] \textbf{Dirty bit (D):} Set if the page has been modified
+        \item[-] \textbf{Access/Reference bit (A):} Set on access; used in replacement policies
+    \end{itemize}
+    \vspace{5px}
+    \noindent\textbf{Multi-Level Page Tables.} \\
+    Used to reduce memory overhead. Split the VPN into multiple parts to form a tree-like hierarchy. The \textbf{offset} remains the last $n = \log_2(\text{page size})$ bits of the address.\\
+    \noindent\textbf{General Breakdown (Multi-Level Paging):}
+    \begin{center}
+    $\text{Virtual Address Size} = m = \sum k_i + n$
+    \end{center}
+    \vspace{-5px}
+    where:
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item[-] $n = \log_2(\text{page size})$: offset bits
+        \item[-] $k_i$: number of bits used at each level of the page table
+    \end{itemize}
+    \vspace{5px}
+    \noindent\textbf{Two-Level Page Table:}
+\begin{center}$
+    \text{VPN} = \underbrace{\text{Level 1 index}}_{k_1} \ \|\ \underbrace{\text{Level 2 index}}_{k_2}, \quad k_1 + k_2 = m - n
+$\end{center}\vspace{-10px}
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item Level 1 index ($k_1$ bits): selects the \textbf{page directory entry (PDE)}
+        \item Level 2 index ($k_2$ bits): selects the \textbf{page table entry (PTE)} from the second-level table
+    \end{itemize}
+\vspace{5px}
+    \noindent\textbf{Three-Level Page Table:}
+\begin{center}$
+    \text{VPN} = \underbrace{\text{L1 index}}_{k_1} \ \|\ \underbrace{\text{L2 index}}_{k_2} \ \|\ \underbrace{\text{L3 index}}_{k_3}, \quad k_1 + k_2 + k_3 = m - n
+$\end{center}\vspace{-10px}
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item Level 1 index ($k_1$ bits): selects \textbf{first-level page directory}
+        \item Level 2 index ($k_2$ bits): selects \textbf{second-level directory/table}
+        \item Level 3 index ($k_3$ bits): selects the final \textbf{PTE}
+    \end{itemize}
+
+    \noindent\textbf{Bit Allocation in Multi-Level Page Tables:} \\
+    The VPN portion ($m - n$ bits) is divided into $L$ parts ($k_1 + k_2 + \dots + k_L = m - n$), one per level.
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item \textbf{Bit division is not necessarily even.} Systems may assign more bits to higher levels.
+        \item If uneven, \textbf{last levels (closer to the leaf)} typically receive \textbf{fewer bits} (fewer entries).
+        \item Each level $i$ contains $2^{k_i}$ entries, indexing the next level or the final PTE.
+    \end{itemize}
+\end{minipage}\\[3px]
+\hrule
+\vspace{3px}
+\noindent\textbf{Segmentation.} \\
+Segmentation divides memory into variable-sized \textbf{logical segments} (e.g., code, data, stack), each with a base and limit. It aligns with program structure and supports segment-level protection, but suffers from \textbf{ext. fragmentation} due to variable-sized allocations.
+\end{minipage}

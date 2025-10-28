@@ -1,0 +1,110 @@
+\hspace*{-8px}\fbox{
+\begin{minipage}[t]{1.1\linewidth}
+\textbf{Graph.}\\
+A graph G = (V, E) consists of a vertex set V and\\an edge set E that contain (ordered) pairs of vertices.\\
+\textbf{In-degree:} Number of edges coming into vertex v.\\
+\textbf{Out-degree:} Number of edges going out from vertex v.\\
+\begin{minipage}[t]{0.45\linewidth}
+\textbf{Breadth-First Search (BFS)}\\
+\textbf{Goal:}\\
+Find all vertices reachable from a starting vertex s, visiting neighbors level by level (like ripples in water).\\
+\textbf{How it works:}\\
+1 - Start at vertex s and mark it as distance 0.\\
+2 - Visit all immediate neighbors first, marking them as distance 1.\\
+3 - Then visit their unvisited neighbors, marking as distance 2.\\
+4 - Continue this layer-by-layer exploration, incrementing distance at each level.\\
+\textbf{Key Data:} Distance of each node from source is stored and gives shortest path in unweighted graphs.\\
+\fbox{
+\begin{minipage}[t]{.6\linewidth}
+\textbf{Time Complexity:} $O(V + E)$\\ \textbf{Space Complexity:} $O(V)$
+\end{minipage}}\\[-12px]
+\algocode{bfs}
+\end{minipage}
+\begin{minipage}[t]{0.45\linewidth}
+    \vspace*{-30px}
+\textbf{Depth-First Search (DFS)}\\
+\textbf{Goal:}\\
+Explore a graph by going as deep as possible along each path before backtracking (like exploring a maze).\\
+\textbf{How it works:}\\
+1 - Initialize all vertices as WHITE (unvisited).\\
+2 - For each WHITE vertex, start DFS-Visit:\\
+3 - Mark current vertex as GRAY (being processed), record discovery time.\\
+4 - Recursively visit each WHITE neighbor (ignore GRAY/BLACK).\\
+5 - When done with all neighbors, mark vertex as BLACK (finished), record finish time.\\
+\textbf{Key Data:} Discovery and finish times are kept for each node in DFS. These times help determine ancestor-descendant relationships and can be used for topological sorting.\\
+\begin{minipage}[t]{.56\linewidth}
+\textbf{DFS-Visit Time Comp.} $O(E)$\\
+\textbf{DFS-Visit Space Comp.} $O(V)$
+\end{minipage}\fbox{
+    \begin{minipage}[t]{.43\linewidth}
+\textbf{Time Comp.} $O(V + E)$ \newline
+\textbf{Space Comp.:} $O(V)$\end{minipage}}\\[-13px]
+\begin{minipage}[t]{0.38\linewidth}
+\algocode{dfs}
+\end{minipage}
+\begin{minipage}[t]{0.58\linewidth}
+\algocode{dfs-visit}
+\end{minipage}
+\end{minipage}\\[-8px]
+\begin{minipage}[t]{0.45\linewidth}
+    \vspace*{-10px}
+    \fbox{\begin{minipage}[t]{0.98\linewidth}
+    \textbf{Definition - Adjacency list.}\\
+    \textit{Array of linked lists storing neighbors for each vertex}\\
+    \textbf{Space Complexity:} $\Theta(V + E)$\\
+    \textbf{Time Complexity:} to list all vertices adjacent to u: $\Theta(degree(u))$\\
+    \textbf{Time Complexity:} to determine whether (u, v) $\in$ E: $O(degree(u))$
+    \end{minipage}}
+    \fbox{\begin{minipage}[t]{0.98\linewidth}
+        \textbf{Definition - Adjacency matrix.}\\
+        \textit{2D matrix where entry (i,j) indicates edge from vertex i to j}\\
+        \textbf{Space Complexity:} $\Theta(V^2)$\\
+        \textbf{Time Complexity:} to list all vertices adjacent to u: $\Theta(V)$\\
+        \textbf{Time Complexity:} to determine whether (u, v) $\in$ E: $\Theta(1)$
+        \end{minipage}}
+    \textbf{Directed Acyclic Graph (DAG)}\\
+    \textit{A directed graph with no cycles. A directed graph G is a DAG if and only if a DFS of G yields no back edges.}\\
+    \fbox{\begin{minipage}[t]{0.98\linewidth}
+    \textbf{Algorithm - Topological Sort.}\\
+    \textit{Linear ordering of vertices where for each edge (u,v), u comes before v. Possible only on Directed Acyclic Graphs (DAGs).}\\
+    \textbf{Topological-Sort(G):}\\
+    1. Call DFS(G) to compute finishing times v.f\\ for all v $\in$ G.V\\
+    2. Output vertices in order of decreasing finishing times\\
+    \textbf{Time Complexity:} $O(V+E)$\\
+    \textbf{Space Complexity:} $O(V)$
+    \end{minipage}}
+\end{minipage}
+        \begin{minipage}[t]{0.46\linewidth}\vspace*{-15px}
+            \textbf{Tree edge.} Edge from parent to child in DFS tree.\\
+\textbf{Back edge.} Edge from descendant to ancestor (indicates cycle).\\
+\textbf{Forward edge.} Edge from ancestor to descendant (not in DFS tree).\\
+\textbf{Cross edge.} Edge between vertices with no ancestor-descendant relationship.\\[2px]
+\textbf{Theorem - White Path.} v is descendant of u iff when u is discovered, there exists a white path (only undiscovered vertices) from u to v.\\
+\textbf{Theorem - Parenthesis.} For vertices u,v: intervals [u.d, u.f] and [v.d, v.f] are either disjoint or one contains the other.\\
+\textbf{G transpose.} The graph G with all edges reversed.\\
+            \fbox{\begin{minipage}[t]{0.98\linewidth}
+                \textbf{Algorithm - Strongly Connected Component.}\\
+                \textit{A maximal set of vertices in a directed graph where for every pair u,v there is a path from u to v and v to u.}\\
+                \textbf{SCC(G):}\\
+                1. Call DFS(G) to compute finishing times u.f for all u.\\
+                2. Compute $G^T$.\\
+                3. Call DFS($G^T$) but in the main loop, consider vertices in order of decreasing u.f (as computed in first DFS).\\
+                4. Output the vertices in each tree of the depth-first forest formed in second DFS as a separate SCC.\\
+                \textbf{Time Complexity:} $O(V+E)$\\
+                \textbf{Space Complexity:} $O(V)$
+             \end{minipage}}
+        \end{minipage}\\
+        \resizebox{0.93\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|}
+    \hline
+    Condition & Edge type & Notes \\
+    \hline
+    $(u,v)$ is the tree‐edge that first discovered $v$ & \textbf{Tree} & part of the DFS forest \\
+    $d[u] < d[v] < f[v] < f[u]$ & \textbf{Forward} & non‐tree edge to a descendant \\
+    $d[v] < d[u] < f[u] < f[v]$ & \textbf{Back} & edge to an ancestor (cycle) \\
+    $d[v] < f[v] < d[u] < f[u]$ & \textbf{Cross} & between two different subtrees \\
+    \hline
+\end{tabular}
+}
+    \end{minipage}
+    }

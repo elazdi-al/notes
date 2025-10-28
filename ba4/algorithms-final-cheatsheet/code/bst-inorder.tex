@@ -1,0 +1,9 @@
+\begin{algorithmic}
+\Function{Inorder-Tree-Walk}{$x$}
+  \If{$x \neq \mathrm{NIL}$}
+    \State \Call{Inorder-Tree-Walk}{$x.\text{left}$}
+    \State \textbf{print} $\mathrm{key}[x]$
+    \State \Call{Inorder-Tree-Walk}{$x.\text{right}$}
+  \EndIf
+\EndFunction
+\end{algorithmic}

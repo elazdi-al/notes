@@ -1,0 +1,15 @@
+\begin{algorithmic}
+    \Function{DFS-Visit}{$G, u$}
+    \State $time \gets time + 1$
+    \State $u.d \gets time$
+    \State $u.\text{color} \gets \text{GRAY}$ \Comment{discover $u$}
+    \ForAll{$v \in G.\mathrm{Adj}[u]$} \Comment{explore $(u,v)$}
+      \If{$v.\text{color} = \text{WHITE}$}
+        \State \Call{DFS-Visit}{$G, v$}
+      \EndIf
+    \EndFor
+    \State $u.\text{color} \gets \text{BLACK}$
+    \State $time \gets time + 1$
+    \State $u.f \gets time$ \Comment{finish $u$}
+  \EndFunction
+  \end{algorithmic}

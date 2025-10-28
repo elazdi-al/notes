@@ -1,0 +1,182 @@
+\documentclass[a4paper]{extarticle}
+\usepackage[a4paper, top=0in, bottom=0in, left=0in, right=0in, includeheadfoot, includehead, includefoot]{geometry} % Minimal margins
+% Force absolute minimal margins
+\setlength{\hoffset}{-1in}
+\setlength{\voffset}{-1in}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\headheight}{0pt}
+\setlength{\headsep}{0pt}
+\setlength{\marginparwidth}{0pt}
+\setlength{\marginparsep}{0pt}
+\setlength{\footskip}{0pt}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{setspace}
+\usepackage{fancyvrb}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{anyfontsize} % Allow any font size
+\usepackage{mathptmx} % Georgia-like font (Times with math support)
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\renewcommand{\familydefault}{\rmdefault} % Set Georgia as default font
+\usepackage{paracol}
+% Define custom font size command that works everywhere
+\newcommand{\tinyfont}{\fontsize{5.2pt}{1pt}\selectfont}
+
+% Define special ultra-small font for algorithms
+\newcommand{\algofont}{\fontsize{4.3pt}{4.7pt}\selectfont}
+\linespread{1.05}
+% Set global font size
+\tinyfont
+
+% Make math fonts match text size
+\DeclareMathSizes{0.8pt}{0.8pt}{0.6pt}{0.5pt}
+
+% Make algorithm math fonts even smaller
+\DeclareMathSizes{4pt}{4pt}{3pt}{2pt}
+
+% Ensure minipages inherit the font size
+\let\oldminipage\minipage
+\renewcommand{\minipage}[2][]{\oldminipage[#1]{#2}\tinyfont}
+
+% ──────────────────────────────────────────────────────────────
+%  Algorithms (algorithm + algpseudocode)
+% ──────────────────────────────────────────────────────────────
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+%----------------------- 1.  Appearance ------------------------
+\AtBeginEnvironment{algorithm}{\tiny}        % smaller body text
+\algrenewcommand\algorithmicindent{2pt}     % compact indent
+
+% Right-flushed, grey comments with a ▹ bullet
+\algrenewcommand\algorithmiccomment[1]{\textit{// #1}}
+
+%----------------------- 2.  Keywords --------------------------
+% lower-case keywords, remove redundant "then/end" words
+\algrenewcommand\algorithmicif{\textbf{if}}
+\algrenewcommand\algorithmicelse{\textbf{else}}
+\algrenewcommand\algorithmicfor{\textbf{for}}
+\algrenewcommand\algorithmicwhile{\textbf{while}}
+\algrenewcommand\algorithmicreturn{\textbf{return}}
+\algrenewcommand\algorithmicthen{}
+\algrenewcommand\algorithmicend{}
+
+% no "Function/Procedure" headings and a lower-case "call"
+\algrenewcommand\algorithmicfunction{}
+\algrenewcommand\algorithmicprocedure{}
+
+%----------------------- 3.  < and > as math -------------------
+% Make plain < and > automatically behave like math relations
+\makeatletter
+\newcommand{\algLt}{\ensuremath{<}}\newcommand{\algGt}{\ensuremath{>}}
+\AtBeginEnvironment{algorithmic}{%
+  \begingroup
+    \lccode`\~=`\<
+    \lowercase{\endgroup\def~{\algLt}}%
+  \begingroup
+    \lccode`\~=`\>
+    \lowercase{\endgroup\def~{\algGt}}%
+  \catcode`\<=\active \catcode`\>=\active
+}
+\makeatother
+
+%----------------------- 4.  Remove algorithm rules -----------
+% Remove the horizontal rules at top and bottom of algorithms
+\usepackage{float}
+\floatstyle{plain}
+\restylefloat{algorithm}
+
+%----------------------- 5.  Ultra-small loader ---------------
+% Usage: \algocode{mysort}  ⇒ loads code/mysort.tex with special small font
+\newcommand{\algocode}[1]{%
+  \vspace{0pt}%
+  \begin{algorithm}[H]
+    \setlength{\abovecaptionskip}{0pt}%
+    \setlength{\belowcaptionskip}{0pt}
+    \setlength{\intextsep}{0pt}%
+    \setlength{\textfloatsep}{0pt}
+    \algofont  % Use special ultra-small algorithm font
+    \input{code/#1.tex}%
+  \end{algorithm}%
+  \vspace{0pt}%
+}
+
+% ─── End of algorithm setup ───────────────────────────────────
+
+
+% Additional margin elimination
+\setlength{\parindent}{0.5pt}
+\setlength{\parskip}{0.5pt}
+\setlength{\baselineskip}{0pt}
+\pagestyle{empty}
+
+% Fix fbox overlapping issues
+\setlength{\fboxrule}{0.4pt}  % Thinner border
+\setlength{\fboxsep}{1pt}     % Less padding inside box
+
+% Maximize text width
+\setlength{\textwidth}{\paperwidth}
+\setlength{\textheight}{\paperheight}
+
+% Remove default spacing from center environment
+\let\oldcenter\center
+\let\endoldcenter\endcenter
+\renewenvironment{center}{\oldcenter\vspace{-\topsep}\vspace{-\partopsep}}{\vspace{-\topsep}\vspace{-\partopsep}\endoldcenter}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+\input{sections/titlepage}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace*{-15px}
+\noindent
+   \columnratio{0.31,0.28,0.35}
+\begin{paracol}{3}
+\setlength{\columnsep}{3pt}
+  \input{sections/master_theorem}\\
+  \input{sections/queue_operations}\\
+  \input{sections/merge_sort}\\
+\input{sections/priority_queue}\\
+  \input{sections/stack_operations}\\
+  \input{sections/dynamic_programming}\\
+  \switchcolumn[1]
+  \input{sections/akra-bazzi}\\
+  \input{sections/insertion_sort}\\
+\input{sections/strassen_matrix}\\
+\input{sections/binary_search_tree}\\
+  \switchcolumn[2]
+\input{sections/asymptotic_notation} \\[-7px]
+ \input{sections/heap} \\[-7px]  \input{sections/max_subarray}\\
+  \input{sections/operations_summary} 
+  \end{paracol}
+\noindent
+  \columnratio{0.31,0.28,0.35}
+\begin{paracol}{3}
+\setlength{\columnsep}{3pt}
+\input{sections/optimal_binary_search_tree}\\
+  \switchcolumn
+\input{sections/matrix_chain_multiplication}\\
+\input{sections/linked_list}\\
+\input{sections/disjoint-set}\\
+\input{sections/disjoint-set-forest}
+    \switchcolumn[2]
+    \input{sections/longest_common_subsequence}\\
+    \input{sections/graph}\\
+    \hspace*{-10px}
+\input{sections/flow_network}
+\end{paracol}
+
+\end{document} 

@@ -1,0 +1,9 @@
+\begin{algorithmic}
+\Function{HEAPSORT}{A, n}
+\State \Call{BUILD-MAX-HEAP}{A, n}
+\For{$i = n$ \textbf{to} $2$}
+  \State exchange $A[1]$ with $A[i]$
+  \State \Call{MAX-HEAPIFY}{A, 1, $i - 1$}
+\EndFor
+\EndFunction
+\end{algorithmic}

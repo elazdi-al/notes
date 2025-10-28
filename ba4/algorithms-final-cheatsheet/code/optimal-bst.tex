@@ -1,0 +1,24 @@
+\begin{algorithmic}
+\Function{OPTIMAL-BST}{$p,q,n$}
+\State let $e[1\ldots n+1,0\ldots n]$, $w[1\ldots n+1,0\ldots n]$, and $\mathit{root}[1\ldots n,1\ldots n]$ be new tables
+\For{$i = 1$ to $n+1$}
+  \State $e[i,i-1] \gets 0$
+  \State $w[i,i-1] \gets 0$
+\EndFor
+\For{$l = 1$ to $n$}
+  \For{$i = 1$ to $n - l + 1$}
+    \State $j \gets i + l - 1$
+    \State $e[i,j] \gets \infty$
+    \State $w[i,j] \gets w[i,j-1] + p_j$
+    \For{$r = i$ to $j$}
+      \State $t \gets e[i,r-1] + e[r+1,j] + w[i,j]$
+      \If{$t < e[i,j]$}
+        \State $e[i,j] \gets t$
+        \State $\mathit{root}[i,j] \gets r$
+      \EndIf
+    \EndFor
+  \EndFor
+\EndFor
+\State \Return $e,\mathit{root}$
+\EndFunction
+\end{algorithmic}

@@ -1,0 +1,13 @@
+\begin{algorithmic}
+\Function{TREE-SUCCESSOR}{$x$}
+  \If{$x.\mathrm{right} \neq \mathrm{NIL}$}
+    \State \Return \Call{TREE-MINIMUM}{$x.\mathrm{right}$}
+  \EndIf
+  \State $y \gets x.\mathrm{p}$
+  \While{$y \neq \mathrm{NIL}$ \textbf{and} $x = y.\mathrm{right}$}
+    \State $x \gets y$
+    \State $y \gets y.\mathrm{p}$
+  \EndWhile
+  \State \Return $y$
+\EndFunction
+\end{algorithmic}

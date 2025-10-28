@@ -1,0 +1,55 @@
+\fbox{%
+\begin{minipage}[t]{1.01\linewidth}
+    \begin{minipage}[t]{0.48\linewidth}
+        \textbf{Flow Network.}\\
+        A directed graph $G=(V,E)$ with a source $s$ and sink $t$. Each edge $(u,v)$ has a capacity $c(u,v) \ge 0$.\\
+        \textbf{Flow Function.}\\
+        A function $f: V \times V \to \mathbb{R}$ satisfying:\\
+        - \textbf{Capacity constraint:} $0 \le f(u,v) \le c(u,v)$\\
+        - \textbf{Flow conservation:} $\sum_{v \in V} f(v,u) = \sum_{v \in V} f(u,v)$ for all $u \in V \setminus \{s,t\}$. (flow in = flow out)\\
+        \textbf{Value of a Flow.}\\
+        Total flow out of the source: $|f| = \sum_{v \in V} f(s,v)$.\\
+        \textbf{Max--Flow Problem \,(What are we \emph{maximizing}?)}\\
+        Choose a flow $f$ that \emph{maximizes its value} $|f|$ \,(the total amount of flow that leaves $s$ and reaches $t$) subject to the capacity and conservation constraints above.\\
+        \textbf{Algorithm (Ford-Fulkerson).}\\
+        Start with 0-flow\\
+        while there is an augmenting path from s to t in residual network do\\
+        1. Find augmenting path\\ 
+        2. Compute bottleneck= min capacity on path\\
+        3. Increase flow on the path by the bottleneck\\
+        When finished, resulting flow is maximal\\
+        \textbf{Cut.}\\
+        A \emph{cut} is a partition $(S,T)$ of $V$ such that $s\in S$ and $t\in T$.\\
+        \emph{Capacity of a cut:} $c(S,T)=\sum_{u\in S,\,v\in T} c(u,v)$ (sum of capacities of all edges that cross from $S$ to $T$).\\
+        \textbf{Min--Cut Problem \,(What are we \emph{minimizing}?)}\\
+        Find the cut $(S,T)$ that \emph{minimizes} $c(S,T)$ --- the smallest total capacity that disconnects $s$ from $t$.\\
+        \textbf{Algorithm.}\\
+        If no augmenting path exists in residual network, then\\
+        1. Find set of nodes S reachable from s in residual network\\
+        2. Set T = V $\setminus$ S\\
+        S and T define a minimum cut\\
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.5\linewidth}
+        \textbf{Residual Network ($G_f$).}\\
+        \textit{basically, for each two edges, draw edges representing the max changes in each direction.}\\
+        The network of residual capacities $c_f(u,v) = c(u,v) - f(u,v)$, indicating how much more flow can be pushed. Edges are created for any pair of vertices $(u,v)$ where $c_f(u,v) > 0$. This includes reverse edges for backward flow.\\
+        \textbf{Augmenting Path.}\\
+        A simple path from $s$ to $t$ in the residual network $G_f$. The path's capacity is the minimum residual capacity of its edges.\\
+        \textbf{Ford-Fulkerson Algorithm.}\\
+        \textit{Goal:} To find the maximum flow in a network. It does this by repeatedly finding an augmenting path in the residual network and increasing the flow along that path until no more augmenting paths exist.\\
+        \texttt{Ford-Fulkerson-Method(G,s,t):}\\
+        1. Initialize flow $f$ to 0 for all edges\\
+        2. \textbf{while} there exists an augmenting path $p$ from $s$ to $t$ in the residual network $G_f$\\
+        3. \hspace{0.5cm} Augment flow $f$ along path $p$\\
+        4. \textbf{return} $f$\\
+        \textbf{Max-flow min-cut theorem.}\\
+        Let G = (V , E) be a flow network with source s and sink t and capacities c and a flow f .\\
+        The following are equivalent:\\
+        1. f is a maximum flow\\
+        2. Gf has no augmenting path\\
+        3. $|f | = c(S,T)$ for a minimum cut (S,T) (max flow = min cut)
+    \end{minipage}
+    
+\end{minipage}%
+}

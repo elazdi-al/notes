@@ -1,0 +1,15 @@
+\begin{algorithmic}
+    \Function{BFS}{(V, E, s)}
+      \ForAll{$u \in V \setminus \{s\}$}
+        \State $u.d \gets \infty$
+      \EndFor
+      \State $s.d \gets 0, Q \gets \emptyset$
+      \State \Call{Enqueue}{$Q,s$}
+      \While{$Q \neq \emptyset$}
+        \State $u \gets$ \Call{Dequeue}{$Q$}
+        \ForAll{$v \in G.\text{Adj}[u]$}
+          \If{$v.d = \infty$} then \State $v.d \gets u.d + 1$ and \Call{Enqueue}{$Q,v$} \EndIf  
+        \EndFor
+      \EndWhile
+      \EndFunction
+\end{algorithmic}

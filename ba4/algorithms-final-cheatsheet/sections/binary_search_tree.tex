@@ -1,0 +1,124 @@
+\fbox{\begin{minipage}[t]{1\linewidth}
+    \textbf{Binary Search Trees (BST)} \\   
+    \begin{minipage}[t]{0.49\linewidth}
+        \textbf{BST-Search}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Start at root\\
+            2. If NULL, return NULL\\
+            3. If key = root's key, return root\\
+            4. If key $<$ root's key, search left\\
+            5. If key $>$ root's key, search right
+        \end{minipage}\\[-10px]
+       \algocode{bst-search}\vspace*{-25px}
+        \textit{Time:} \(O(\log n)\) avg, \(O(h)\) worst\\
+        \textit{Space:} \(O(n)\) for tree, \(O(h)\) auxiliary\\
+        \textbf{BST-Minimum}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Start at root\\
+            2. If NULL, return NULL\\
+            3. Follow left pointers until no left child\\
+            4. Return leftmost node
+        \end{minipage}\\[-10px]
+        \algocode{bst-minimum}\vspace*{-25px}
+        \textit{Time:} \(O(h)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(1)\) auxiliary\\
+        \textbf{BST-Maximum}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Start at root\\
+            2. If NULL, return NULL\\
+            3. Follow right pointers until no right child\\
+            4. Return rightmost node
+        \end{minipage}\\[-10px]
+        \algocode{bst-maximum}\vspace*{-25px}
+        \textit{Time:} \(O(h)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(1)\) auxiliary\\
+        \textbf{BST-Successor}\\
+        \begin{minipage}[t]{\linewidth}
+            1. If right subtree exists:\\
+            \quad Return minimum in right subtree\\
+            2. Otherwise:\\
+            \quad Find first ancestor where\\
+            \quad node is in left subtree
+        \end{minipage}\\[-10px]
+        \algocode{bst-successor}\vspace*{-25px}
+        \textit{Time:} \(O(h)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(1)\) auxiliary\\
+        \textbf{BST-Insert}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Create new node z with key\\
+            2. Start at root, track parent y = NIL\\
+            3. Move down tree (left if key < node key, right otherwise)\\
+            4. Once NULL found, link z as child of y\\
+            5. If y is NIL, z becomes root\\
+            6. Otherwise, insert z as left or right child based on key comparison
+        \end{minipage}\\[-10px]
+        \algocode{bst-insert}\vspace*{-25px}
+        \textit{Time:} \(O(h)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(1)\) auxiliary
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.5\linewidth}
+        \textbf{BST-Postorder}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Recursively traverse left\\
+            2. Recursively traverse right\\
+            3. Visit current node\\
+            \textit{(Children first, then root)}
+        \end{minipage}\\[-10px]
+        \algocode{bst-postorder}\vspace*{-25px}
+        \textit{Time:} \(O(n)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(h)\) auxiliary\\
+        \textbf{BST-Inorder}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Recursively traverse left\\
+            2. Visit current node\\
+            3. Recursively traverse right\\
+            \textit{(Visits nodes in sorted order)}
+        \end{minipage}\\[-10px]
+        \algocode{bst-inorder}\vspace*{-25px}
+        \textit{Time:} \(O(n)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(h)\) auxiliary\\
+        \textbf{BST-Preorder}\\
+        \begin{minipage}[t]{\linewidth}
+            1. Visit current node\\
+            2. Recursively traverse left\\
+            3. Recursively traverse right\\
+            \textit{(Root first, then children)}
+        \end{minipage}\\[-10px]
+        \algocode{bst-preorder}\vspace*{-25px}
+        \textit{Time:} \(O(n)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(h)\) auxiliary\\
+        \textbf{BST-Transplant}\\
+        \begin{minipage}[t]{\linewidth}
+            Replace subtree at u with v:\\
+            1. If u is root, set v as root\\
+            2. If u is left child, make v left child of u's parent\\
+            3. Else make v right child of u's parent\\
+            4. Set v's parent to u's parent
+        \end{minipage}\\[-10px]
+        \algocode{bst-transplant}\vspace*{-25px}
+        \textit{Time:} \(O(1)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(1)\) auxiliary\\
+        \textbf{BST-Delete}\\
+        \begin{minipage}[t]{\linewidth}
+            1. If z has no left: transplant right\\
+            2. If z has no right: transplant left\\
+            3. With both children:\\
+            \quad a. Find successor y\\
+            \quad b. Handle y's children\\
+            \quad c. Replace z with y
+        \end{minipage}\\[-10px]
+        \algocode{bst-delete}\vspace*{-25px}
+        \textit{Time:} \(O(h)\)\\
+        \textit{Space:} \(O(n)\) for tree, \(O(1)\) auxiliary
+    \end{minipage}
+    \vspace{2pt}
+        \hrule
+        \vspace{2pt}
+        \textbf{Properties:}\\
+ - Left subtree: all keys $<$ node's key\\
+ - Right subtree: all keys $>$ node's key\\
+ - Left and right subtrees are also BSTs\\
+ - A \textbf{Node} has: \textbf{key} (value), \textbf{left} \& \textbf{right} (child pointers), \textbf{parent} (optional)\\
+ - Tree height \textbf{h}: length of longest path from root to leaf\\
+ \end{minipage}} 

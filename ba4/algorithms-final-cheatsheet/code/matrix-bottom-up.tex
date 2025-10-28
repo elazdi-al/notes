@@ -1,0 +1,23 @@
+\begin{algorithmic}
+\Function{Matrix-Chain-Order}{$p$}
+\State $n \gets p.\text{length} - 1$
+\State let $m[1..n,1..n]$ and $s[1..n,1..n]$ be new tables
+\For{$i = 1$ to $n$}
+  \State $m[i,i] \gets 0$
+\EndFor
+\For{$\ell = 2$ to $n$} \Comment{$\ell$ is the chain length}
+  \For{$i = 1$ to $n - \ell + 1$}
+    \State $j \gets i + \ell - 1$
+    \State $m[i,j] \gets \infty$
+    \For{$k = i$ to $j - 1$}
+      \State $q \gets m[i,k] + m[k+1,j] + p_{i-1}p_kp_j$
+      \If{$q < m[i,j]$}
+        \State $m[i,j] \gets q$
+        \State $s[i,j] \gets k$
+      \EndIf
+    \EndFor
+  \EndFor
+\EndFor
+\State \Return $m, s$
+\EndFunction
+\end{algorithmic}

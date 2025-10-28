@@ -1,0 +1,23 @@
+\fbox{%
+\begin{minipage}[t]{1.02\linewidth}
+\textbf{Insertion Sort.}\\[-10px]
+\begin{minipage}[htp]{0.48\linewidth}
+1 - \textbf{Select the key}\\ 
+Begin with the second element (at index 1) as the \textit{key}.\\[1pt]
+2 - \textbf{Compare and Shift}\\ 
+Compare the key with elements in the sorted section (to its left).\\[1pt]
+3 - \textbf{Shift Elements}\\ 
+If an element is greater than the key, shift that element one position to the right.
+\end{minipage}%
+\hfill
+\begin{minipage}[htp]{0.52\linewidth}
+\algocode{insertion-sort}
+\end{minipage}\\[-10px]
+4 - \textbf{Insert the Key}\\
+Once an element less than or equal to the key is found (or you reach the start), insert the key immediately after that element.\\
+5 - \textbf{Repeat}\\ 
+Move forward to the next element, treating it as the new key, and repeat until the array is sorted.\\
+\textit{Time Complexity:} Worst-case $O(n^2)$, Best-case $O(n)$.\\
+\textit{Space Complexity:} $O(1)$.
+\end{minipage}%
+}

@@ -1,0 +1,12 @@
+\begin{algorithmic}
+\Function{Heap-Extract-Max}{A,n}
+    \If{$n < 1$}
+        \State \textbf{error} ``heap underflow''
+    \EndIf
+    \State $max \gets A[1]$
+    \State $A[1] \gets A[n]$
+    \State $n \gets n - 1$
+    \State \Call{Max-Heapify}{A,1,n}
+    \State \Return $max$
+\EndFunction
+\end{algorithmic}

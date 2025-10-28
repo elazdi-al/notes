@@ -1,0 +1,22 @@
+\fbox{
+    \begin{minipage}[t]{0.25\textwidth}
+        \scriptsize
+        \textbf{Stack Operations}\\
+        \textbf{Stack-Empty(S):} \textit{Time: O(1), Auxiliary Space: O(1)}\\[2px]
+        1. Returns TRUE if the stack is empty.\\
+        2. Returns FALSE otherwise.\\[2pt]
+        \textbf{Push(S, x):} \textit{Time: O(1), Auxiliary Space: O(1)}\\
+        1. Adds element x to the top of stack S.\\
+        2. Increments the stack pointer.\\[2pt]
+        \textbf{Pop(S):} \textit{Time: O(1), Auxiliary Space: O(1)}\\
+        1. If Stack-Empty(S), return error "underflow".\\
+        2. Otherwise, remove and return the top element.\\
+        3. Decrements the stack pointer.\\[2pt]
+        \textbf{Stack Implementation:}\\
+        1. Elements are stored in a simple array\\
+        2. S.top: Index of the topmost element\\
+        3. An empty stack has S.top = 0 or S.top = -1 (implementation dependent)\\
+        
+        \textit{Overall Space Complexity:} \(O(n)\) for a stack of size n
+    \end{minipage}
+} 

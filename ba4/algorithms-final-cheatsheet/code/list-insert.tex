@@ -1,0 +1,10 @@
+\begin{algorithmic}
+\Function{List-Insert}{L, x}
+    \State $x.\mathrm{next} \gets L.\mathrm{head}$
+    \If{$L.\mathrm{head} \neq \mathrm{nil}$}
+        \State $L.\mathrm{head}.\mathrm{prev} \gets x$
+    \EndIf
+    \State $L.\mathrm{head} \gets x$
+    \State $x.\mathrm{prev} \gets \mathrm{NIL}$
+\EndFunction
+\end{algorithmic}

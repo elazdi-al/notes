@@ -1,0 +1,239 @@
+\hspace{-20px}
+%%%%%%%%%%%%%%%%%%%%%%%% FS API %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{minipage}[htp]{0.5\textwidth}
+    \noindent\textbf{File System API.} Kernel provides access to files and directories through system calls. Files are represented using \textbf{File Descriptors (FDs)} — integers indexing into a \textbf{per-process FD table}.
+
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{File Descriptor:} Non-negative int returned by \texttt{open()}. Index into the process’s FD table.
+        \item[-] \textbf{Open File Description (OFD):} Kernel object holding metadata like file offset, mode, and inode reference.
+        \item[-] \textbf{Per-Process Table:} Each process has its own FD table mapping integers to OFDs.
+        \item[-] \textbf{Reserved FDs:} 0 = \texttt{stdin}, 1 = \texttt{stdout}, 2 = \texttt{stderr}.
+        \item[-] \textbf{FD Allocation:} \texttt{open()} returns the lowest unused FD.
+    \end{itemize}
+
+    \vspace{15px}
+    \noindent\textbf{Common FS System Calls.} Core interface for file I/O and positioning.
+    \begin{itemize}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item[-] \texttt{open(path, flags, mode):} Open file, return FD. \\Flags: \texttt{O\_RDONLY} (read-only access), \texttt{O\_WRONLY} (write-only access), \texttt{O\_RDWR} (read-write access), \texttt{O\_CREAT} (create if doesn't exist), \texttt{O\_TRUNC} (truncate to zero length).
+        \item[-] \texttt{read(fd, buf, count):} Read up to \texttt{count} bytes from FD into buffer.
+        \item[-] \texttt{write(fd, buf, count):} Write up to \texttt{count} bytes from buffer to FD.
+        \item[-] \texttt{lseek(fd, offset, whence):} Move file offset. \texttt{SEEK\_SET} = from start, \texttt{SEEK\_CUR} = from current, \texttt{SEEK\_END} = from end.
+        \item[-] \texttt{unlink(path):} Remove (delete) a file. File is deleted once no processes have it open.
+        \item[-] \texttt{fsync(fd):} Flush all modified file data and metadata to disk.
+        \item[-] \texttt{fstat(fd, \&statbuf):} Get metadata about file referred to by FD (size, mode, timestamps, etc.).
+        \item[-] \texttt{close(fd):} Close the file descriptor. \\Trying to close an already closed FD results in an error.
+    \end{itemize}
+       
+    \vspace{15px}
+    \begin{minipage}[t]{0.49\textwidth}
+        \noindent\textbf{File Internals.} A file consists of two main components: \textbf{data} and \textbf{metadata}.
+        \begin{itemize}[noitemsep,nolistsep,topsep=-8px,partopsep=0pt,parsep=0pt]
+            \item[-] \textbf{Data:} Actual user content, stored in data blocks.
+            \item[-] \textbf{Metadata:} Stored in the inode:
+            \begin{itemize}[noitemsep,nolistsep]
+                \item[-] Owner, permissions, timestamps
+                \item[-] File size, type, and block pointers
+                \item[-] Device ID and inode number
+            \end{itemize}
+            \item[-] \textbf{Inode:} Kernel-managed structure that holds file metadata and pointers to data blocks.
+            \item[-] \textbf{Filename:} Not stored in the inode. Stored in directory entries.
+            \item[-] \textbf{Uniqueness:} File is uniquely identified by (device, inode).
+            \item[-] \textbf{Allocation:} Inodes are created and managed by the file system.
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.49\textwidth}
+        \noindent\textbf{Directory Internals.} A directory is a \textbf{special file} used to organize and reference files.
+            - \textbf{Structure:} Stored like a regular file, but marked with a directory flag in its inode. \\
+            - \textbf{Content:} Contains a list of entries:\\ 
+            - Each entry is a \texttt{filename $\rightarrow$ inode number} mapping\\
+            - \textbf{Function:} Maps human-readable names to inodes.\\
+            - \textbf{Permissions:} Govern ability to read entries, traverse, or modify structure.\\
+            - \textbf{Traversal:} Used in path resolution to step through the hierarchy.\\
+            - \textbf{Isolation:} \textbf{Normal processes cannot write directly to directories as a file (writing arbitrary bytes is not allowed).}
+    \end{minipage}\\
+    \begin{minipage}[t]{0.49\textwidth}
+    \noindent\textbf{Path Resolution, Step-by-Step.} \\
+    Converting a pathname to a target inode involves directory traversal.
+    \begin{enumerate}[noitemsep,nolistsep,topsep=-10px,partopsep=0pt,parsep=0pt]
+        \item Begin at root (\texttt{/}) or current working directory.
+        \item Parse each path component left to right.
+        \item For each component, look up entry in current directory: \texttt{filename → inode number}.
+        \item Follow inode to next directory or target file.
+        \item Final inode is cached in the file descriptor table for future access.
+    \end{enumerate}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+    \hrule
+    \vspace{5px}
+    \noindent\textbf{Mount Point.} \\
+Directory where a filesystem is attached to the global namespace. Root filesystem is mounted at \texttt{/}.\\
+\textbf{mount command.} \\
+Attach filesystem to directory (mount point).\\
+\texttt{mount [device] [dir]} \\ mount device at dir.\\
+\textbf{df command.} \\
+Display filesystem disk usage.\\
+\texttt{df --} report filesystem disk usage.\\
+\end{minipage}\\[2px]
+\noindent\textbf{Partition.} \\
+Linear view of persistent storage: sequence of \texttt{N} blocks, indexed \texttt{0 to N-1}. \\
+\begin{minipage}[t]{0.4\textwidth}
+    \noindent\textbf{Inode.} \\
+    Filesystem structure representing a file. Each inode stores:
+    \begin{itemize}[noitemsep,topsep=0pt]
+        \item File type and permissions
+        \item Owner UID / GID
+        \item File size
+        \item Timestamps (created, modified, accessed)
+        \item Pointers to data blocks
+        \item Link count (number of directory references)
+    \end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.55\textwidth}
+\noindent\textbf{Block Usage.}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item[-] \textbf{Data blocks} — store file contents.
+    \item[-] \textbf{Metadata blocks} — store filesystem structures.
+    \item[-] \textbf{Boot block} — code for booting (block 0).
+    \item[-] \textbf{Superblock} — global File System metadata:
+        \begin{itemize}[noitemsep,topsep=0pt]
+            \item number of inodes, number of data blocks
+            \item Inode table location
+            \item Free inode/data block management
+        \end{itemize}
+\end{itemize}
+\end{minipage}\\[2px]
+\begin{minipage}[htp]{1\textwidth}
+\noindent\textbf{Block Types.}\\
+\hspace*{-35px}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item[] (I) \textbf{Inode Block} — contains array of inodes (e.g., 16 inodes/block at 256B each).
+    \item[] (D) \textbf{Data Block} — holds actual file content (user data).
+    \item[] (i)/(d) \textbf{Bitmap Blocks} — tracks used/free inodes and data blocks (free list).
+\end{itemize}
+\end{minipage}%
+\hspace*{-10px}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item[(S)] \textbf{Superblock} — global FS metadata:
+        \begin{itemize}[noitemsep,topsep=0pt]
+            \item Total inodes and data blocks
+            \item Inode table start block
+            \item Bitmap locations
+            \item FS state (clean, dirty)
+        \end{itemize}
+    \item[(B)] \textbf{Boot Block} — bootloader code; block 0 of partition.
+\end{itemize}
+\end{minipage}
+\includegraphics[width=1\textwidth]{images/blocks.png}
+\end{minipage}
+\end{minipage}
+\small
+\begin{minipage}[htp]{0.5\textwidth}
+\vspace{-40px}
+    \begin{minipage}[htp]{0.45\textwidth}
+    \textbf{Links.} Multiple names can refer to files using links.\\
+- \textbf{Hard Link:} Maps a file name directly to the \textbf{same inode} as the original file, deleting one's file name does not remove the actual data as long as another link still exists.
+    \end{minipage}
+    \hfill
+    \begin{minipage}[htp]{0.55\textwidth}
+        \includegraphics[width=0.93\textwidth]{images/soft-hard.png}
+    \end{minipage}\\
+- \textbf{Symbolic Link:} Logically maps a file's path to a target file by creating an actual link to the original file with a \textbf{new inode number}, and becomes broken or invalid if the target file is removed or deleted.\\
+\noindent\textbf{File Allocation.} \\
+Strategy to map file data to disk blocks. Managed via pointers in inodes or allocation tables.\\[2px]
+\begin{minipage}[htp]{0.49\textwidth}
+\noindent\textbf{File Allocation Table.}\\
+\textbf{Layout:} A table holds block chains for files\\
+\textbf{How it works:}
+\begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item Inode contains pointer to first metadata block.
+    \item Each Metadata block contains pointer to next metadata block.
+    \item Read the corresponding data block in FAT table and repeat until end-of-file marker is reached.
+\end{enumerate}
+
+\textbf{Pros:} No ext. fragmentation, avoids mixing data and metadata, only requires locating the first block.\\
+\textbf{Cons:} Poor random access, limited metadata, FAT must remain in memory.
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.49\textwidth}
+\noindent\textbf{Contiguous Allocation.}\\
+\textbf{Pros:} fast access, simple offset computation\\
+\textbf{Cons:} fragmentation, difficult resizing\\
+\textbf{Layout:} A file is a sequence of consecutive blocks\\[5px]
+\noindent\textbf{Linked Allocation.}\\
+\textbf{Pros:} No fragmentation, simple - find the first block of a file. \\\textbf{Cons:} slow random access, pointer overhead, mix data/metadata in the same block \\
+\textbf{Layout:} Inode contains pointer to first block, each block contains pointer to next
+\end{minipage}\\[2px]
+\textbf{Multi-Level Indexing.} \\
+Each inode holds pointers to data blocks directly or indirectly.\\
+\noindent\textbf{Pros:} No ext. fragmentation, no conflating between data/metadata, Scales to large files, efficient for small files (via direct blocks), flexible block usage\\
+\noindent\textbf{Cons:} Indirection overhead for large files, slower access for deep pointer chains.
+\noindent\textbf{Inode Block Structure.} \\
+Inode forms a fixed, asymmetric tree. Leaf nodes = fixed-size data blocks.
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item \textbf{Pointers 0–11:} direct — point to data blocks
+    \item \textbf{Pointer 12:} single indirect — points to block of data block pointers
+    \item \textbf{Pointer 13:} double indirect — points to block of single indirect blocks
+    \item \textbf{Pointer 14:} triple indirect — points to block of double indirect blocks
+\end{itemize}
+\vspace*{-10px}
+\begin{center}
+    \includegraphics[width=0.95\textwidth]{images/multi-level-indexing.png}
+\end{center}
+\vspace*{-10px}
+\begin{minipage}[htp]{0.4\textwidth}
+    \small
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item[] \textbf{Direct Pointers:} \\ 
+$
+    \texttt{number\_of\_direct\_pointers}
+$
+    
+    \item[] \textbf{Single Indirect Pointer:} \\ 
+$
+    N = \frac{\texttt{block\_size} - r}{\texttt{pointer\_size}}
+$
+    
+    \item[] \textbf{Double Indirect Pointer:} \\ 
+$
+    N^2 = \left(\frac{\texttt{block\_size} - r}{\texttt{pointer\_size}}\right)^2
+$
+\item[] \textbf{Triple Indirect Pointer:}  \\
+$
+    N^3 = \left(\frac{\texttt{block\_size} - r}{\texttt{pointer\_size}}\right)^3
+$
+\end{itemize}
+\end{minipage}
+\hspace*{-20px}
+\begin{minipage}[htp]{0.68\textwidth}
+    \small
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+
+    
+    \item[] \textbf{Total Addressable Blocks:} \\ 
+    \small
+    $
+    \texttt{number\_of\_direct\_pointers} + \sum_{i=1}^{3} \left(\frac{\texttt{block\_size} - r}{\texttt{pointer\_size}}\right)^i
+$
+
+    
+    \item[] \textbf{Maximum File Size (bytes):} \\ 
+$
+    \texttt{total\_addressable\_blocks} \times \texttt{block\_size}
+$
+    \item[-] The count \(N\) represents the number of data blocks that can be reached through that single pointer.
+    \item[-] If no metadata is reserved in the indirect blocks, then set \(r = 0\).
+\end{itemize}
+\end{minipage}
+\begin{minipage}[htp]{1\textwidth}
+    \noindent\textbf{Reading.}\\
+    \includegraphics[width=1\textwidth]{images/read.png}
+\end{minipage}\\
+\begin{minipage}[htp]{1\textwidth}
+    \noindent\textbf{Writing.}\\
+    \includegraphics[width=1\textwidth]{images/write.png}
+\end{minipage}
+\end{minipage}

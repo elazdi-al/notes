@@ -1,0 +1,9 @@
+\begin{algorithmic}
+\Function{Preorder-Tree-Walk}{$x$}
+  \If{$x \neq \mathrm{NIL}$}
+    \State \textbf{print} $key[x]$
+    \State \Call{Preorder-Tree-Walk}{$x.\mathit{left}$}
+    \State \Call{Preorder-Tree-Walk}{$x.\mathit{right}$}
+  \EndIf
+\EndFunction
+\end{algorithmic}

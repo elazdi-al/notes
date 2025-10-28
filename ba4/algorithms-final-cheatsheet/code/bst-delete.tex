@@ -1,0 +1,19 @@
+\begin{algorithmic}
+\Function{TREE-DELETE}{T, z}
+    \If{z.left == NIL}
+        \State \Call{TRANSPLANT}{T, z, z.right} \Comment{z has no left child}
+    \ElsIf{z.right == NIL}
+        \State \Call{TRANSPLANT}{T, z, z.left} \Comment{z has just a left child}
+    \Else \Comment{z has two children}
+        \State y $\gets$ \Call{TREE-MINIMUM}{z.right} \Comment{y is z's successor}
+        \If{y.p $\neq$ z}
+            \State \Call{TRANSPLANT}{T, y, y.right}
+            \State y.right $\gets$ z.right
+            \State y.right.p $\gets$ y
+        \EndIf
+        \State \Call{TRANSPLANT}{T, z, y}
+        \State y.left $\gets$ z.left
+        \State y.left.p $\gets$ y
+    \EndIf
+\EndFunction
+\end{algorithmic}

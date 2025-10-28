@@ -1,0 +1,26 @@
+\fbox{
+    \begin{minipage}[t]{0.31\textwidth}
+        \scriptsize
+        \textbf{Queue Operations}\\        
+        \textbf{Queue-Empty(Q):} \textit{Time: O(1), Auxiliary Space: O(1)}\\[2px]
+        1. Returns TRUE if the queue is empty (Q.head = Q.tail).\\
+        2. Returns FALSE otherwise.\\[2pt]
+        \textbf{Enqueue(Q, x):} \textit{Time: O(1), Auxiliary Space: O(1)}\\
+        1. Adds element x to the rear of queue Q.\\
+        2. Q[Q.tail] = x\\
+        3. Q.tail = Q.tail + 1 (or wrap around if using circular array)\\[2pt]
+        \textbf{Dequeue(Q):} \textit{Time: O(1), Auxiliary Space: O(1)}\\
+        1. If Queue-Empty(Q), return error "underflow".\\
+        2. Otherwise, remove and return the element at the front.\\
+        3. x = Q[Q.head]\\
+        4. Q.head = Q.head + 1 (or wrap around)\\
+        5. Return x\\[2pt]
+        \textbf{Queue Implementation:}\\
+        1. Q.head: Index of the front element\\
+        2. Q.tail: Index where next element will be inserted\\
+        3. In a circular array, indices wrap around\\
+        4. Leave one slot empty to distinguish full/empty states
+
+        \textit{Overall Space Complexity:} \(O(n)\) for a queue of capacity n
+    \end{minipage}
+} 

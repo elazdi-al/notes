@@ -1,0 +1,12 @@
+\begin{algorithmic}
+\Function{LINK}{$x, y$}
+    \If{$x.rank > y.rank$}
+        \State $y.p \gets x$
+    \Else
+        \State $x.p \gets y$
+        \If{$x.rank = y.rank$}
+            \State $y.rank \gets y.rank + 1$
+        \EndIf
+    \EndIf
+\EndFunction
+\end{algorithmic} 

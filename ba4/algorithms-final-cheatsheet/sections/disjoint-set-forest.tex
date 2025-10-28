@@ -1,0 +1,20 @@
+\noindent\fbox{
+  \begin{minipage}[t]{0.96\linewidth}
+    \textbf{Disjoint-Set Forest (Union--Find)}\\
+      \begin{minipage}[t]{0.54\textwidth}
+        A disjoint-set forest represents each set as a rooted tree.  Each node stores a \texttt{parent} pointer; the root of the tree is the \emph{representative}.\\[2px]
+     - \textbf{Make-Set(x)}: create a singleton node.\\[3px]
+     - \textbf{Find-Set(x)}: follow parent pointers to the root.  \emph{Path compression}: after the search, point every node on the path directly to the root.\\[3px]
+     - \textbf{Union(x,y)}: make one root a child of another.  \emph{Union-by-rank}: always hang the shallower tree under the deeper one (break ties by increasing the new root's rank).\\[3px]
+        \textit{Complexity with both heuristics:} a sequence of $m$ operations on $n$ elements runs in $O\!\big(m\,\alpha(n)\big)$ time.  For all practical sizes $\alpha(n) \le 5$.\\
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.45\textwidth}
+        \vspace*{-17px}
+        \algocode{make-set}\vspace*{-30px}
+        \algocode{find-set}\vspace*{-30px}
+        \algocode{union-op}\vspace*{-30px}
+        \algocode{link}\vspace*{-22px}
+      \end{minipage}
+  \end{minipage}
+}

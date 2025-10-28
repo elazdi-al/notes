@@ -1,0 +1,69 @@
+\fbox{
+\algoblock{1}{\scriptsize Dynamic Programming}{
+\scriptsize
+\begin{minipage}[t]{\textwidth}
+\textbf{Problem:} Optimal solutions to overlapping subproblems
+
+\begin{minipage}[t]{0.32\textwidth}
+\scriptsize
+\textbf{Fibonacci Sequence:}\\
+\textbf{Top-Down (Memoization):}\\
+1. Create memo array $F[0...n]$ initialized to NIL\\
+2. Base cases: $F[0] = 0$, $F[1] = 1$\\
+3. Recursive with memo:\\
+- Return $F[n]$ if already computed\\
+- Otherwise compute $F[n] = F[n-1] + F[n-2]$\\
+- Store result in $F[n]$ and return\\[2pt]
+\imageblock{1}{images/fib-memoized.png}\\
+
+\textbf{Bottom-Up (Tabulation):}\\
+1. Create array $F[0...n]$\\
+2. Base cases: $F[0] = 0$, $F[1] = 1$\\
+3. For $i = 2$ to $n$:\\
+- Compute $F[i] = F[i-1] + F[i-2]$\\
+4. Return $F[n]$\\[2pt]
+\imageblock{0.45}{images/fib-bottom-up.png}\\
+\textbf{Complexity:} Time: $O(n)$, Space: $O(n)$ (includes input and memo array)
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\scriptsize
+\textbf{Cut-Rod Problem:}\\
+Find optimal way to cut rod to maximize revenue\\
+\textbf{Top-Down (Memoization):}\\
+1. Create memo array $r[0...n]$ with $r[0] = 0$\\
+2. For uncalculated $r[j]$, compute:\\
+$r[j] = \max_{1\leq i\leq j}(p[i] + r[j-i])$\\
+3. Return $r[n]$\\[2pt]
+\imageblock{1}{images/rod-memoized.png}\\
+
+\textbf{Bottom-Up (Tabulation):}\\
+1. Create array $r[0...n]$ with $r[0] = 0$\\
+2. For $j = 1$ to $n$:\\
+- Compute $r[j] = \max_{1\leq i\leq j}(p[i] + r[j-i])$\\
+3. Return $r[n]$\\[2pt]
+\imageblock{0.5}{images/rod-bottom-up.png}\\
+\textbf{Complexity:} Time: $O(n^2)$, Space: $O(n)$ (includes input prices and array)
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\scriptsize
+\textbf{Matrix Chain Multiplication:}\\
+Find optimal parenthesization to minimize multiplications\\
+\textbf{Bottom-Up (Tabulation):}\\
+1. Create table $m[1...n, 1...n]$ with $m[i,i] = 0$\\
+   - $m[i,j]$ stores minimal cost of multiplying matrices $i$ through $j$\\
+2. For $l = 2$ to $n$ (chain length):\\
+3. For $i = 1$ to $n-l+1$:\\
+- Set $j = i+l-1$\\
+- Compute $m[i,j] = \min_{i\leq k<j} \{m[i,k] + m[k+1,j] + p_{i-1}p_kp_j\}$\\
+- Store $k$ in $s[i,j]$ that achieved minimum cost\\
+4. Return $m[1,n]$\\[2pt]
+\imageblock{0.8}{images/matrix-bottom-up.png}\\
+\textbf{Complexity:}\\
+- Time: $O(n^3)$\\
+- Space: $O(n^2)$ (includes matrix dimensions and tables)\\
+- Table $s[i,j]$ stores index of last matrix in \\first parenthesized group
+\end{minipage}
+\end{minipage}
+}} 

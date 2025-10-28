@@ -1,0 +1,27 @@
+\begin{algorithmic}
+\Function{MEMOIZED-CUT-ROD-AUX}{p, n, r}
+\If{r[n] $\ge$ 0}
+  \State \Return r[n]
+\EndIf
+\If{n == 0}
+  \State q = 0
+\Else
+  \State q = $-\infty$
+  \For{$i = 1$ to $n$}
+    \State q = $\max\bigl(q,\;p[i] + \Call{MEMOIZED-CUT-ROD-AUX}{p,\,n - i,\,r}\bigr)$
+  \EndFor
+\EndIf
+\State r[n] = q
+\State \Return q
+\EndFunction
+\end{algorithmic}
+
+\begin{algorithmic}
+\Function{MEMOIZED-CUT-ROD}{p, n}
+\State let r[0\dots n] be a new array
+\For{$i = 0$ to $n$}
+  \State r[i] = $-\infty$
+\EndFor
+\State \Return \Call{MEMOIZED-CUT-ROD-AUX}{p, n, r}
+\EndFunction
+\end{algorithmic}

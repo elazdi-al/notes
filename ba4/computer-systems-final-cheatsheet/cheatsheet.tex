@@ -1,0 +1,100 @@
+\documentclass[8pt]{extarticle}
+\usepackage[top=0in, bottom=0in, left=0.1in, right=0.1in]{geometry} % Adjust margins individually
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{graphicx} % Required for \includegraphics
+\usepackage{ragged2e}
+\usepackage{fancyvrb} % For better verbatim formatting
+\usepackage{xcolor} % For color support
+
+\usepackage[absolute,overlay]{textpos}
+\usepackage{array} % For better column definitions
+\usepackage{booktabs} % For improved table aesthetics
+\raggedbottom
+\setlist[itemize]{leftmargin=2em}
+\newcommand{\dist}[2]{\left\langle #1,\, #2 \right\rangle}
+\setlength{\TPHorizModule}{0.1mm} % Set horizontal units to millimeters
+\setlength{\TPVertModule}{0.1mm}  % Set vertical units to millimeters
+\usepackage{multicol}
+\setlength{\leftmargini}{1.1em} % Adjust the left margin (default is 1.5em)
+\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\usepackage{setspace}
+\setstretch{1}
+\pagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%% C CODE STYLING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Define custom colors for C syntax highlighting
+\definecolor{CKeyWord}{rgb}{0.8,0.1,0.1}      % For C keywords (e.g., int, return)
+\definecolor{CBackground}{rgb}{0.95,0.95,0.95} % Background color for code blocks
+\definecolor{CComment}{rgb}{0.0,0.5,0.0}        % Comment color
+\definecolor{CString}{rgb}{0.1,0.1,0.8}         % String literal color
+\definecolor{CRule}{rgb}{0.5,0.5,0.5}           % Frame rule color
+\definecolor{CNumber}{rgb}{0.6,0.6,0.6}         % Line number color
+
+% Define a custom listing style for C code
+\lstdefinestyle{CStyle}{
+  language=C,
+  basicstyle=\footnotesize\ttfamily,
+  backgroundcolor=\color{CBackground},
+  commentstyle=\color{CComment}\itshape,
+  keywordstyle=\color{CKeyWord}\bfseries,
+  stringstyle=\color{CString},
+  numbers=none,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{CRule},
+  tabsize=2,
+  captionpos=b,
+  columns=fullflexible,
+  keepspaces=true,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  framexleftmargin=0pt,
+  framexrightmargin=0pt,
+  framextopmargin=0pt,
+  framexbottommargin=0pt,
+}
+
+% Define a new environment for C code blocks using the custom style.
+% Optional arguments can be passed to adjust settings further.
+\lstnewenvironment{cc}[1][]{
+  \lstset{style=CStyle, #1}
+}{}
+
+% Redefine the textblock environment
+\let\originaltextblock\textblock
+\let\endoriginaltextblock\endtextblock
+
+\renewenvironment{textblock}[2][]{%
+    \originaltextblock[#1]{#2}%
+    \fcolorbox{red}{white}{%
+    \begin{minipage}{#2}%
+}{%
+    \end{minipage}%
+    }%
+    \endoriginaltextblock
+}
+
+\setlist[itemize]{leftmargin=1.2em}
+\begin{document}
+\input{title-page.tex}
+\input{page-1.tex}
+\input{page-2.tex}
+\newpage
+\input{page-3.tex}
+\newpage
+\input{page-4.tex}
+\newpage
+\input{page-5.tex}
+    \newpage
+    \input{page-6.tex}
+    \newpage
+    \input{page-7.tex}
+    \newpage
+    \input{page-8.tex}
+\end{document}

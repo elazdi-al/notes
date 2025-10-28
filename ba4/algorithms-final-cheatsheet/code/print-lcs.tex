@@ -1,0 +1,15 @@
+\begin{algorithmic}
+\Function{PRINT-LCS}{$b,X,i,j$}
+  \If{$i=0 \lor j=0$}
+    \Return
+  \EndIf
+  \If{$b[i,j]==\nwarrow$}
+    \State \Call{PRINT-LCS}{$b,X,i-1,j-1$}
+    \State \textbf{print} $x_i$
+  \ElsIf{$b[i,j]==\uparrow$}
+    \State \Call{PRINT-LCS}{$b,X,i-1,j$}
+  \Else
+    \State \Call{PRINT-LCS}{$b,X,i,j-1$}
+  \EndIf
+\EndFunction
+\end{algorithmic}

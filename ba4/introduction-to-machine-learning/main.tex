@@ -1,0 +1,727 @@
+\documentclass[10pt]{article}
+\usepackage[top=0.2in, bottom=0.2in, left=0.2in, right=0.2in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+% Set page style
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{\thepage}
+
+% Spacing and formatting
+\setstretch{1.05}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+% Reduce spacing in lists
+\setlist{noitemsep,topsep=1pt,parsep=0pt,partopsep=0pt}
+
+% Section formatting - reduced spacing
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\section}{0pt}{8pt}{3pt}
+\titlespacing*{\subsection}{0pt}{5pt}{2pt}
+
+% Custom commands
+\newcommand{\formula}[1]{\textbf{#1}}
+\newcommand{\concept}[1]{\textbf{#1:}}
+%% -------------------- Page Headers and Footers --------------------
+\pagestyle{fancy}
+\fancyhf{} % clear all header/footer fields
+\fancyhead[RE]{\leftmark}             % Left header on even pages: chapter info
+\fancyhead[RO]{Notes by Ali EL AZDI}   % Right header on odd pages: custom text
+\fancyfoot[CE,CO]{\thepage}            % Center page number on all pages
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Title page information
+\title{\Huge IML Summary/Cheat Sheet}
+\author{}
+\date{}
+
+\begin{document}
+
+% Create custom title page
+\begin{titlepage}
+    \centering
+    \vspace*{10cm}
+    {\Huge \textbf{IML Summary/Cheat Sheet}} \\[1em]
+    {\large Unfortunately, we're only allowed to bring a hand-written cheatsheet to the exam. Therefore, \\
+    THIS CANNOT BE USED AT THE EXAM, YOU MUST HANDWRITE YOUR OWN CHEATSHEET. \\[0.5em]
+    However, this may serve as a reference/example of what to include.}
+\end{titlepage}
+
+\section{Mathematical Foundations}
+
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Parametrized Hyperplane}
+\concept{Standard Form} In $\mathbb{R}^N$, a hyperplane is defined as:
+$$\vec{w} \cdot \vec{x} = 0, \quad \text{with } \|\vec{w}\| = 1$$
+where $\vec{w} = [w_1, \ldots, w_N]$ and $\vec{x} = [x_1, \ldots, x_N]$.
+
+\concept{Extended Form} Including bias term:
+$$\vec{w} \cdot \vec{x} + b = 0$$
+Alternatively, using extended vectors $\tilde{\vec{w}} = [w_0, w_1, \ldots, w_N]$ and $\tilde{\vec{x}} = [1, x_1, \ldots, x_N]$:
+$$\tilde{\vec{w}} \cdot \tilde{\vec{x}} = 0, \quad \text{with } \tilde{\vec{x}} = [1 | \vec{x}]$$
+
+\textbf{Key Insight:} When using normalized augmented vectors, the first component is always $x_0 = 1$, which corresponds to the bias term.
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Distance Formulations}
+\concept{Signed Distance (Standard)}
+Distance from point $\vec{x}_0$ to hyperplane:
+$$d_{\text{signed}} = \frac{\vec{w} \cdot \vec{x}_0 + b}{\|\vec{w}\|}$$
+
+\concept{Interpretation}
+\begin{itemize}
+  \item[-] $h = 0$: Point on decision boundary
+  \item[-] $h > 0$: Point on one side
+  \item[-] $h < 0$: Point on the other side
+\end{itemize}
+
+\concept{Reformulated Signed Distance}
+Using normalized extended vectors:
+$$\tilde{\vec{w}}' = \frac{\tilde{\vec{w}}}{\|\vec{w}\|} = \left[\frac{w_0}{\|\vec{w}\|}, \frac{\vec{w}}{\|\vec{w}\|}\right]$$
+
+\textbf{Key Result:}
+$$d_{\text{signed}} = \frac{\tilde{\vec{w}} \cdot \tilde{\vec{x}}}{\|\vec{w}\|}, \quad \forall \tilde{\vec{w}} \in \mathbb{R}^{N+1}$$
+\end{minipage}
+\subsection{Logistic Regression}
+\begin{minipage}[htp]{0.48\textwidth}
+\concept{Overview} Parametric model for binary classification that predicts probabilities using the sigmoid function.
+
+\concept{Model} Prediction using sigmoid:
+$$y_n = \sigma(\tilde{\vec{w}} \cdot \tilde{\vec{x}}_n)$$
+$$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+
+\concept{Cross-Entropy Loss Function}
+$$E(\tilde{\vec{w}}) = -\sum_n \{t_n \ln y_n + (1-t_n) \ln(1-y_n)\}$$
+where $t_n \in \{0,1\}$ are target labels and $y_n$ are predicted probabilities.
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.48\textwidth}
+\concept{Gradient} For gradient descent:
+$$\nabla E(\tilde{\vec{w}}) = \sum_n (y_n - t_n)\tilde{\vec{x}}_n$$
+
+\concept{Weight Update}
+$$\tilde{\vec{w}} \leftarrow \tilde{\vec{w}} - \alpha \nabla E(\tilde{\vec{w}})$$
+where $\alpha$ is the learning rate.
+
+\concept{Decision Rule} Classify based on threshold:
+$$\hat{y} = \begin{cases} 1 & \text{if } y_n \geq 0.5 \\ 0 & \text{otherwise} \end{cases}$$
+\end{minipage}
+
+\section{Support Vector Machines}
+
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Hyperplane Fundamentals}
+\concept{General Hyperplane Equation} In $d$-dimensional space:
+$$w_1x_1 + w_2x_2 + \cdots + w_dx_d + b = 0$$
+or $\vec{w}^T \vec{x} + b = 0$ where $\vec{w} \in \mathbb{R}^d$ is the normal vector and $b \in \mathbb{R}$ is the bias term.
+
+\concept{Signed Distance} Distance from point $\vec{x}_0$ to hyperplane $\vec{w}^T \vec{x} + b = 0$:
+$$d_{\text{signed}}(\vec{x}_0) = \frac{\vec{w}^T \vec{x}_0 + b}{\|\vec{w}\|}$$
+\begin{itemize}
+  \item[-] Positive: Point on same side as normal vector $\vec{w}$
+  \item[-] Negative: Point on opposite side of normal vector $\vec{w}$
+  \item[-] Zero: Point lies on the hyperplane
+\end{itemize}
+
+\concept{Unsigned Distance} Absolute distance from point to hyperplane:
+$$d_{\text{unsigned}}(\vec{x}_0) = \frac{|\vec{w}^T \vec{x}_0 + b|}{\|\vec{w}\|}$$
+
+\concept{Geometric Interpretation}
+\begin{itemize}
+  \item[-] Decision boundary: $\vec{w}^T \vec{x} + b = 0$
+  \item[-] Positive margin boundary: $\vec{w}^T \vec{x} + b = +1$
+  \item[-] Negative margin boundary: $\vec{w}^T \vec{x} + b = -1$
+  \item[-] Margin width: $\frac{2}{\|\vec{w}\|}$ (distance between parallel hyperplanes)
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Linear SVM}
+\concept{Hard-Margin Objective} For linearly separable data, find hyperplane with maximum margin:
+$$\min \frac{1}{2}\|\vec{w}\|^2 \quad \text{subject to} \quad y_i(\vec{w}^T \vec{x}_i + b) \geq 1 \quad \forall i$$
+
+\concept{Soft-Margin Objective} For non-separable data, allow some misclassification with slack variables:
+$$\min \frac{1}{2}\|\vec{w}\|^2 + C\sum_{i=1}^{n}\xi_i$$
+subject to $y_i(\vec{w}^T \vec{x}_i + b) \geq 1-\xi_i, \quad \xi_i \geq 0$ where $C$ is the regularization parameter controlling the trade-off between margin maximization and classification errors.
+
+\concept{Margin ($\gamma$)} The margin is the distance between the hyperplane and the nearest data point of any class. For a normalized weight vector, it is defined as:
+$$\gamma = \frac{1}{\|\vec{w}\|}$$
+The goal is to maximize this margin, which is equivalent to minimizing $\|\vec{w}\|^2$.
+
+\concept{Support Vectors} Points that lie on the margin boundaries:
+\begin{itemize}
+  \item[-] Hard margin: Points where $y_i(\vec{w}^T \vec{x}_i + b) = 1$
+  \item[-] Soft margin: Points where $y_i(\vec{w}^T \vec{x}_i + b) = 1-\xi_i$ or $\xi_i > 0$
+\end{itemize}
+\end{minipage}
+
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Regularization Parameter C - Detailed Analysis}
+\begin{itemize}
+  \item[-] \textbf{Large $C$ (e.g., $C \gg 1$):} 
+    \begin{itemize}
+      \item Hard margin behavior, heavily penalizes misclassification
+      \item Low bias, high variance (prone to overfitting)
+      \item More support vectors, complex decision boundary
+    \end{itemize}
+  \item[-] \textbf{Small $C$ (e.g., $C \ll 1$):}
+    \begin{itemize}
+      \item Soft margin behavior, tolerates misclassification
+      \item High bias, low variance (may underfit)
+      \item Fewer support vectors, simpler decision boundary
+    \end{itemize}
+  \item[-] \textbf{Selection:} Use cross-validation with grid search over $C \in \{10^{-3}, 10^{-2}, \ldots, 10^3\}$
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{SVM Dual Formulation}
+\concept{Why Dual Form?} 
+\begin{itemize}
+  \item[-] Easier to solve constrained optimization
+  \item[-] Enables kernel trick (dot products only)
+  \item[-] Reveals which points are support vectors
+  \item[-] Handles non-separable data naturally
+\end{itemize}
+
+\concept{From Primal to Dual} Using Lagrange multipliers, the primal problem:
+$$\min \frac{1}{2}\|\vec{w}\|^2 + C\sum_{i=1}^{n}\xi_i$$
+becomes the dual problem:
+
+\concept{Dual Optimization Problem}
+$$\max \sum_{i=1}^{n} \alpha_i - \frac{1}{2} \sum_{i,j=1}^{n} \alpha_i \alpha_j y_i y_j \vec{x}_i^T \vec{x}_j$$
+subject to $0 \leq \alpha_i \leq C$ and $\sum_{i=1}^{n} \alpha_i y_i = 0$.
+
+\concept{Dual Variables Interpretation}
+\begin{itemize}
+  \item[-] $\alpha_i = 0$: Point not a support vector
+  \item[-] $0 < \alpha_i < C$: Point on margin boundary
+  \item[-] $\alpha_i = C$: Point violates margin (misclassified or inside margin)
+\end{itemize}
+
+\concept{Recovery of Primal Solution}
+$$\vec{w} = \sum_{i=1}^{n} \alpha_i y_i \vec{x}_i \quad \text{(only support vectors contribute)}$$
+\end{minipage}
+
+\subsection{Kernelized SVM}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Kernel Trick} Replace dot products $\vec{x}_i^T \vec{x}_j$ with $K(\vec{x}_i, \vec{x}_j)$:
+$$K(\vec{x}, \vec{x}') = \phi(\vec{x})^T \phi(\vec{x}')$$
+
+\concept{Kernelized Dual Problem}
+$$\max \sum_{i=1}^{n} \alpha_i - \frac{1}{2} \sum_{i,j=1}^{n} \alpha_i \alpha_j y_i y_j K(\vec{x}_i, \vec{x}_j)$$
+
+\concept{Decision Function}
+$$f(\vec{x}) = \text{sign}\left(\sum_{i \in SV} \alpha_i y_i K(\vec{x}_i, \vec{x}) + b\right)$$
+where $SV$ = support vector indices.
+
+\concept{Common Kernels}
+\begin{itemize}
+  \item[-] \formula{Linear:} $K(\vec{x}, \vec{x}') = \vec{x}^T \vec{x}'$
+  \item[-] \formula{Polynomial:} $K(\vec{x}, \vec{x}') = (\vec{x}^T \vec{x}' + c)^d$
+  \item[-] \formula{RBF:} $K(\vec{x}, \vec{x}') = \exp(-\gamma\|\vec{x} - \vec{x}'\|^2)$
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Polynomial Feature Mapping} For degree $d=2$ in 2D:
+$$\phi(\vec{x}) = [1, x_1, x_2, x_1^2, \sqrt{2}x_1x_2, x_2^2]$$
+
+\concept{Cover's Theorem} \textit{"Complex patterns are more likely to be linearly separable in high-dimensional space."}
+
+\concept{Polynomial Kernel Benefits}
+\begin{itemize}
+  \item[-] \textbf{Efficiency:} $O(n)$ vs $O(n^d)$ computation
+  \item[-] \textbf{Memory:} No explicit feature storage
+  \item[-] \textbf{Implicit mapping:} Works in feature space automatically
+\end{itemize}
+
+\concept{Dimension Growth} From $\mathbb{R}^n \to \mathbb{R}^M$ where:
+$$M = \binom{n+d}{d} = \frac{(n+d)!}{n!d!}$$
+
+\concept{Example: Circle to Line} Quadratic kernel transforms:
+$$\vec{x} = [x_1, x_2] \mapsto \phi(\vec{x}) = [x_1^2, \sqrt{2}x_1x_2, x_2^2]$$
+\textbf{Result:} Circular boundaries become linear in feature space.
+
+\concept{Kernel Selection Guidelines}
+\begin{itemize}
+  \item[-] \textbf{Linear:} High-dimensional data, text classification
+  \item[-] \textbf{Polynomial:} Image processing, specific polynomial patterns
+  \item[-] \textbf{RBF:} General purpose, smooth boundaries
+\end{itemize}
+\end{minipage}
+
+\section{AdaBoost (Adaptive Boosting)}
+
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Overview}
+\concept{Concept} Ensemble method that combines multiple weak learners (typically decision stumps) to create a strong classifier by iteratively focusing on misclassified examples.
+
+\concept{Key Idea} 
+\begin{itemize}
+  \item[-] Train weak learners sequentially
+  \item[-] Increase weights of misclassified examples
+  \item[-] Weight final votes by classifier performance
+  \item[-] Final prediction via weighted majority vote
+\end{itemize}
+
+\concept{Weak Learner} A classifier that performs slightly better than random guessing (error $<$ 0.5). Common choice: decision stumps (single-split decision trees).
+
+\concept{Algorithm} For training set $\chi = \{\vec{x}_n, t_n\}$ where $t_n \in \{-1,1\}$ for $1 \leq n \leq N$:
+\begin{enumerate}
+  \item Initialize data weights: $\forall n, w_n^1 = \frac{1}{N}$
+  \item For $t = [1, \ldots, T]$:
+    \begin{itemize}
+      \item[(a)] Find classifier $y_t: \chi \to \{-1,1\}$ that minimizes weighted error $\sum_{t_n \neq y_t(\vec{x}_n)} w_n^t$
+      \item[(b)] Evaluate:
+      $$\epsilon_t = \frac{\sum_{t_n \neq y_t(\vec{x}_n)} w_n^t}{\sum_{n=1}^{N} w_n^t}$$
+      $$\alpha_t = \log\left(\frac{1-\epsilon_t}{\epsilon_t}\right)$$
+      \item[(c)] Update weights: $w_n^{t+1} = w_n^t \exp(\alpha_t I(t_n \neq y_t(\vec{x}_n)))$
+    \end{itemize}
+\end{enumerate}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Mathematical Details}
+
+\concept{Final Classifier} Weighted combination of weak learners:
+$$Y(\vec{x}) = \text{sign}\left(\sum_{t=1}^{T} \alpha_t y_t(\vec{x})\right)$$
+
+\concept{Classifier Weight Interpretation}
+\begin{itemize}
+  \item[-] $\epsilon_t < 0.5 \Rightarrow \alpha_t > 0$ (good classifier gets positive weight)
+  \item[-] $\epsilon_t = 0.5 \Rightarrow \alpha_t = 0$ (random classifier gets zero weight)
+  \item[-] $\epsilon_t \to 0 \Rightarrow \alpha_t \to \infty$ (perfect classifier gets high weight)
+\end{itemize}
+
+\concept{Outlier Sensitivity Problem} 
+\textbf{Why AdaBoost Overfits to Outliers:}
+
+\concept{Weight Explosion Mechanism}
+\begin{itemize}
+  \item[-] Outliers are consistently misclassified by weak learners
+  \item[-] Weight update: $w_i^{(t+1)} = w_i^{(t)} \exp(\alpha_t)$ for misclassified samples
+  \item[-] Since $\alpha_t > 0$, outlier weights grow exponentially
+  \item[-] After $T$ iterations: $w_{\text{outlier}} \propto \exp(\sum_{t=1}^{T} \alpha_t)$
+\end{itemize}
+
+\concept{Overfitting Consequences} Outliers dominate training, causing weak learners to focus on noise rather than patterns, creating complex boundaries that memorize outliers instead of generalizing.
+\end{minipage}
+
+\section{Decision Trees \& Ensembles}
+
+\subsection{Decision Trees (Classification)}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Core Concept} Tree-based model that recursively splits data based on feature values to create decision boundaries parallel to axes.
+
+\concept{Tree Construction Algorithm}
+\begin{enumerate}
+  \item Start with all training data at root
+  \item For each feature and threshold, compute split quality
+  \item Choose best split that maximizes information gain
+  \item Recursively split child nodes
+  \item Stop when stopping criterion met
+\end{enumerate}
+
+\concept{Splitting Criteria}
+\begin{itemize}
+  \item[-] \formula{Gini Impurity:} $G = 1 - \sum_{i=1}^{C} p_i^2$
+  \item[-] \formula{Entropy:} $H = -\sum_{i=1}^{C} p_i \log_2(p_i)$
+  \item[-] \formula{Information Gain:} $IG = H_{parent} - \sum_{child} \frac{|child|}{|parent|} H_{child}$
+\end{itemize}
+where $p_i$ = proportion of class $i$, $C$ = number of classes.
+
+\concept{Best Split Selection} For feature $f$ and threshold $t$:
+$$\text{Split}(f,t): x_f \leq t \rightarrow \text{left}, \quad x_f > t \rightarrow \text{right}$$
+
+\concept{Stopping Criteria}
+\begin{itemize}
+  \item[-] Maximum depth reached
+  \item[-] Minimum samples per leaf/split
+  \item[-] No improvement in purity
+  \item[-] Maximum number of leaves
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Prediction} For new sample, traverse tree from root to leaf:
+$$\hat{y} = \text{majority class in leaf node}$$
+
+\concept{Advantages}
+\begin{itemize}
+  \item[-] Interpretable (white-box model)
+  \item[-] Handles mixed data types
+  \item[-] No assumptions about data distribution
+  \item[-] Built-in feature selection
+  \item[-] Handles missing values naturally
+\end{itemize}
+
+\concept{Disadvantages}
+\begin{itemize}
+  \item[-] High variance (overfitting)
+  \item[-] Biased toward features with more levels
+  \item[-] Axis-parallel splits only
+  \item[-] Instability (small data changes → different tree)
+\end{itemize}
+
+\concept{Pruning Techniques}
+\begin{itemize}
+  \item[-] \textbf{Pre-pruning:} Stop early based on criteria
+  \item[-] \textbf{Post-pruning:} Build full tree, then remove branches
+  \item[-] \textbf{Cost complexity:} Minimize $Error + \alpha \times |leaves|$
+\end{itemize}
+
+\concept{Complexity}
+\begin{itemize}
+  \item[-] \textbf{Training:} $O(n \log n \times m)$ where $n$ = samples, $m$ = features
+  \item[-] \textbf{Prediction:} $O(\log n)$ average, $O(n)$ worst case
+\end{itemize}
+\end{minipage}
+
+\subsection{Decision Tree Regression}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Regression Splitting Criterion} 
+\begin{itemize}
+  \item[-] \formula{MSE:} $MSE = \frac{1}{n}\sum_{i=1}^{n}(y_i - \bar{y})^2$
+  \item[-] \formula{MAE:} $MAE = \frac{1}{n}\sum_{i=1}^{n}|y_i - \bar{y}|$
+\end{itemize}
+where $\bar{y}$ = mean target value in node.
+
+\concept{Split Quality} Choose split that minimizes weighted average:
+$$\text{Quality} = \frac{|left|}{|total|} \times MSE_{left} + \frac{|right|}{|total|} \times MSE_{right}$$
+
+\concept{Prediction} Leaf node prediction:
+$$\hat{y} = \frac{1}{|leaf|} \sum_{i \in leaf} y_i \quad \text{(mean of leaf samples)}$$
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Key Differences from Classification}
+\begin{itemize}
+  \item[-] Continuous target values
+  \item[-] Use MSE/MAE instead of Gini/Entropy
+  \item[-] Predict mean instead of majority class
+  \item[-] Same tree structure and algorithms
+\end{itemize}
+
+\concept{Regularization}
+\begin{itemize}
+  \item[-] \textbf{min\_samples\_split:} Minimum samples to split
+  \item[-] \textbf{min\_samples\_leaf:} Minimum samples per leaf
+  \item[-] \textbf{max\_depth:} Maximum tree depth
+  \item[-] \textbf{max\_leaf\_nodes:} Limit total leaves
+\end{itemize}
+\end{minipage}
+
+\subsection{Random Forests}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Ensemble Method} Combines multiple decision trees trained on different subsets of data and features.
+
+\concept{Algorithm}
+\begin{enumerate}
+  \item For $b = 1, 2, \ldots, B$ trees:
+  \item Sample $n$ training examples with replacement (bootstrap)
+  \item At each split, randomly select $m < M$ features
+  \item Build tree using only selected features
+  \item Combine predictions: vote (classification) or average (regression)
+\end{enumerate}
+
+\concept{Key Parameters}
+\begin{itemize}
+  \item[-] \textbf{n\_estimators:} Number of trees $B$
+  \item[-] \textbf{max\_features:} Features per split $m$ 
+  \item[-] Typical choice: $m = \sqrt{M}$ (classification), $m = M/3$ (regression)
+  \item[-] \textbf{bootstrap:} Sample with replacement
+\end{itemize}
+
+\concept{Final Prediction}
+\begin{itemize}
+  \item[-] \formula{Classification:} $\hat{y} = \text{mode}(\{h_1(\vec{x}), \ldots, h_B(\vec{x})\})$
+  \item[-] \formula{Regression:} $\hat{y} = \frac{1}{B}\sum_{b=1}^{B} h_b(\vec{x})$
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Why Random Forests Work}
+\begin{itemize}
+  \item[-] \textbf{Bagging:} Reduces variance through averaging
+  \item[-] \textbf{Feature randomness:} Decorrelates trees
+  \item[-] \textbf{Bootstrap sampling:} Each tree sees different data
+  \item[-] \textbf{Wisdom of crowds:} Ensemble > individual trees
+\end{itemize}
+
+\concept{Advantages}
+\begin{itemize}
+  \item[-] Lower overfitting than single trees
+  \item[-] Handles large datasets efficiently
+  \item[-] Provides feature importance
+  \item[-] Works well out-of-the-box
+  \item[-] Parallel training possible
+\end{itemize}
+
+\concept{Feature Importance} Based on impurity decrease:
+$$Importance_j = \sum_{t \in splits\_on\_j} \frac{|samples_t|}{|total|} \times \Delta_{impurity}$$
+
+\concept{Out-of-Bag (OOB) Error}
+\begin{itemize}
+  \item[-] Each tree trained on ~63\% of data
+  \item[-] Remaining ~37\% used for validation
+  \item[-] OOB error estimates generalization without separate validation set
+\end{itemize}
+\end{minipage}
+
+\subsection{Ensemble Cascades \& Boosting Trees}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Gradient Boosting Trees} Sequential ensemble where each tree corrects previous errors.
+
+\concept{Algorithm}
+\begin{enumerate}
+  \item Initialize: $F_0(\vec{x}) = \arg\min_{\gamma} \sum_{i=1}^{n} L(y_i, \gamma)$
+  \item For $m = 1, 2, \ldots, M$:
+  \item Compute residuals: $r_{im} = -\frac{\partial L(y_i, F_{m-1}(\vec{x}_i))}{\partial F_{m-1}(\vec{x}_i)}$
+  \item Train tree $h_m$ on $\{(\vec{x}_i, r_{im})\}$
+  \item Update: $F_m(\vec{x}) = F_{m-1}(\vec{x}) + \eta \cdot h_m(\vec{x})$
+\end{enumerate}
+
+\concept{Learning Rate} $\eta$ controls step size:
+\begin{itemize}
+  \item[-] Small $\eta$: More trees needed, better generalization
+  \item[-] Large $\eta$: Faster training, risk of overfitting
+  \item[-] Typical range: $\eta \in [0.01, 0.3]$
+\end{itemize}
+
+\concept{Cascade Architecture}
+\begin{itemize}
+  \item[-] \textbf{Early exit:} Easy samples classified by shallow trees
+  \item[-] \textbf{Progressive depth:} Later stages handle harder cases
+  \item[-] \textbf{Computational efficiency:} Avoid deep processing for simple inputs
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{XGBoost Enhancements}
+\begin{itemize}
+  \item[-] \textbf{Regularization:} $\Omega(f) = \gamma T + \frac{1}{2}\lambda\|\vec{w}\|^2$
+  \item[-] \textbf{Second-order approximation:} Uses both gradient and Hessian
+  \item[-] \textbf{Column sampling:} Random feature selection per tree
+  \item[-] \textbf{Parallel processing:} Efficient implementation
+\end{itemize}
+
+\concept{Stacking Cascades}
+\begin{itemize}
+  \item[-] \textbf{Level 0:} Base learners (trees, SVM, etc.)
+  \item[-] \textbf{Level 1:} Meta-learner combines base predictions
+  \item[-] \textbf{Cross-validation:} Prevent overfitting in meta-learner
+\end{itemize}
+
+\concept{Model Selection Guidelines}
+\begin{itemize}
+  \item[-] \textbf{Single Tree:} Interpretability needed
+  \item[-] \textbf{Random Forest:} Balanced performance, robustness
+  \item[-] \textbf{Gradient Boosting:} Maximum accuracy, careful tuning
+  \item[-] \textbf{Cascade:} Computational efficiency important
+\end{itemize}
+
+\concept{Hyperparameter Tuning}
+\begin{itemize}
+  \item[-] Trees: max\_depth, min\_samples\_split
+  \item[-] RF: n\_estimators, max\_features
+  \item[-] Boosting: learning\_rate, n\_estimators, regularization
+\end{itemize}
+\end{minipage}
+
+\newpage
+\section{Data Preprocessing}
+
+\subsection{Normalization \& Standardization}
+\begin{itemize}
+  \item \formula{Z-score Standardization:} $x' = \frac{x - \mu}{\sigma}$ — Mean 0, std 1
+  \item \formula{Unit Vector Scaling:} $x' = \frac{x}{\|x\|}$ — Scales to unit norm
+\end{itemize}
+
+\section{Cross-Validation}
+\subsection{Validation Techniques}
+\begin{itemize}
+  \item \concept{K-Fold CV} Split data into $k$ folds, train on $k-1$, validate on 1, repeat $k$ times
+\end{itemize}
+
+\section{Bias-Variance Tradeoff}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Error Decomposition}
+$$\text{Expected Error} = \text{Bias}^2 + \text{Variance} + \text{Irreducible Error}$$
+
+\concept{What is Bias in ML?} 
+\textbf{Bias} measures how far off the average prediction is from the true value across different training sets.
+
+\textit{Intuition:} Bias captures the model's ability to learn the underlying pattern. High bias means the model makes systematic errors.
+
+\textit{Mathematical:} $\text{Bias} = E[\hat{f}(\vec{x})] - f(\vec{x})$
+where $\hat{f}$ is our learned model and $f$ is the true function.
+
+\concept{High Bias (Underfitting)}
+\begin{itemize}
+  \item[-] \textbf{Cause:} Model too simple to capture true relationship
+  \item[-] \textbf{Example:} Linear model for nonlinear data
+  \item[-] \textbf{Symptoms:} Poor performance on both training and test sets
+  \item[-] \textbf{Solutions:} Increase model complexity, add features, reduce regularization
+\end{itemize}
+
+\concept{Examples of High Bias Models}
+\begin{itemize}
+  \item[-] Linear regression for polynomial relationships
+  \item[-] Shallow neural networks for complex patterns
+  \item[-] Decision trees with very few splits
+  \item[-] Over-regularized models (large $\lambda$ in Ridge/Lasso)
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{What is Variance in ML?} 
+\textbf{Variance} measures how much the predictions change when trained on different datasets.
+
+\textit{Intuition:} Variance captures the model's sensitivity to training data. High variance means the model is inconsistent across different training sets.
+
+\textit{Mathematical:} $\text{Variance} = E[(\hat{f}(\vec{x}) - E[\hat{f}(\vec{x})])^2]$
+
+\concept{High Variance (Overfitting)}
+\begin{itemize}
+  \item[-] \textbf{Cause:} Model too complex, memorizes training noise
+  \item[-] \textbf{Example:} High-degree polynomial, deep neural network
+  \item[-] \textbf{Symptoms:} Great training performance, poor test performance
+  \item[-] \textbf{Solutions:} Reduce complexity, add regularization, more data
+\end{itemize}
+
+\concept{Examples of High Variance Models}
+\begin{itemize}
+  \item[-] High-degree polynomial regression
+  \item[-] Deep neural networks without regularization
+  \item[-] Decision trees with no pruning
+  \item[-] KNN with very small $k$ values
+  \item[-] Under-regularized models (small $\lambda$)
+\end{itemize}
+
+\concept{The Tradeoff}
+\begin{itemize}
+  \item[-] \textbf{Simple models:} High bias, low variance
+  \item[-] \textbf{Complex models:} Low bias, high variance  
+  \item[-] \textbf{Goal:} Find optimal complexity that minimizes total error
+  \item[-] \textbf{Sweet spot:} Balance both via cross-validation
+\end{itemize}
+\end{minipage}
+
+
+\section{Evaluation Metrics}
+
+\subsection{Confusion Matrix}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+ & \textbf{Predicted Positive} & \textbf{Predicted Negative} \\
+\hline
+\textbf{Actual Positive} & True Positive (TP) & False Negative (FN) \\
+\hline
+\textbf{Actual Negative} & False Positive (FP) & True Negative (TN) \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Classification Metrics}
+
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Primary Metrics}
+\begin{itemize}
+  \item[-] \formula{Accuracy} = $\frac{TP + TN}{TP + TN + FP + FN}$
+
+  \textit{Interpretation:} Overall correctness across all classes.
+  \textit{When to use:} Use when classes are balanced and misclassification costs are equal for all classes.
+
+  \item[-] \formula{Precision} = $\frac{TP}{TP + FP}$
+
+  \textit{Interpretation:} Of all positive predictions, how many were correct? Critical when false positives are costly.
+  \textit{When to use:} Use when the cost of a false positive is high (e.g., spam detection, recommending a product that a user won't like, medical diagnosis where a false positive leads to unnecessary treatment).
+
+  \item[-] \formula{Recall (Sensitivity)} = $\frac{TP}{TP + FN}$
+
+  \textit{Interpretation:} Of all actual positives, how many were correctly identified? Critical when false negatives are costly.
+  \textit{When to use:} Use when the cost of a false negative is high (e.g., disease detection where a missed case is critical, fraud detection where missing a fraudulent transaction is bad).
+
+  \item[-] \formula{Specificity} = $\frac{TN}{TN + FP}$
+
+  \textit{Interpretation:} Of all actual negatives, how many were correctly identified? Measures ability to avoid false alarms.
+  \textit{When to use:} Use when it's important to correctly identify negative instances (e.g., confirming a patient is healthy, airport security screening where correctly identifying non-threatening items is crucial).
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\concept{Composite Metrics}
+\begin{itemize}
+  \item[-] \formula{F1 Score} = $\frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} = \frac{2TP}{2TP + FP + FN}$
+
+  \textit{Interpretation:} Harmonic mean of precision and recall. Balances both metrics equally.
+  \textit{When to use:} Use when you need a balance between Precision and Recall, especially when dealing with imbalanced classes where accuracy can be misleading.
+
+  \item[-] \formula{F$_\beta$ Score} = $(1+\beta^2) \cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision} + \text{Recall}}$
+
+  \textit{Interpretation:} Weighted harmonic mean. $\beta > 1$ emphasizes recall, $\beta < 1$ emphasizes precision.
+  \textit{When to use:} Use when one metric (Precision or Recall) is more important than the other. For example, if recall is twice as important as precision, set $\beta = 2$. If precision is twice as important, set $\beta = 0.5$.
+\end{itemize}
+\end{minipage}
+
+\section{NumPy Essentials}
+
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Broadcasting}
+\concept{Overview} Mechanism that allows NumPy to perform arithmetic operations on arrays of different shapes without explicit replication of data.
+
+\concept{Rules}
+\begin{itemize}
+  \item[-] Arrays with fewer dimensions are padded with ones on the left.
+  \item[-] Arrays with size 1 along a dimension are stretched to match the other array's size.
+  \item[-] If dimensions are incompatible, broadcasting fails.
+\end{itemize}
+
+\concept{Example}
+\begin{itemize}
+  \item[-] Array (3, 1) + Scalar: Scalar is broadcast to (3, 1).
+  \item[-] Array (3, 2) + Array (1, 2): Second array is broadcast to (3, 2).
+  \item[-] Manual broadcasting with \texttt{np.newaxis}: Reshape to add dimension, e.g., \texttt{arr[:, np.newaxis]}.
+\end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\subsection{Common Functions}
+\begin{itemize}
+  \item[-] \formula{np.sort(arr)}: Returns a sorted copy of the array.
+  \item[-] \formula{np.argsort(arr)}: Returns indices that would sort the array.
+  \item[-] \formula{np.max(arr)}: Returns the maximum value in the array.
+  \item[-] \formula{np.argmax(arr)}: Returns the index of the maximum value.
+  \item[-] \formula{np.sqrt(arr)}: Computes the square root of each element.
+  \item[-] \formula{np.exp(arr)}: Computes the exponential of each element.
+  \item[-] \formula{np.square(arr)}: Squares each element.
+  \item[-] \formula{np.sum(arr, axis=...)}: Sums elements along the specified axis. Without axis, sums all elements.
+  \item[-] \formula{np.any(arr)}: Returns True if any element is True (useful for boolean arrays).
+  \item[-] \formula{np.array[..][boolean]}: Boolean indexing to filter array based on condition.
+  \item[-] \formula{np.array([... for ... in ...])}: Array creation via list comprehension, e.g., \texttt{np.array([i**2 for i in range(5)])}.
+\end{itemize}
+\end{minipage}
+
+\end{document}

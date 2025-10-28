@@ -1,0 +1,40 @@
+\fbox{
+\algoblock{0.65}{\scriptsize Maximum Subarray Problem}{
+\scriptsize
+\begin{minipage}[t]{0.75\textwidth}
+\textbf{Problem:} Find contiguous subarray with largest sum
+    \begin{enumerate}[noitemsep]
+        \scriptsize
+        \item \textbf{Divide and Conquer Approach:} \\
+        \begin{minipage}[t]{0.45\textwidth}
+        \scriptsize
+        \textbf{Divide:} Split array at midpoint\\
+        $\text{mid} = \lfloor(\text{low} + \text{high})/2\rfloor$\\[3pt]
+        
+        \textbf{Conquer:} Find maximum subarrays recursively\\
+        1. Left max: in $A[\text{low}...\text{mid}]$\\
+        2. Right max: in $A[\text{mid}+1...\text{high}]$\\
+        3. Crossing max: spans the midpoint\\[3pt]
+        
+        \textbf{Combine:} Return the largest of the three\\
+        $\max(\text{left\_max}, \text{right\_max}, \text{crossing\_max})$
+        \end{minipage}
+        \hspace{10px}
+        \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-10pt}
+            \imageblock{1.0}{images/max-subarray.png}
+        \end{minipage}\\
+        \item \textbf{Finding the Crossing Maximum:}\\
+        1. Find maximum suffix in left half (from mid down to low)\\
+        2. Find maximum prefix in right half (from mid+1 up to high)\\
+        3. Crossing max = max suffix + max prefix
+    \end{enumerate}
+    \justifying
+    \textit{Time Complexity:} $\Theta(n\log n)$ due to $T(n) = 2T(n/2) + \Theta(n)$\\
+    \textit{Space Complexity:} $O(n)$ including input array
+\end{minipage}
+\begin{minipage}[t]{0.2\textwidth}
+\vspace{0pt}
+\imageblock{1.2}{images/max-subarray-crossing.png}
+\end{minipage}
+}} 

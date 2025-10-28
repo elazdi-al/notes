@@ -1,0 +1,37 @@
+\fbox{%
+  \begin{minipage}[t]{0.44\textwidth}
+  \begin{minipage}[t]{0.4\textwidth}
+  \textbf{Maximum Subarray Problem}\\
+  \textbf{Problem:} Find contiguous subarray with largest sum\\
+  \textbf{Divide and Conquer Approach:}\\
+  1 - \textbf{Divide.} \\
+  Split array at midpoint\\$\text{mid} = \lfloor(\text{low} + \text{high})/2\rfloor$.\\
+  2 - \textbf{Conquer.} \\
+  Find maximum subarrays recursively
+  \begin{itemize}[leftmargin=0pt,itemsep=0pt,topsep=0pt,parsep=0pt]
+  \item[] Left max: in $A[\text{low}...\text{mid}]$
+  \item[] Right max: in $A[\text{mid}+1...\text{high}]$
+  \item[] Crossing max: spans the midpoint
+  \end{itemize}
+  3 - \textbf{Combine:} Return the largest of the three\\
+  $\max(\text{left\_max}, \text{right\_max}, \text{crossing\_max})$\\
+  \end{minipage}%
+  \begin{minipage}[t]{0.56\textwidth}
+    \vspace{-15px}
+      \algocode{max-subarray}\vspace*{-35px}
+  \end{minipage}\\
+  \begin{minipage}[t]{0.5\textwidth}
+  4 - \textbf{Finding the Crossing Maximum:}\\
+  a. Find maximum suffix in left half (from mid down to low)\\
+  b. Find maximum prefix in right half (from mid+1 up to high)\\
+  c. Crossing max = max suffix + max prefix\\[1pt]
+  \textbf{Crossing Subarray:} The maximum subarray that crosses the midpoint combines the maximum suffix of the left half with the maximum prefix of the right half.\\[2pt]
+  \textit{Time Complexity:} $\Theta(n\log n)$ due to $T(n) = 2T(n/2) + \Theta(n)$\\
+  \textit{Space Complexity:} $O(\log n)$ for recursion stack\\[2pt]
+  \end{minipage}
+  \begin{minipage}[t]{0.5\textwidth}
+    \vspace{-20px}
+  \algocode{max-subarray-crossing}
+  \end{minipage}\vspace*{-23px}
+  \end{minipage}%
+  }

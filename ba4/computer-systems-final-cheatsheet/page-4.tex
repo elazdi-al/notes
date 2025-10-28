@@ -1,0 +1,337 @@
+\noindent
+\hspace{-10px}
+\begin{minipage}[t]{0.5\textwidth}
+\small
+\noindent\textbf{Block Cache.} In-memory cache of disk blocks\\
+- \textbf{Good for reads} — avoids repeated disk access\\
+- \textbf{Limited for writes} — consistency requires flushing\\
+- \textbf{Write-through} — data written to both cache and disk immediately\\
+  (slower, but consistent)\\
+- \textbf{Write-back} — data stays in cache, flushed later\\
+  (faster, but risk of data loss on crash)\\
+- \texttt{fsync()} — forces flush of dirty blocks to disk\\
+\noindent\textbf{Consistency Update Problem.} \\
+File system metadata may become inconsistent due to crashes during updates.\\
+\noindent\textbf{File System Checker (fsck).} \\
+Tool to scan and repair on-disk metadata inconsistencies.\\
+Cons: Functionality - fix not always obvious or correct, \\Performance - slow; may take hours.\\
+\noindent\textbf{fsck Fix Examples.}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item[-] \textbf{Link Count Inconsistency} — problem: inode's link count $\neq$ number of directory entries pointing to it; fix: correct link count to match actual references.
+    
+    \item[-] \textbf{Lost Inodes} — problem: inode has link count $ > 0$ but no directory entry points to it; fix: move file to \texttt{lost+found} for recovery.
+    
+    \item[-] \textbf{Data Bitmap Errors} — problem: inode uses a block, but bitmap marks it free; fix: set corresponding bitmap bit to “used”.
+    
+    \item[-] \textbf{Duplicate Pointers} — problem: two inodes point to same data block; fix: duplicate the block and update one inode to preserve both files.
+    
+    \item[-] \textbf{Invalid Pointers} — problem: inode points to a block beyond partition size; fix: remove invalid pointer to prevent access.
+\end{itemize}
+\noindent\textbf{Journaling.} \\
+Crash-consistency technique. Metadata updates are first written to a log (journal) before applying to the main file system\\
+\noindent\textbf{Pros.} Fast crash recovery (no full scan); Metadata consistency guaranteed; Safer than fsck in most cases.\\
+\begin{minipage}[t]{0.48\textwidth}
+\noindent\textbf{How It Works.}
+\begin{enumerate}[noitemsep,topsep=0pt]
+    \item Group changes into a \textbf{transaction}
+    \item Write to journal: \texttt{TxBegin | changes | TxEnd | Valid}
+    \item \texttt{Valid} block = transaction committed
+    \item Apply changes to file system (checkpoint)
+    \item Clear transaction from journal
+\end{enumerate}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\noindent\textbf{Recovery.}
+\begin{enumerate}[noitemsep,topsep=0pt]
+    \item For each uncleared transaction (stil in journal): 
+    \item \textbf{If no \texttt{Valid}:} discard
+    \item \textbf{If \texttt{Valid} found:} replay transaction to disk
+\end{enumerate}
+\end{minipage}\\[3px]
+\hrule
+\vspace{3px}
+\begin{minipage}[t]{0.48\textwidth}
+\noindent\textbf{I/O Interrupt.} \\
+Device triggers an interrupt when it needs service. \\ 
+\textbf{Pro:} efficient for unpredictable events.  \\
+\textbf{Con:} high overhead per interrupt.\\
+\vspace{-7.3px}
+\hrule
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\noindent\textbf{I/O Polling.} \\
+CPU repeatedly checks device status register.  \\
+\textbf{Pro:} low overhead when frequent.  \\
+\textbf{Con:} wastes CPU cycles if idle or infrequent.\\[2px]
+\end{minipage}\\[-13px]
+\noindent\textbf{Livelock.} \\
+System busy handling I/O (e.g., interrupts) but makes no progress in real work. Spinning without forward progress.\\
+\begin{minipage}[htp]{0.48\textwidth}
+\noindent\textbf{Real-World Strategy.}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item[-] Use \textbf{interrupts} for overlap (slow devices)
+    \item[-] Use \textbf{polling} for short bursts, small data, high performance
+    \item[-] \textbf{Coalescing}: delay, batch multiple responses for efficiency
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.48\textwidth}
+\vspace*{-20px}
+\noindent\textbf{PIO (Programmed I/O).} \\
+CPU tells the device \textbf{what data to read/write}.\\
+\end{minipage}\\
+\begin{minipage}[htp]{0.48\textwidth}
+\noindent\textbf{DMA (Direct Memory Access).} \\
+CPU tells the device \textbf{where data is}.\\
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.48\textwidth}
+\vspace*{-30px}
+\noindent\textbf{DMA Controller.} \\
+Hardware unit that transfers data between device and memory without CPU involvement. Handles address incrementing and byte counting.\\
+\end{minipage}\\
+\begin{minipage}[htp]{0.48\textwidth}
+\vspace*{-8px}
+\noindent\textbf{DMA Transfer Workflow. (device to memory transfer.)}
+\begin{enumerate}[noitemsep,topsep=0pt]
+\item The device driver receives an instruc-
+    tion to transfer disk data to a buffer at
+    address X.
+\item The driver commands the disk con-
+    troller to transfer C bytes from disk to
+    the buffer at address X.
+\item The disk controller initiates the DMA
+    transfer operation.
+\item The disk controller sends each byte to
+    the DMA controller.
+\item The DMA controller transfers bytes
+    to buffer X, incrementing the memory
+    address and decrementing C until C =
+    0.
+\item When C = 0, the DMA controller inter-
+    rupts the CPU to signal completion of
+    the transfer.
+\end{enumerate}
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.48\textwidth}
+    \vspace{-15px}
+\begin{center}
+\includegraphics[width=0.75\textwidth]{images/dma.png}
+\end{center}
+\end{minipage}\\
+\textbf{ls -l command output.} \\
+\hspace*{-10px}
+    \resizebox{1.05\textwidth}{!}{%
+    \texttt{
+    \begin{tabular}{@{}lllllllllll@{}}
+    \textbf{Type} & \textbf{Usr} & \textbf{Grp} & \textbf{Oth} & \textbf{Ln} & \textbf{Owner} & \textbf{Group} & \textbf{Size} & \textbf{Mon} & \textbf{Day} & \textbf{Time/Year Name} \\
+    \texttt{[d/-/l]} & \texttt{ppp} & \texttt{ppp} & \texttt{ppp} & [n] & [username] & [groupname] & [bytes] & [Mon] & [DD] & [HH:MM / YYYY] [filename] \\
+    \end{tabular}
+    }
+    }
+
+\textbf{Permissions Breakdown:}\\
+\begin{minipage}[t]{0.5\textwidth}
+ \small
+\begin{itemize}
+  \item[] \texttt{Type} — File type:\\
+- \texttt{-} = regular file\\
+- \texttt{d} = directory\\
+- \texttt{l} = symbolic link \\[-15px]
+  \item[] \texttt{Usr}, \texttt{Grp}, \texttt{Oth} — Permission triplets for:\\
+- \texttt{r} = read\\
+- \texttt{w} = write\\
+- \texttt{x} = execute\\
+- \texttt{-} = permission not granted
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}\small
+\begin{itemize}[noitemsep,topsep=0pt]
+  \item[-] \texttt{Ln} — Number of hard links
+  \item[-] \texttt{Owner} — Username of the file owner
+  \item[-] \texttt{Group} — Group associated with the file
+  \item[-] \texttt{Size} — File size in bytes
+  \item[-] \texttt{Mon, Day, Time/Year} — Last modification timestamp
+  \item[-] \texttt{Name} — File or directory name
+\end{itemize}
+\end{minipage}\\[2px]
+\hrule\vspace{2px}
+\begin{minipage}[t]{1\textwidth}
+    \noindent\texttt{malloc(size\_t size)} $\vert$ Allocates \texttt{size} bytes. Returns \texttt{void*} to uninitialized memory.\\
+    \textbf{Return:} pointer to memory or \texttt{NULL} on failure\\
+    \noindent\texttt{calloc(size\_t nmemb, size\_t size)} $\vert$ Allocates space for \texttt{nmemb} elements of \texttt{size} bytes each. Memory is zero-initialized.\\
+    \textbf{Return:} pointer to zeroed memory or \texttt{NULL}\\
+    \noindent\texttt{memset(void *ptr, int value, size\_t num)} $\vert$ Sets the first \texttt{num} bytes of \texttt{ptr} to \texttt{(unsigned char)value}.\\
+    \textbf{Use:} initialize or reset memory\\
+    \noindent\texttt{realloc(void *ptr, size\_t new\_size)} $\vert$ Resizes previously allocated block to \texttt{new\_size} bytes.\\
+    \textbf{Return:} pointer to new block (contents preserved), or \texttt{NULL}
+\end{minipage}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+    \noindent\textbf{Disk Storage} \\
+    Goal: fast, reliable, affordable persistent data access. Must return what was written—quickly and without loss.\\
+    \noindent\textbf{RAID (Redundant Array of Inexpensive Disks)} \\
+    Combines multiple physical disks into one logical unit for performance and fault tolerance, Allows for a higher throughput and reliability.\\
+     \begin{minipage}[htp]{0.48\textwidth}
+            \textbf{RAID 0 (Striping)}\\
+            data split across $N \geq 2$ disks\\
+            \textbf{+} High throughput, full capacity\\
+            \textbf{--} No redundancy\\
+            \textbf{Read:} from corresponding disk\\
+            \textbf{1 disk fails:} all data lost
+        \end{minipage}
+        \hfill
+        \begin{minipage}[htp]{0.48\textwidth}
+            \textbf{RAID 1 (Mirroring)}\\
+            data duplicated on 2 disks\\
+            \textbf{+} Survives 1-disk failure, fast reads\\
+            \textbf{--} $2\times$ storage cost\\
+            \textbf{Read:} from either copy (load-balanced)\\
+            \textbf{1 disk fails:} use remaining mirror
+        \end{minipage}\\
+\begin{minipage}[htp]{0.48\textwidth}
+            \textbf{RAID 5 (Striping + Parity)} — block-level striping + distributed parity across $N \geq 3$ disks\\
+            \textbf{+} Efficient redundancy, survives 1-disk failure\\
+            \textbf{--} Writes = read + modify parity (slow)\\
+            \textbf{Read:} from data disk if intact\\
+            \textbf{1 disk fails:} reconstruct via XOR:\\
+$
+                \text{Missing Block} = \text{Parity} \oplus \bigoplus_{i \neq \text{failed}} \text{Data}_i
+$
+            \\Or define parity as:\\
+$
+                \text{Parity} = \bigoplus_{i=1}^{N-1} \text{Data}_i
+$
+        \end{minipage}
+        \hfill
+        \begin{minipage}[htp]{0.48\textwidth}
+            \includegraphics[width=1\textwidth]{images/raid5.png}
+        \end{minipage}\\[3px]
+        \hrule
+        \vspace{3px}
+        \noindent\textbf{Context Switch} \\
+        Triggered by \textit{timer interrupt} or blocking events. Used to enforce fairness and preempt misbehaving threads.\\
+        \textbf{Procedure.}
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item \textbf{Save state} of current thread (PC, registers, etc.) to PCB
+            \item \textbf{Choose next thread} via scheduler
+            \item \textbf{Restore state} of selected thread from its PCB
+            \item \textbf{Resume execution} via \texttt{return-from-trap}
+        \end{enumerate}
+        \noindent\textit{Timer interrupts} ensure control returns to the OS periodically, allowing preemption and preventing CPU hogging.\\
+        \noindent\textbf{Scheduling Policy} — strategy for choosing the next thread
+        
+        \noindent\textbf{Scheduling Metrics}
+        \begin{itemize}[noitemsep,topsep=0pt]
+            \item[–] \textbf{CPU Utilization:} \% time CPU is busy
+            \item[–] \textbf{Turnaround Time:} completion time $-$ submission time
+            \item[–] \textbf{Response Time:} time from submission to first response (eg. submission to first time a thread is scheduled)
+        \end{itemize}
+        \begin{minipage}[t]{0.48\textwidth}
+        \noindent\textbf{FIFO Scheduling (First-In, First-Out)} \\
+        Non-preemptive (waits for completion before scheduling next thread). Runs threads in order of arrival.
+
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item \textbf{Enqueue} new threads at the tail of the ready queue
+            \item \textbf{Select} the thread at the head of the queue
+            \item \textbf{Run} it to completion or blocking
+            \item \textbf{Repeat} with the next thread in queue
+        \end{enumerate}
+        \noindent\textbf{Pros:} Simple, fair (by arrival order), minimal overhead \\
+        \noindent\textbf{Cons:} Poor responsiveness, suffers from \textit{convoy effect} (short jobs wait behind long ones)\\
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.48\textwidth}
+        \noindent\textbf{SJF Scheduling (Shortest Job First)} \\
+        Non-preemptive. Picks the thread with the shortest remaining execution time.
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item \textbf{Estimate} or know job lengths in advance
+            \item \textbf{Select} the shortest job from the ready queue
+            \item \textbf{Run} it to completion or blocking
+            \item \textbf{Repeat} with the next shortest job
+        \end{enumerate}
+        \vspace{4px}
+        \noindent\textbf{Pros} Minimizes average turnaround time (optimal under perfect knowledge) \\
+        \noindent\textbf{Cons} Requires job length estimates, risk of starvation for long jobs\\
+        \end{minipage}\\[-5px]
+        \begin{minipage}[t]{0.48\textwidth}
+        \noindent\textbf{STCF Scheduling (Shortest Time to Completion First)} \\
+        Preemptive SJF. Always runs the thread with the least remaining time.
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item \textbf{Track} remaining time for all ready/running threads
+            \item \textbf{On arrival} of a new thread, compare its time to current thread
+            \item \textbf{Preempt} if new thread has shorter remaining time
+            \item \textbf{Run} the shortest job until completion or preemption
+        \end{enumerate}
+
+        \noindent\textbf{Pros} Optimal average turnaround time under preemption \\
+        \noindent\textbf{Cons} Requires accurate time estimates, may cause starvation of longer jobs, bad Response Time\\
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.48\textwidth}
+        \noindent\textbf{Round Robin Scheduling} \\
+        Preemptive. Each thread gets a fixed time slice, cycling through the ready queue.\\
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item \textbf{Enqueue} threads in arrival order
+            \item \textbf{Run} the thread at the head for one quantum
+            \item \textbf{Preempt} if not finished; move to tail of queue
+            \item \textbf{Repeat} with the next thread in queue
+        \end{enumerate}
+        \noindent\textbf{Pros} Fair, responsive, avoids starvation \\
+        \noindent\textbf{Cons} High context switch overhead if time slice is too small; poor for short jobs if time slice is too large\\
+        \end{minipage}\\[-5px]
+        \noindent\textbf{MLFQ Scheduling (Multi-Level Feedback Queue)} \\
+        \small
+        Preemptive. Dynamically adjusts thread priority based on behavior.\\
+        \noindent\textbf{Rules}
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item If priority(A) $>$ priority(B), \textbf{A runs}
+            \item If priority(A) = priority(B), \textbf{A, B run in Round Robin}
+            \item \textbf{New threads start at top priority}
+            \item If a thread uses up its time slice, \textbf{demote its priority}
+            \item Periodically \textbf{boost all threads to top priority} (prevents starvation)
+        \end{enumerate}
+        \begin{minipage}[htp]{0.55\textwidth}
+        \noindent\textbf{Procedure}
+        \begin{enumerate}[noitemsep,topsep=0pt]
+            \item Maintain multiple ready queues by priority level
+            \item Insert new or boosted threads at highest priority
+            \item Select thread from highest non-empty queue
+            \item Run using Round Robin within queue
+            \item \textbf{Demote if thread uses full time slice; \textbf{boost} periodically} !!!!
+        \end{enumerate}
+        \end{minipage}
+        \hfill
+        \begin{minipage}[htp]{0.43\textwidth}
+        \begin{center}
+            \includegraphics[width=0.8\textwidth]{images/mlfq.png}
+        \end{center}
+        \end{minipage}\\
+        \begin{minipage}[htp]{0.48\textwidth}
+            \begin{minipage}[htp]{0.48\textwidth}
+                \vspace*{-10px}
+            \noindent\textbf{Recursive Struct.}\vspace*{-8px}
+            \begin{verbatim}
+typedef struct Node {
+    int value;
+    struct Node* next;
+} Node;
+\end{verbatim}
+\end{minipage}\hspace*{10px}
+\begin{minipage}[htp]{0.48\textwidth}
+\textbf{Generic Pointers.}\vspace*{-5px}
+\begin{verbatim}
+void apply(void* array, size_t len, size_t elem_size, 
+void (*func)(void*)) {
+    for (size_t i = 0; i < len; i++) {
+        void* elem = (char*)array + i * elem_size;
+        func(elem);
+    }
+}
+\end{verbatim}
+\end{minipage}
+        \end{minipage}
+    \end{minipage}

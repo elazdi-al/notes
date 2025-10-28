@@ -1,0 +1,80 @@
+\fbox{
+  \begin{minipage}[t]{1\linewidth}
+    \textbf{Heap}  \fbox{\begin{minipage}[t]{0.55\linewidth}
+    Root is A[1] \;
+    Left(i) = 2i \; 
+    Right(i) = 2i + 1 \;
+    Parent(i) =$\lfloor i/2 \rfloor$\end{minipage}}\\
+    \begin{minipage}[t]{0.67\textwidth}
+          \textbf{ Max-Heapify (heapify subtree rooted at i)}\\
+          1. Starting at the root\\
+          2. Compare A[i], A[Left(i)], A[Right(i)]\\
+          3. If necessary, swap A[i] with the largest of the two children\\
+          4. \textbf{Max-Heapify} the swapped child\\
+          5. Continue comparing and swapping down the heap until subtree rooted at i is max-heap\\
+          \textit{Time Complexity:} \(O(\log(n))\) \\ \textit{Space Complexity:} \(O(n)\) including heap array, \(O(1)\) auxiliary
+    \end{minipage}
+    \begin{minipage}[t]{0.32\textwidth}
+      \vspace*{-25px}
+      \algocode{heapify}
+      \vspace*{-25px}
+    \end{minipage}\\
+    \begin{minipage}[t]{0.67\textwidth}   
+          \textbf{ Max-Heap-Insert (insert new key into heap)}\\
+          1. Increase heap size: A.heap-size = A.heap-size + 1\\
+          2. Set the last element to negative infinity: A[A.heap-size] = $-\infty$\\
+          3. Call Max-Heap-Increase-Key to update to the correct value\\
+          \textit{Time Complexity:} \(O(\log n)\) \\ \textit{Space Complexity:} \(O(n)\) including heap array, \(O(1)\) auxiliary
+    \end{minipage}
+    \begin{minipage}[t]{0.32\textwidth}
+      \vspace*{-16px}
+      \algocode{heap-insert}
+      \vspace*{-15px}
+    \end{minipage}\\
+    \begin{minipage}[t]{0.67\textwidth}
+          \textbf{ Max-Heap-Increase-Key (increase key at position i)}\\
+          1. Ensure new key is larger than current: if key $<$ A[i] then error\\
+          2. Set A[i] = key\\
+          3. Compare with parent and swap if necessary: \\ while i $>$ 1 and A[Parent(i)] $<$ A[i]\\
+          4. Exchange A[i] with A[Parent(i)]\\
+          5. Set i = Parent(i) and continue upward\\
+          \textit{Time Complexity:} \(O(\log n)\) \\ \textit{Space Complexity:} \(O(n)\) including heap array, \(O(1)\) auxiliary
+    \end{minipage}
+    \begin{minipage}[t]{0.32\textwidth}
+      \vspace*{-16px}
+      \algocode{heap-increase-key}
+      \vspace*{-15px}
+    \end{minipage}\\
+   \begin{minipage}[t]{0.67\textwidth}
+          \noindent \textbf{ Build-Max-Heap (build a max-heap from an array)}\\
+          1. Start from the last non-leaf node at index \(\frac{n}{2} - 1\)\\
+          2. Move upwards to the root (index \(0\)) and:\\
+          \\ a. \textbf{Max-Heapify} the current node\\
+          \\ b. Ensure the subtree rooted here satisfies max-heap property\\
+          3. Repeat until the root node is processed\\
+          4. After completion, array \(A\) represents a valid max heap\\
+          \textit{Time Complexity:} \(O(n)\) \\ \textit{Space Complexity:} \(O(n)\) including heap array, \(O(1)\) auxiliary\\
+          \textbf{ Heap Sort}\\
+          \textbf{1. Build a Max Heap:}\\
+          a. Convert the given array into a max heap\\
+          b. Start from the last non-leaf node and heapify upwards\\
+          c. Ensure each parent node is greater than its children\\
+          \textbf{2. Extract Maximum Elements:}\\
+          a. Swap the root (maximum value) with the last element\\
+          b. Reduce heap size by one to exclude the last element\\
+          c. Heapify the root to maintain max heap property\\
+          d. Repeat until heap size becomes 1\\
+          \textbf{3. Final Sorted Array:}\\
+          a. After extraction, the sorted array in ascending order is obtained\\
+          b. Maximum elements are placed at the end\\
+          \textit{Time Complexity:} \(O(n\log n)\) \\ \textit{Space Complexity:} \(O(n)\) including array, \(O(1)\) auxiliary
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.32\textwidth}
+        \vspace*{-15px}
+        \algocode{build-max-heap}
+        \algocode{heapsort}\vspace*{-30px}
+        \algocode{heap-extract-max}\vspace*{-30px}
+    \end{minipage}
+    \end{minipage}
+  }

@@ -1,0 +1,112 @@
+\documentclass[5pt]{extarticle}
+\usepackage[top=0in, bottom=0.1in, left=0.1in, right=0.1in]{geometry} % Minimal margins
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{setspace}
+\usepackage{fancyvrb}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+% Configure microtype for more condensed text
+\microtypesetup{tracking=true, letterspace=-40}
+\DisableLigatures{encoding = *, family = * }
+
+% Compress inter-word spacing
+\fontdimen2\font=2pt  % inter-word space
+\fontdimen3\font=-1pt  % inter-word stretch
+\fontdimen4\font=1pt  % inter-word shrink
+\fontdimen7\font=1pt  % extra space
+
+% Define a custom smaller font size
+\makeatletter
+\newcommand{\tinyfont}{\@setfontsize\tinyfont{4pt}{2pt}}
+\makeatother
+
+% Replace \scriptsize with \tinyfont in document where needed
+\let\oldscriptsize\scriptsize
+\renewcommand{\scriptsize}{\tinyfont}
+
+% Fix horizontal spacing
+\setstretch{0.85}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5pt plus 0.1pt minus 0.1pt}
+
+% Additional horizontal compression
+\setlength{\tabcolsep}{1pt}  % Reduce table column separation
+\renewcommand{\arraystretch}{0.8} % Compress table rows vertically
+
+% Reduce spacing in lists
+\setlist{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,leftmargin=*}
+\AtBeginEnvironment{enumerate}{\setlength{\itemsep}{-2pt}}
+\AtBeginEnvironment{itemize}{\setlength{\itemsep}{-2pt}}
+
+% Reduce spacing in multicols
+\setlength{\multicolsep}{0pt}
+\setlength{\columnsep}{3pt}
+
+% Compact section titles
+\titlespacing*{\section}{0pt}{0pt}{0pt}
+\titlespacing*{\subsection}{0pt}{0pt}{0pt}
+
+% Custom commands for algorithm blocks
+\newcommand{\algoblock}[3]{%
+  \begin{minipage}[t]{#1\textwidth}
+    \setlength{\baselineskip}{0.8\baselineskip}
+    \vspace{0pt}\textbf{#2}\\[0.3ex]
+    #3
+  \end{minipage}
+}
+
+\newcommand{\imageblock}[2]{%
+  \begin{minipage}[t]{#1\textwidth}
+    \vspace{0pt}\includegraphics[width=\linewidth]{#2}
+  \end{minipage}
+}
+
+\newcommand{\theoremblock}[3]{%
+  \begin{minipage}[t]{#1\textwidth}
+    \setlength{\baselineskip}{0.8\baselineskip}
+    \vspace{0pt}\textbf{#2}\\[0.3ex]
+    \justifying
+    #3
+  \end{minipage}
+}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+\input{sections/titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tiny
+\vspace*{-13px}
+% First row - Asymptotic Notation and Master Theorem
+\input{sections/asymptotic_notation}
+\hfill
+\input{sections/master_theorem}
+\input{sections/insertion_sort}
+\input{sections/max_subarray}\\
+\input{sections/stack_operations}
+\input{sections/strassen_matrix}
+\input{sections/queue_operations}\\
+\input{sections/merge_sort}
+\hfill
+\input{sections/priority_queue}\\
+\input{sections/heap}
+\input{sections/operations_summary}\\
+\input{sections/binary_search_tree}
+\hfill
+\input{sections/dynamic_programming}
+\input{sections/longest_common_subsequence}
+\input{sections/optimal_binary_search_tree}
+\input{sections/linked_list}
+\end{document} 

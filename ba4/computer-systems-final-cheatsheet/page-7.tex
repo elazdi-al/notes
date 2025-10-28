@@ -1,0 +1,279 @@
+% Reduce verbatim spacing globally for this page
+\setlength{\fboxsep}{1pt}
+\footnotesize
+\renewenvironment{verbatim}{\vspace{1mm}\small\begin{quote}\ttfamily}{\end{quote}\vspace{1mm}}
+\vspace*{-15px}
+\hspace*{-15px}
+\begin{minipage}[htp]{0.5\textwidth}
+    \noindent\textbf{C Language Essentials:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{const:} Read-only variable
+        \item[-] \textbf{size\_t sizeof(type):} Returns size in bytes
+    \end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+typedef struct { int x, y; } Point;
+const char* str = "Hello"; // read-only
+
+int arr[10] = {1,2,3}; // rest are 0
+void func(int tab[]) { /* tab is pointer */ }
+printf("Array size: %lu\n", sizeof(arr));
+
+// Control structures
+switch(i) {
+    case 1: printf("One"); break;
+    default: printf("Other");
+}
+for (int i = 0; i < 10; i++) { /* loop */ }
+\end{cc}
+\end{minipage}\\
+\noindent\textbf{Memory Management Functions:}
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item[-] \textbf{void* malloc(size\_t size):} Allocates uninitialized heap memory
+    \item[-] \textbf{void* calloc(size\_t count, size\_t size):} Allocates zero-initialized memory
+    \item[-] \textbf{void* realloc(void* ptr, size\_t size):} Resizes existing allocation
+    \item[-] \textbf{void free(void* ptr):} Deallocates memory (always call!)
+\end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+int *arr = malloc(5 * sizeof(int));
+if (!arr) { perror("malloc"); exit(1); }
+
+int *zeros = calloc(5, sizeof(int)); // all zeros
+arr = realloc(arr, 10 * sizeof(int)); // may move
+free(arr); free(zeros);
+\end{cc}
+\end{minipage}\\
+\noindent\textbf{Common String Functions:}
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item[-] \textbf{size\_t strlen(const char* s):} String length (excludes null terminator)
+    \item[-] \textbf{char* strcpy(char* dest, const char* src):} Copy strings
+    \item[-] \textbf{char* strncpy(char* dest, const char* src, size\_t n):} Copy strings (safer)
+    \item[-] \textbf{int strcmp(const char* s1, const char* s2):} Compare strings (returns $<$ 0, 0, $>$ 0)
+    \item[-] \textbf{int strncmp(const char* s1, const char* s2, size\_t n):} Compare strings
+    \item[-] \textbf{char* strcat(char* dest, const char* src):} Concatenate strings
+    \item[-] \textbf{char* strncat(char* dest, const char* src, size\_t n):} Concatenate strings
+    \item[-] \textbf{char* strchr(const char* s, int c):} Search for character
+    \item[-] \textbf{char* strstr(const char* haystack, const char* needle):} Search for substring
+\end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+char dest[20], src[] = "Hello";
+strcpy(dest, src);           // Copy string
+if (strcmp(dest, "Hello") == 0) { /* equal */ }
+char *p = strchr(dest, 'l'); // Find 'l' in dest
+memset(dest, 0, sizeof(dest)); // Zero out
+\end{cc}
+\end{minipage}\\
+\noindent\textbf{Structs \& Flexible Arrays:}
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item[-] \textbf{Flexible array members:} For variable-length data
+\end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+typedef struct {
+    int data;
+    struct Node *next;
+} Node;
+// Flexible array member (C99)
+typedef struct {
+    size_t len;
+    char data[];  // flexible array
+} string_t;
+string_t *s = malloc(sizeof(*s) + len + 1);
+s->len = len;
+memcpy(s->data, input, len + 1);
+\end{cc}
+\end{minipage}\\
+\noindent\textbf{Function Pointers:}\\
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+int add(int a, int b) { return a + b; }
+int sub(int a, int b) { return a - b; }
+int (*op)(int, int) = add;    // function pointer
+int result = op(5, 3);        // calls add(5,3)
+int (*ops[])(int,int) = {add, sub}; // array
+result = ops[0](10, 5);       // calls add(10,5)
+\end{cc}
+\end{minipage}\\
+    \noindent\textbf{Parallelism \& Concurrency:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Parallelism:} Doing two different tasks at the same time
+        \item[-] \textbf{Concurrency:} Doing a task while waiting \\on another (overlapping execution)
+        \item[-] \textbf{Benefits:} Increases throughput, reduces latency
+        \item[-] \textbf{Between processes:} Use \texttt{pid\_t fork(void)}
+        \item[-] \textbf{Within process:}\\ 
+        \texttt{int pthread\_create(pthread\_t* thread, const pthread\_attr\_t* attr, void* (*start\_routine)(void*), void* arg)}
+    \end{itemize}
+    \noindent\textbf{Thread Issues \& Solutions:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Thread interleaving:} \\Uncontrolled scheduling → non-deterministic behavior
+        \item[-] \textbf{Race condition:} Timing/order affects program correctness
+        \item[-] \textbf{Data race:} One thread reads while another writes (no sync)
+        \item[-] \textbf{Solution:} Locks - only holder can modify, others wait
+    \end{itemize}
+    \noindent\textbf{Lock Types:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Disable Interrupts:} Turn off interrupts during critical section
+        \item[-] \textbf{Test-and-Set Spinlock:} Busy wait until lock available
+        \item[-] \textbf{Mutex:} Sleepable locks with OS involvement
+    \end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+// Disable Interrupts (single processor)
+void lock(lock_t &l) { disable_interrupts(); }
+void unlock(lock_t &l) { enable_interrupts(); }
+
+// Test-and-Set Spinlock
+int test_and_set(int *ptr, int val) {
+    int old = *ptr; *ptr = val; return old;
+}
+bool lock1 = false;
+void lock(bool *l) { while (test_and_set(l, true)); }
+void unlock(bool *l) { *l = false; }
+
+// Mutex (sleepable)
+pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+void critical_section(int *counter) {
+    pthread_mutex_lock(&m);
+    *counter += 1;
+    pthread_mutex_unlock(&m);
+}
+\end{cc}
+\end{minipage}
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.5\textwidth}
+    \vspace*{-20px}
+    \noindent\textbf{Process System Calls:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{pid\_t fork(void):} Clone process, returns child PID or 0
+        \item[-] \textbf{void exit(int status):} Terminate process cleanly
+        \item[-] \textbf{pid\_t wait(int* status):} Wait for child termination
+    \end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+pid_t pid = fork();
+if (pid == 0) {
+    // Child: replace with new program
+    execl("/bin/ls", "ls", "-l", NULL);
+    exit(1); // only if exec fails
+} else if (pid > 0) {
+    // Parent: wait for child
+    int status;
+    wait(&status);
+} else { perror("fork"); }
+\end{cc}
+\end{minipage}\\
+    \noindent\textbf{Thread System Calls:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{int pthread\_create(pthread\_t* thread, const pthread\_attr\_t* attr, void* (*start\_routine)(void*), void* arg):} Create new thread
+        \item[-] \textbf{int pthread\_join(pthread\_t thread, void** retval):} Wait for thread completion
+    \end{itemize}
+
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+pthread_t thread_id;
+void* action(void* arg) {
+    printf("Thread running\n");
+    return NULL;
+}
+pthread_create(&thread_id, NULL, action, NULL);
+pthread_join(thread_id, NULL); // wait for completion
+\end{cc}
+\end{minipage}\\
+    \noindent\textbf{File I/O System Calls:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{int open(const char* pathname, int flags, mode\_t mode):} Open file, return FD
+        \item[-] \textbf{ssize\_t read(int fd, void* buf, size\_t count):} Read bytes from FD
+        \item[-] \textbf{ssize\_t write(int fd, const void* buf, size\_t count):} Write bytes to FD
+        \item[-] \textbf{off\_t lseek(int fd, off\_t offset, int whence):} Move file offset
+        \item[-] \textbf{int close(int fd):} Close file descriptor
+    \end{itemize}
+    \noindent\textbf{File Streams (stdio.h):}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{FILE* fopen(const char* filename, const char* mode):} Open file stream
+        \item[-] \textbf{size\_t fread(void* ptr, size\_t size, size\_t nmemb, FILE* stream):} Read data blocks
+        \item[-] \textbf{size\_t fwrite(const void* ptr, size\_t size, size\_t nmemb, FILE* stream):} Write data blocks
+        \item[-] \textbf{int fflush(FILE* stream):} Force buffer write
+        \item[-] \textbf{int fclose(FILE* stream):} Close file stream
+    \end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+int fd = open("file.txt", O_RDWR | O_CREAT, 0644);
+if (fd == -1) { perror("open"); exit(1); }
+char buf[100];
+ssize_t n = read(fd, buf, sizeof(buf)-1);
+if (n > 0) buf[n] = '\0';
+write(fd, "Hello", 5);
+lseek(fd, 0, SEEK_SET); // rewind to start
+close(fd);
+\end{cc}
+\end{minipage}\\
+    \noindent\textbf{Socket System Calls:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{int socket(int domain, int type, int protocol):} Create communication endpoint
+        \item[-] \textbf{int bind(int sockfd, const struct sockaddr* addr, socklen\_t addrlen):} Assign address to socket
+        \item[-] \textbf{ssize\_t sendto(int sockfd, const void* buf, size\_t len, int flags, const struct sockaddr* dest\_addr, socklen\_t addrlen):} Send data
+        \item[-] \textbf{ssize\_t recvfrom(int sockfd, void* buf, size\_t len, int flags, struct sockaddr* src\_addr, socklen\_t* addrlen):} Receive data
+    \end{itemize}
+\begin{minipage}{0.65\textwidth}
+\begin{cc}
+int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+struct sockaddr_in addr;
+addr.sin_family = AF_INET;
+addr.sin_port = htons(8080);
+bind(sockfd, (struct sockaddr*)&addr, sizeof(addr));
+\end{cc}
+\end{minipage}\\
+\hspace*{-70px}
+\vspace*{-20px}
+\fbox{
+\begin{minipage}{1.22\textwidth}
+\textbf{General Exam Assumptions}\\
+- If a question asks to identify all subnets, include trivial subnets (those with no end-systems). \\
+- If a question wants to ignore trivial subnets, it will say so explicitly. \\
+- Reasonable alternative assumptions will not be penalized if clearly stated. \\
+- SEQ number of the first segment carrying data is 1 (but other values are acceptable if consistently used). \\
+\textbf{Networking Assumptions}\\
+- Each router interface has an IP and MAC address. \\
+- L2 switch interfaces have neither IP nor MAC addresses (even if unrealistic). \\
+- Each subnet has a broadcast IP address (highest address in the range). \\
+- Subnets have no reserved network address (e.g., 8.0.0.0 is assignable). \\
+- Each end-system knows the IP address of its default gateway. \\
+- Recursive or iterative DNS can be assumed; just state your assumption. \\
+- If the ARP cache is empty, ARP requests must be made for: \\
+- The default gateway’s MAC (for routing outside the subnet). \\
+- The local DNS server’s MAC, if it is on the same subnet. \\
+- Do not assume NAT is in use unless stated explicitly. \\
+- Assume IPv4 address space is sufficient. \\
+\textbf{TCP Assumptions}\\
+- Use a single persistent TCP connection for multiple data exchanges. \\
+- Second segment from A to B (3rd of handshake) carries MSS bytes of data and has SEQ = 1. \\
+- First response from B to A carries both ACK and data, also with SEQ = 1. \\
+- Transmission delays of ACKs are negligible. \\
+- Timeout behavior: \\
+- Once timeout occurs: congestion window reset to 1 MSS, and retransmission of oldest unacknowledged segment. \\
+- Before timeout: sender may continue sending as long as congestion window allows. \\
+- Congestion avoidance: use MSS²/2 per ACK formula (not strictly 1 MSS per RTT). \\
+- Assume Tahoe unless stated otherwise. \\
+- Out-of-order segments are buffered, not dropped. \\
+\textbf{Memory Virtualization Assumptions}\\
+- A page table entry (PTE) contains the physical frame number (PFN), not a full physical address. \\
+- Do not assume a minimum PTE size unless stated. \\
+- Total physical memory = $2^{\#PFNs} \times$ frame size. \\
+\textbf{File Access Assumptions}\\
+- A filesystem cache (block cache) exists unless told otherwise. \\
+- Read operations may be avoided due to caching; writes always require block access. \\
+- A write() syscall: \\
+- Updates the FS cache. \\
+- Triggers disk writes for data and inode. \\
+- A close() syscall does not trigger block accesses (you may assume it does, but it's unnecessary). \\
+\textbf{Scheduling Assumptions}\\
+- If a thread blocks or terminates mid-tick (e.g., after 0.99 ticks), nothing happens for the rest of the tick. \\
+- The OS scheduler runs only at integer tick values (0, 1, 2, ...). \\
+\textbf{Timers in TCP}\\
+- The timer for a segment may be assumed to start either before or after transmission — both are valid. \\
+\end{minipage}}
+\end{minipage}
+

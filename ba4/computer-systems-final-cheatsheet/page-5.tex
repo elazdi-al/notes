@@ -1,0 +1,210 @@
+\hspace{-20px}
+\begin{minipage}[htp]{0.495\textwidth}
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Network Addressing \& Web Protocols:}\\
+       - \textbf{IP Address:} 32-bit (IPv4) or 128-bit (IPv6) unique identifier for network devices. Format: dotted decimal (e.g., 192.168.1.1) or hexadecimal notation.\\
+       - \textbf{Port Number:} 16-bit identifier (0-65535) for specific application/service on a host. Well-known ports: HTTP=80, HTTPS=443, FTP=21, SSH=22.
+    \end{minipage}}\\[5px]
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{HTTP(HyperText Transfer Protocol):} Stateless application-layer protocol for web communication.
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Stateless Protocol:} Server doesn't maintain client state between requests. Each request is independent and self-contained.
+        \item[-] \textbf{Web Objects:} Files identified by URLs (HTML pages, images, videos, CSS, JavaScript, etc.). Each object has a unique URL.
+        \item[-] \textbf{Web Page:} Base HTML file + referenced objects (images, stylesheets, scripts). \textbf{Single page may require multiple HTTP requests.}
+        \item[]  \begin{minipage}[htp]{0.5\textwidth}
+            \textbf{HTTP Methods:}\\
+ \textbf{GET:} Retrieve resource from server. Safe, idempotent.\\
+\textbf{HEAD:} Like GET but returns only headers (no body). Used for metadata.\\
+ \textbf{POST:} Submit data to server (forms, uploads). Non-idempotent.\\
+ \textbf{PUT:} Update/create resource. Idempotent.\\
+ \textbf{DELETE:} Remove resource. Idempotent.
+        \end{minipage}
+        \hfill
+        \begin{minipage}[htp]{0.48\textwidth}
+        \textbf{Common Response Codes:}\\
+ \textbf{200 OK:} Request successful\\
+ \textbf{301/302:} Redirect (permanent/temporary)\\
+ \textbf{404 Not Found:} Resource doesn't exist\\
+ \textbf{500 Internal Server Error:} Server-side error
+        \end{minipage}
+        \item[-] \textbf{Cookies:} Small data stored by browser, sent with requests to maintain state across stateless HTTP. Used for authentication, preferences, tracking.
+        \item[-] \textbf{Web Caching:} Store frequently accessed objects closer to client to reduce latency and server load. Types: browser cache, proxy cache, and \textbf{Edge Caches} (part of a CDN) which are geographically distributed.
+        \item[-] \textbf{Max-Age:} Cache-Control directive specifying how long (in seconds) a resource can be cached before becoming stale. Example: \texttt{max-age=3600} (1 hour).
+    \end{itemize} 
+    \end{minipage}}\\[5px]
+    \fbox{
+    \begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{DNS (Domain Name System):} Hierarchical distributed naming system that translates human-readable domain names to IP addresses.
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{DNS Name:} Hierarchical structure (e.g., www.epfl.ch). Read right-to-left: .ch (TLD), epfl (2nd level), www (subdomain).
+        \item[-] \textbf{Reserved Port:} UDP/TCP port 53. 
+        \item[-] \textbf{DNS Server Hierarchy:}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Root DNS Servers:} 13 logical servers (A-M) managing top-level domains
+            \item \textbf{TLD DNS Servers:} Manage specific top-level domains (.com, .org, .ch, etc.)
+            \item \textbf{Authoritative DNS Servers:} Store actual DNS records for specific domains
+        \end{itemize}
+        \item[-] \textbf{TTL (Time To Live):} Specifies how long DNS records can be cached (in seconds).
+                \item[-] \textbf{Protocol:} Primarily UDP for speed. TCP used for zone transfers or when response exceeds 512 bytes.
+        \item[-] \textbf{Client-side Syscalls (UDP):}
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{socket():} Creates a new UDP socket endpoint.
+            \item \textbf{bind():} (Optional) Assigns a local port to the socket. If not called, an ephemeral port is assigned by the kernel on first `sendto()`.
+            \item \textbf{sendto():} Sends the DNS query to the server's IP and port 53.
+            \item \textbf{recvfrom():} Waits to receive the DNS response from the server.
+        \end{itemize}
+    \end{itemize}
+
+    \noindent\textbf{DNS Resolution Approaches:}\\
+    \begin{minipage}[htp]{0.48\textwidth}
+        \textbf{Iterative Query:}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item Client queries local DNS
+            \item Local DNS queries root, gets TLD referral
+            \item Local DNS queries TLD, gets authoritative referral  
+            \item Local DNS queries authoritative, gets answer
+            \item Each server returns \textbf{referral} or answer
+        \end{enumerate}
+        \includegraphics[width=0.9\textwidth]{images/iterative.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[htp]{0.48\textwidth}
+        \textbf{Recursive Query:}
+        \begin{enumerate}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item Client queries local DNS
+            \item Local DNS recursively queries on behalf of client
+            \item Each server in chain does the work
+            \item Final answer returned through chain
+            \item Client only sees final result
+        \end{enumerate}
+        \includegraphics[width=0.9\textwidth]{images/recursive.png}
+    \end{minipage}
+\end{minipage}}\\[5px]
+\noindent\textbf{Packet Switching \& Network Delays:}
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item[-] \textbf{Packet Switch:} Network device that forwards packets using store-and-forward switching. Receives entire packet before forwarding.
+    \item[-] \textbf{Transmission Delay:} Time to push packet onto link. $\mathbf{d_{trans} = \frac{L}{R}}$, where L is the packet size (bits), R is the transmission rate (bps).
+    \item[-] \textbf{Propagation Delay:} Time for signal to travel link. $\mathbf{d_{prop} = \frac{d}{s}}$, where d is the distance, s is the signal speed.
+    \item[-] \textbf{Queuing Delay:} Time packet waits in output queue before transmission. Depends on congestion level.
+    \item[-] \textbf{Total Packet Delay:} $\mathbf{d_{total} = d_{proc} + d_{queue} + d_{trans} + d_{prop}}$, where $\mathbf{d_{proc}}$ is the processing delay.
+    \item[-] \textbf{Packet Loss:} Occurs when packet arrives at full queue buffer. Packet is dropped.
+    \item[-] \textbf{Traffic Analysis:}
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item \textbf{Arrival Rate ($\lambda$):} Average rate at which packets arrive.
+        \item \textbf{Packet Inter-arrival Time:} Time between consecutive packet arrivals. Average inter-arrival time = $\mathbf{\frac{1}{\lambda}}$.
+        \item \textbf{Departure Rate ($\mu$):} Rate at which packets are served/transmitted.
+        \item \textbf{If $\mathbf{\lambda > \mu}$:} Queue grows indefinitely, delay increases, eventually packet loss.
+        \item \textbf{If $\mathbf{\lambda < \mu}$:} Stable system, finite queuing delay.
+        \item \textbf{If $\mathbf{\lambda = \mu}$:} System at capacity, high sensitivity to bursts.
+    \end{itemize}
+    \item[-] \textbf{Average Throughput:} $\mathbf{\text{min(transmission rates along path)}}$ - the bottleneck link determines end-to-end throughput.
+    \item[-] \textbf{Transfer Time (N packets through bottleneck):} Total time to send N packets of size L bits through a path with bottleneck link rate $R_b$.
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item $\mathbf{\text{Transfer Time} = d_{\text{to bottleneck}} + \frac{N \times L}{R_b} + d_{\text{from bottleneck}}}$
+        \item Where $d_{\text{to bottleneck}}$ and $d_{\text{from bottleneck}}$ include propagation and transmission delays on non-bottleneck links
+    \end{itemize}
+\end{itemize}
+\textbf{Congestion Control:} A network-wide mechanism where senders reduce their transmission rate to prevent overwhelming the network's capacity.\\
+\textbf{Flow Control:} A point-to-point mechanism where the receiver informs the sender how much data it can handle, preventing the sender from overwhelming the receiver's buffer.
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.495\textwidth}
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{Internet Structure:}
+\begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+    \item[-] \textbf{ISP (Internet Service Provider):} Company that provides Internet access.
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item \textbf{Tier-1 ISP:} Global network, peers with all other Tier-1s. The backbone.
+        \item \textbf{Regional ISP:} Connects to one or more Tier-1 ISPs.
+        \item \textbf{Access ISP (Last-mile):} Connects end-users (homes, businesses).
+    \end{itemize}
+    \item[-] \textbf{IXP (Internet Exchange Point):} Physical infrastructure where multiple ISPs connect to exchange traffic directly, avoiding Tier-1 transit.
+\end{itemize}
+\end{minipage}}\\[5px]
+\fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{UDP (User Datagram Protocol):} Connectionless, unreliable transport protocol.
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Characteristics:} No connection establishment, no reliability guarantees, no flow/congestion control, minimal overhead.
+        \item[-] \textbf{Header Structure (8 bytes total):}
+        \begin{itemize}[noitemsep,nolistsep,topsep=-5px,partopsep=0pt,parsep=0pt]
+            \item Source Port: 16 bits
+            \item Destination Port: 16 bits  
+            \item Length: 16 bits (UDP header + data length)
+            \item Checksum: 16 bits (optional in IPv4, mandatory in IPv6)
+        \end{itemize}
+    \end{itemize}
+    \end{minipage}}\\[5px]
+\fbox{\begin{minipage}[htp]{0.99\textwidth}
+    \noindent\textbf{TCP Protocol Essentials.} Transmission Control Protocol provides reliable, ordered delivery over unreliable networks.
+    \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+        \item[-] \textbf{Three-Way Handshake:} Connection establishment process.
+        \begin{itemize}[noitemsep,nolistsep,topsep=-5px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Step 1:} Client sends SYN with initial sequence number (ISN)
+            \item \textbf{Step 2:} Server responds with SYN-ACK (server ISN + ACK of client ISN+1)
+            \item \textbf{Step 3:} Client sends ACK (acknowledges server ISN+1)
+        \end{itemize}
+        \item[-] \textbf{Sequence Number (SEQ):} 32-bit field identifying byte position in data stream. Initial value chosen randomly. Each byte of data increments SEQ by 1. Used for ordering and duplicate detection.
+        \item[-] \textbf{Acknowledgment Number (ACK):} 32-bit field indicating next expected sequence number from sender.
+    \end{itemize}
+\end{minipage}}    
+ \textbf{Congestion Window (cwnd):} TCP sender's estimate of how many bytes can be sent without causing network congestion, dynamically adjusted based on network conditions.
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Purpose:} Controls sending rate to prevent network overload and packet loss due to buffer overflow at intermediate routers.
+            \item \textbf{Relationship:} $\mathbf{\text{Effective Window} = \min(\text{cwnd}, \text{rwnd})}$ where rwnd = receiver advertised window.
+        \end{itemize}
+ \textbf{Maximum Segment Size (MSS):} Largest amount of data bytes that TCP can send in a single segment, excluding TCP and IP headers.\\
+ \textbf{Timeout Calculation:} TCP adaptively calculates retransmission timeout to balance quick recovery from lost packets with avoiding unnecessary retransmissions due to network delay variations.
+        \begin{itemize}[noitemsep,nolistsep,topsep=-5px,partopsep=0pt,parsep=0pt]
+            \item \textbf{SampleRTT:} Measured time for a specific segment to be sent and acknowledged (not retransmitted segments)
+            \item \textbf{EstimatedRTT:} Exponentially weighted moving average of RTT samples to smooth out fluctuations\\
+            $\mathbf{\text{EstimatedRTT} = (1-\alpha) \times \text{EstimatedRTT} + \alpha \times \text{SampleRTT}}$\\where $\mathbf{\alpha}$ = smoothing factor for RTT estimation (typically 0.125)\\
+
+            \item \textbf{DevRTT:} Estimate of RTT variation to account for network jitter and delay variability\\
+            $\mathbf{\text{DevRTT} = (1-\beta) \times \text{DevRTT} + \beta \times |\text{SampleRTT} - \text{EstimatedRTT}||}$\\where $\mathbf{\beta}$ = smoothing factor for deviation estimation (typically 0.25)\\
+        \end{itemize}
+$\mathbf{\text{TimeoutInterval} = \text{EstimatedRTT} + 4 \times \text{DevRTT}}$\\
+\textbf{Checksum:} 16-bit Internet checksum. Computed over TCP header, data, and pseudo-header (source IP, dest IP, protocol, TCP length). Uses 1's complement arithmetic.\\[-5px]
+\hrule
+\vspace*{2px}
+ \textbf{TCP Congestion Control (Tahoe \& Reno):} Algorithms that dynamically adjust sending rate to prevent network congestion while maximizing throughput.
+        \begin{itemize}[noitemsep,nolistsep,topsep=0px,partopsep=0pt,parsep=0pt]
+            \item \textbf{Common Phases (Both Algorithms):}
+            \begin{itemize}[noitemsep,nolistsep,topsep=-5px,partopsep=0pt,parsep=0pt]
+                \item \textbf{Slow Start:} $\mathbf{\text{cwnd} = \text{cwnd} + \text{MSS}}$ for each ACK. Exponential growth until cwnd $\geq$ ssthresh.
+                \item \textbf{Congestion Avoidance:} $\mathbf{\text{cwnd} = \text{cwnd} + \frac{\text{MSS}^2}{\text{cwnd}}}$ for each ACK. Linear growth.
+                \item \textbf{Fast Retransmit vs No Fast Retransmit:}
+                \begin{itemize}[noitemsep,nolistsep,topsep=-5px,partopsep=0pt,parsep=0pt]
+                    \item \textbf{Enabled:} Upon 3 duplicate ACKs, immediately retransmit lost segment. Faster recovery, reduced latency.
+                    \item \textbf{Disabled:} Must wait for timeout expiration to detect and retransmit lost segments. Slower recovery, higher latency.
+                \end{itemize}
+            \end{itemize}
+      \end{itemize}
+      \vspace*{5px}
+      \fbox{\begin{minipage}[htp]{0.99\textwidth}
+        \begin{minipage}[htp]{0.35\textwidth}
+            \textbf{Tahoe \\No fast-retransmit (Conservative):}\\
+            \vfill
+           \textbf{Timeout}\\   ssthresh = $\mathbf{\lfloor\text{cwnd}/2\rfloor}$, \\cwnd = MSS (slow start)\\
+           \textbf{Behavior:}\\ Always returns to slow start after ANY loss (more conservative).\\
+           
+        \end{minipage}   
+        \hfill
+        \begin{minipage}[htp]{0.65\textwidth}
+        \includegraphics[width=1\textwidth]{images/tahoe.png}
+        \end{minipage}
+    \end{minipage}}\\[5px]
+    \fbox{\begin{minipage}[htp]{0.99\textwidth}
+        \begin{minipage}[htp]{0.35\textwidth}
+        \textbf{Reno (Adaptive):}\\
+        \vfill
+           \textbf{Timeout:}\\ssthresh = $\mathbf{\lfloor\text{cwnd}/2\rfloor}$, \\cwnd = MSS (slow start)\\
+           \textbf{3 Dup ACKs:} \\ssthresh = $\mathbf{\lfloor\text{cwnd}/2\rfloor}$, \\cwnd = ssthresh + 3×MSS \\(fast recovery)\\
+        \end{minipage}
+        \hfill
+        \begin{minipage}[htp]{0.65\textwidth}
+            \includegraphics[width=1\textwidth]{images/reno.png}
+        \end{minipage}
+    \end{minipage}}
+ \vspace*{35px}
+\end{minipage}
+

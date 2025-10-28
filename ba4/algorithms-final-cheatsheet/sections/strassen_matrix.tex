@@ -1,0 +1,50 @@
+\fbox{
+\begin{minipage}[t]{1\linewidth}
+\textbf{Strassen's Matrix Multiplication}\\
+ \textbf{Divide:} Partition each of \(A, B, C\) into four \(\tfrac{n}{2} \times \tfrac{n}{2}\) submatrices:\\
+$
+        \begin{pmatrix}
+            C_{11} & C_{12} \\
+            C_{21} & C_{22}
+        \end{pmatrix}
+        \;=\;
+        \begin{pmatrix}
+            A_{11} & A_{12} \\
+            A_{21} & A_{22}
+        \end{pmatrix}
+        \cdot
+        \begin{pmatrix}
+            B_{11} & B_{12} \\
+            B_{21} & B_{22}
+        \end{pmatrix}.
+$\\[2pt]
+\begin{minipage}[t]{0.47\textwidth}
+    \textbf{Conquer:} Compute 7 products (recursively on \(\tfrac{n}{2} \times \tfrac{n}{2}\) matrices):\\
+$
+        \begin{aligned}
+        M_1 &:= (A_{11} + A_{22})(B_{11} + B_{22}), \\
+        M_2 &:= (A_{21} + A_{22}) \, B_{11}, \\
+        M_3 &:= A_{11} \,(B_{12} - B_{22}), \\
+        M_4 &:= A_{22} \,(B_{21} - B_{11}), \\
+        M_5 &:= (A_{11} + A_{12}) \, B_{22}, \\
+        M_6 &:= (A_{21} - A_{11}) \,(B_{11} + B_{12}), \\
+        M_7 &:= (A_{12} - A_{22}) \,(B_{21} + B_{22}).
+        \end{aligned}
+$
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.5\textwidth}
+    \textbf{Combine:} Assemble the resulting submatrices to form \(C\): \\[2px]
+$
+        \begin{aligned}
+        C_{11} &= M_1 + M_4 - M_5 + M_7, \\
+        C_{21} &= M_2 + M_4, \\
+        C_{12} &= M_3 + M_5, \\
+        C_{22} &= M_1 + M_3 - M_2 + M_6.
+        \end{aligned}
+$\\[2px]
+\textit{Time Complexity:} $O(n^{\log_2 7}) \approx O(n^{2.81})$\\
+\textit{Space Complexity:}$O(n^2)$
+        \end{minipage}
+\end{minipage}
+}

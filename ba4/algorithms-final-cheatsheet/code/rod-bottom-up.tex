@@ -1,0 +1,17 @@
+\begin{algorithmic}
+\Function{Extended-Bottom-Up-Cut-Rod}{$p, n$}
+\State let $r[0..n]$ and $s[0..n]$ be new arrays
+\State $r[0] \gets 0$
+\For{$j \gets 1$ \textbf{to} $n$}
+    \State $q \gets -\infty$
+    \For{$i \gets 1$ \textbf{to} $j$}
+        \If{$q < p[i] + r[j-i]$}
+            \State $q \gets p[i] + r[j-i]$
+            \State $s[j] \gets i$
+        \EndIf
+    \EndFor
+    \State $r[j] \gets q$
+\EndFor
+\State \Return{$r, s$}
+\EndFunction
+\end{algorithmic}

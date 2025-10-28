@@ -1,0 +1,8 @@
+\begin{algorithmic}
+\Function{FIND-SET}{$x$}
+    \If{$x \neq x.p$}
+        \State $x.p \gets$ \Call{FIND-SET}{$x.p$}
+    \EndIf
+    \State \Return $x.p$
+\EndFunction
+\end{algorithmic} 

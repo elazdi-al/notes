@@ -1,0 +1,16 @@
+\fbox{
+\begin{minipage}[t]{1\linewidth}
+\textbf{Master Theorem}\\
+If $T(n) =aT\left(\frac{n}{b}\right) + f(n)$, $a \geq 1$, $b > 1$, and $f(n)$ asymptotically positive.\\
+\textbf{Case 1: }If $f(n) = O(n^{\log_b a - \epsilon})$ for some $\epsilon > 0$, then $T(n) = \Theta(n^{\log_b a})$.\\
+\textbf{Case 2: }If $f(n) = \Theta(n^{\log_b a})$, then $T(n) = \Theta(n^{\log_b a}\log n)$.\\
+\textbf{Case 3: }If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some $\epsilon > 0$, and if $a\, f\left(\frac{n}{b}\right) \leq c\, f(n)$ for some $c < 1$ and all sufficiently large $n$, then $T(n) = \Theta(f(n))$.\\
+\noindent
+    \begin{center}
+    \textbf{Common case - if $f(n) = \Theta(n^d)$ for some exponent $d$:}\\[0.3em]
+    \end{center}
+- If $\frac{a}{b^d} < 1$ (or $d > \log_b a$), then $T(n) = \Theta(n^d)$.\\
+- If $\frac{a}{b^d} = 1$ (or $d = \log_b a$), then $T(n) = \Theta(n^d \log n)$.\\
+- If $\frac{a}{b^d} > 1$ (or $d < \log_b a$), then $T(n) = \Theta(n^{\log_b a})$.
+    \end{minipage}
+    }

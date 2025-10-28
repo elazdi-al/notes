@@ -1,0 +1,9 @@
+\begin{algorithmic}
+\Function{Postorder-Tree-Walk}{x}
+\If{$x \neq \mathrm{NIL}$}
+    \State \Call{Postorder-Tree-Walk}{x.left}
+    \State \Call{Postorder-Tree-Walk}{x.right}
+    \State \textbf{print} key[x]
+\EndIf
+\EndFunction
+\end{algorithmic}

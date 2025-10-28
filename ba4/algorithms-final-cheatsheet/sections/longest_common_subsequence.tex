@@ -1,0 +1,36 @@
+\fbox{
+      \begin{minipage}[t]{1\linewidth}
+      \textbf{Longest Common Subsequence}\\
+      \textbf{Problem:} Find the longest subsequence common to two sequences\\
+      \begin{minipage}[t]{0.48\textwidth}
+      \textbf{LCS-Length:}\\
+      - Build tables for length $c[0...m, 0...n]$ and direction $b[1...m, 1...n]$\\
+      - Initialize first row and column to zeros\\
+      - For each cell $(i,j)$ in the table:\\
+      \quad If characters match, take diagonal value + 1\\
+      \quad Otherwise, take maximum from above or left\\
+      - Table $c[m,n]$ contains the LCS length\\
+      - Table $b$ records decisions for reconstruction\\[-17px]
+      \algocode{lcs-length}\vspace*{-25px}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.48\textwidth}
+      \textbf{Print-LCS:}\\
+      - Recursively trace back through direction table $b$\\
+      - Follow diagonal arrows and print characters\\
+      - Skip cells with up or left arrows\\
+      - Stops when reaching first row or column\\[-15px]
+      \algocode{print-lcs}\vspace*{-20px}
+      \textbf{Example Recording of Solution:}
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{images/lcs-table.png}
+      \end{center}
+    \end{minipage}\\[2px]
+    \begin{minipage}[t]{1\linewidth}
+ \textbf{Time Complexity:} $O(mn)$ for two sequences of lengths $m$ and $n$\\
+ \textbf{Space Complexity:} $O(mn)$ (includes input sequences and tables)\\
+ \textbf{Space can be optimized to $O(m+n)$ if only length is needed}\\
+ \textbf{Print-LCS takes $O(m+n)$ time to reconstruct the solution}
+      \end{minipage}   
+  \end{minipage}
+      }

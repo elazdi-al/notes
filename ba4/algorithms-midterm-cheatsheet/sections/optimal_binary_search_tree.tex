@@ -1,0 +1,29 @@
+\fbox{
+\algoblock{0.25}{\scriptsize Optimal Binary Search Tree}{
+\scriptsize
+\begin{minipage}[t]{\textwidth}
+\textbf{Problem:} Construct a BST with minimum expected search cost given access probabilities \\
+\scriptsize
+
+\textbf{Optimal-BST Algorithm:}
+\begin{itemize}[leftmargin=1.2em]
+  \item Input: Keys $K_1,\dots,K_n$, probabilities $p_1,\dots,p_n$ for successful searches
+  \item Optional: Probabilities $q_0,\dots,q_n$ for unsuccessful searches
+  \item Create tables $e[1 \dots n+1,\, 0 \dots n]$ for expected costs
+  \item Create $w[i,j]$ for sum of probabilities from $i$ to $j$
+  \item Create $root[i,j]$ to record optimal roots
+  \item Fill tables bottom‐up by increasing subproblem size
+  \item For each subproblem, try all possible roots and pick the minimum cost
+  \item Formula: $e[i,j] \;=\; \min_{\,i \le r \le j}\!\bigl\{\,e[i,r-1] \;+\; e[r+1,j] \;+\; w[i,j]\bigr\}$
+  \item The root of the overall optimal tree is in $root[1,n]$
+\end{itemize}
+
+\imageblock{0.9}{images/optimal-bst.png}
+\textbf{Complexity:}
+\begin{itemize}[leftmargin=1.2em]
+  \item Time: $O(n^3)$ 
+  \item Space: $O(n^2)$ for tables $e$, $w$, and $root$
+  \item The algorithm computes optimal costs for all possible subtrees
+\end{itemize}
+\end{minipage}
+}} 

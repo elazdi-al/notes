@@ -1,0 +1,45 @@
+\theoremblock{0.78}{\scriptsize Master Theorem}{
+\scriptsize
+\begin{minipage}[t]{0.49\textwidth}
+If $T(n) = a\, T\left(\frac{n}{b}\right) + f(n)$, where $a \geq 1$, $b > 1$, and $f(n)$ is asymptotically positive.
+\begin{enumerate}[noitemsep, topsep=-2pt]
+    \item \textbf{Case 1:} If $f(n) = O(n^{\log_b a - \epsilon})$ for some $\epsilon > 0$, then $T(n) = \Theta(n^{\log_b a})$.
+    \item \textbf{Case 2:} If $f(n) = \Theta(n^{\log_b a})$, then $T(n) = \Theta(n^{\log_b a}\log n)$.
+    \item \textbf{Case 3:} If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some $\epsilon > 0$, and if $a\, f\left(\frac{n}{b}\right) \leq c\, f(n)$ for some $c < 1$ and all sufficiently large $n$, then $T(n) = \Theta(f(n))$.
+\end{enumerate}
+\noindent
+\vspace*{-8px}
+\begin{center}
+Common case - if $f(n) = \Theta(n^d)$ for some exponent $d$:
+\end{center}
+\vspace{-6px}
+\begin{enumerate}[noitemsep]
+    \item If $\frac{a}{b^d} < 1$ (or $d > \log_b a$), then $T(n) = \Theta(n^d)$.
+    \item If $\frac{a}{b^d} = 1$ (or $d = \log_b a$), then $T(n) = \Theta(n^d \log n)$.
+    \item If $\frac{a}{b^d} > 1$ (or $d < \log_b a$), then $T(n) = \Theta(n^{\log_b a})$.
+\end{enumerate}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\vspace*{-5px}
+\textbf{Akra--Bazzi:}\\
+For recurrence
+$T(n)=\alpha\,T(a\,n)+\beta\,T(b\,n)+\Theta(n^d),$\\
+where $\alpha,\beta>0$, $a,b\in(0,1)$, $d\ge0$,\\and unique $p$ with
+$\alpha\,a^p+\beta\,b^p=1$\\
+Then:\\[-10px]
+\begin{center}
+$p>d \Rightarrow T(n)=\Theta(n^p),$\\
+$p=d \Rightarrow T(n)=\Theta(n^d\log n),$\\
+$p<d \Rightarrow T(n)=\Theta(n^d).$\\[-7px]
+\end{center}\vspace*{-7px}
+If $p$ is not easily found, compare $\alpha\,a^d+\beta\,b^d$ with 1:\\[-7px]
+\begin{center}
+$\alpha\,a^d+\beta\,b^d<1 \Rightarrow T(n)=\Theta(n^d),$\\
+$\alpha\,a^d+\beta\,b^d=1 \Rightarrow T(n)=\Theta(n^d\log n),$\\
+$\alpha\,a^d+\beta\,b^d>1 \Rightarrow T(n)=\Theta(n^p),$\\
+\end{center}
+\vspace{-7px}
+with $p$ determined by $\alpha\,a^p+\beta\,b^p=1$.
+\end{minipage}
+} 

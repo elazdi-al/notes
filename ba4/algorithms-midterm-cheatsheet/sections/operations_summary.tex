@@ -1,0 +1,108 @@
+\fbox{
+\algoblock{0.6}{\scriptsize Data Structure Operations Summary}{
+\tiny
+\begin{minipage}[t]{0.49\textwidth}
+% Queue Operations
+\textbf{\tiny Queue Operations}\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.33\textwidth}|p{0.13\textwidth}|p{0.08\textwidth}|}
+\hline
+\textbf{Operation} & \textbf{Description} & \textbf{Time} & \textbf{Space} \\
+\hline
+Queue-Empty(Q) & Returns TRUE if queue is empty, FALSE otherwise & $O(1)$ & $O(1)$ \\
+\hline
+Enqueue(Q, x) & Adds element x to rear of queue Q & $O(1)$ & $O(1)$ \\
+\hline
+Dequeue(Q) & Removes and returns front element from queue Q & $O(1)$ & $O(1)$ \\
+\hline
+\end{tabular}\\
+
+% Linked List Operations
+\textbf{Linked List Operations}\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.33\textwidth}|p{0.13\textwidth}|p{0.08\textwidth}|}
+\hline
+\textbf{Operation} & \textbf{Description} & \textbf{Time} & \textbf{Space} \\
+\hline
+List-Search(L, k) & Returns pointer to first node with key k, NULL if not found & $O(n)$ & $O(1)$ \\
+\hline
+List-Insert(L, x) & Inserts node x at beginning of list L & $O(1)$ & $O(1)$ \\
+\hline
+List-Delete(L, x) & Removes node x from list L & $O(n)$ find, $O(1)$ del & $O(1)$ \\
+\hline
+\end{tabular}\\
+
+% Heap Operations
+\textbf{Heap Operations}\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.16\textwidth}|p{0.08\textwidth}|}
+\hline
+\textbf{Operation} & \textbf{Description} & \textbf{Time} & \textbf{Space} \\
+\hline
+Max-Heapify(A, i) & Maintains max-heap property at node i & $O(\log n)$ & $O(1)$ \\
+\hline
+Build-Max-Heap(A,n) & Converts array A of n elements into max heap & $O(n)$ & $O(1)$ \\
+\hline
+Heap-Sort(A, n) & Sorts array A of n elements using heap structure & $O(n \log n)$ & $O(1)$ \\
+\hline
+Max-Heap-Insert(A, k) & Inserts key k into heap A & $O(\log n)$ & $O(1)$ \\
+\hline
+Heap-Extract-Max(A) & Returns and removes largest element from heap A & $O(\log n)$ & $O(1)$ \\
+\hline
+Heap-Increase-Key(A,i,k) & Increases key at index i to new value k & $O(\log n)$ & $O(1)$ \\
+\hline
+\end{tabular}\\
+\end{minipage}
+\hspace{-37px}
+\begin{minipage}[t]{0.49\textwidth}
+\textbf{Stack Operations}\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.33\textwidth}|p{0.13\textwidth}|p{0.08\textwidth}|}
+\hline
+\textbf{Operation} & \textbf{Description} & \textbf{Time} & \textbf{Space} \\
+\hline
+Stack-Empty(S) & Returns TRUE if stack is empty, FALSE otherwise & $O(1)$ & $O(1)$ \\
+\hline
+Push(S, x) & Adds element x to top of stack S & $O(1)$ & $O(1)$ \\
+\hline
+Pop(S) & Removes and returns top element from stack S & $O(1)$ & $O(1)$ \\
+\hline
+\end{tabular}\\
+\textbf{BST Operations}\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.33\textwidth}|p{0.13\textwidth}|p{0.08\textwidth}|}
+\hline
+\textbf{Operation} & \textbf{Description} & \textbf{Time} & \textbf{Space} \\
+\hline
+BST-Search(T, k) & Finds node with key k in tree T & $O(h)$ & $O(h)$ \\
+\hline
+BST-Minimum(T) & Returns node with smallest key in T & $O(h)$ & $O(1)$ \\
+\hline
+BST-Maximum(T) & Returns node with largest key in T & $O(h)$ & $O(1)$ \\
+\hline
+BST-Successor(x) & Returns node with smallest key greater than x's key & $O(h)$ & $O(1)$ \\
+\hline
+BST-Insert(T, z) & Inserts node z into BST T & $O(h)$ & $O(1)$ \\
+\hline
+BST-Delete(T, z) & Removes node z from BST T & $O(h)$ & $O(1)$ \\
+\hline
+BST-Inorder(T) & Visits all nodes in sorted order & $O(n)$ & $O(h)$ \\
+\hline
+BST-Preorder(T) & Visits root before its children & $O(n)$ & $O(h)$ \\
+\hline
+BST-Postorder(T) & Visits children before root & $O(n)$ & $O(h)$ \\
+\hline
+\end{tabular}\\
+
+% Priority Queue Operations
+\textbf{Priority Queue Operations}\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.33\textwidth}|p{0.13\textwidth}|p{0.08\textwidth}|}
+\hline
+\textbf{Operation} & \textbf{Description} & \textbf{Time} & \textbf{Space} \\
+\hline
+Maximum(S) & Returns element with highest priority & $O(1)$ & $O(1)$ \\
+\hline
+Extract-Max(S) & Removes and returns element with highest priority & $O(\log n)$ & $O(1)$ \\
+\hline
+Insert(S, x) & Inserts element x into set S & $O(\log n)$ & $O(1)$ \\
+\hline
+Increase-Key(S, x, k) & Increases priority of element x to k & $O(\log n)$ & $O(1)$ \\
+\hline
+\end{tabular}\\
+\end{minipage}
+}} 
