@@ -57,7 +57,7 @@
 	\vspace*{20px}
 \end{titlepage}
 
-
+\small
 \vspace*{-20px}
 \noindent
 \begin{minipage}[t]{0.49\textwidth}
@@ -70,7 +70,7 @@
 		\item[-] \textbf{Anonymity.} protection of an individual's identity from being disclosed or linked to specific actions or data.
 		\item[-] \textbf{Non-repudiation.} assurance that a party in a communication cannot deny the authenticity of their signature or the sending of a message.
 	\end{itemize}
-	\noindent\textbf{The Adversary.} malicious entity aiming at breaching the security policy and \textbf{will} choose the optimal way to use her ressources to mount an attack that violates the security properties.\\
+	\noindent\textbf{The Adversary.} malicious entity aiming at breaching the security policy and \textbf{will} choose the optimal way to use its ressources to mount an attack that violates the security properties.\\
 	\noindent \textbf{Threat Model.} describes the ressources available to the adversary and their capabilities \textit{(has access to internet, but doesn't have access to the internal network of the company.)}\\
 	\noindent \textbf{Threat.} Who might attack which assets, using what resources, with what goal, how, and with what probability\\
 	\noindent \textbf{Vulnerability.} Specific weakness that could be exploited by adversaries with interest in a lot of different assets \textit{(API is not protected, password appears in plain text\dots)}
@@ -180,34 +180,74 @@
 	\textbf{Role Based Access Control (RBAC).} access granted based on user roles and predefined permissions. systems have too many subjects (that come and go) $\rightarrow$ large dynamic ACLs.\\
 	Subjects are often similar to each other and get assigned the same rights.\\
 	1. Assign permissions to roles, \quad 2. Assign roles to subjects\\
-	3. Subjects select a role, they have the permissions of the active role\\[0.1em]
-	Problems: role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege.\\
+	3. Subjects have the permissions of their assigned role\\[0.1em]
+	$\ominus$ role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege.\\
 	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are (typically) broader, less specialized, often representing organizational units rather than specific functions.
 	\begin{itemize}
 		\item[1.] Assign permissions to groups
 		\item[2.] Assign subjects to groups
 		\item[3.] Subjects have the combined permissions of all their groups
 	\end{itemize}
-	Problems: coarse granularity, overlapping group memberships, inconsistent permissions, difficult to manage if users belong to many groups.\\
+	$\ominus$ coarse granularity, overlapping group memberships, inconsistent permissions, difficult to manage if users belong to many groups.\\
 	\textit{In case of \textbf{Negative Permissions} check negative permissions first before group, think of system crashes before checking negatives.}\\[2px]
 	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}, stores permissions close to the user/process.\\
 	\textit{Alice: \{(file1, read/write), (file3, read)\}}\\
 	\textit{Bob: \{(file2, read/write), (file3, read/write)\}}\\
 	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
 	$\ominus$ difficult to determine who can access a given resource, and to revoke rights by resource.\\
-\end{minipage}
-\hfill
-\begin{minipage}[htp]{0.49\textwidth}
 	\textbf{Ambient Authority.} an action succeeds if the subject only specifies the \textit{operation} and the \textit{object name}, not the specific authority used. $\ominus$ leads to accidental misuse of authority, programs may act with more rights than intended. $\rightarrow$ Confused Deputy Problem.\\
-	\textbf{Confused Deputy Problem.} when a program (deputy) is tricked into misusing its authority on behalf of another subject. \textit{students ask a professor (who has access) to open a staff-only room, the professor unintentionally bypasses policy.}\\
+	\textbf{Confused Deputy Problem.} when a program (deputy) is tricked into misusing its authority on behalf of another subject. \\\textit{students ask a professor (who has access) to open a staff-only room, the professor unintentionally bypasses policy.}\\
 	\textit{Compiler example:} Alice runs compiler(input, bill) $\Rightarrow$ compiler (with write access to bill) overwrites billing file.\\
 	$\Rightarrow$ Alice uses compiler’s authority to modify bill indirectly.\\
 	$\ominus$ ambient authority allows unintended privilege use.\\
-	$\oplus$ \textbf{Solutions:}\\
+	\textbf{Solutions:}\\
 	1. Restrict privileged process access.\\
 	2. Make privileged process check user’s authorization.\\
 	3. Use \textbf{Capabilities} to explicitly delegate rights.\\
-
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.49\textwidth}
+	\textbf{User \& Group Identities.}\\
+	Most modern systems rely on DAC.\\
+	\textbf{UIDs / GIDs.} numerical identifiers for users and groups.\\
+	\textit{/etc/passwd:} \texttt{username:password:UID:GID:info:home:shell}\\
+	\textit{/etc/group:} defines secondary groups.\\
+	Each user has a home directory and belongs to one or more groups.\\
+	\textbf{UNIX Model.}\\
+	Everything is a file. Each file has:
+	\begin{itemize}[leftmargin=1.2em]
+		\item[-] Owner (UID) and Group (GID)
+		\item[-] 9 permission bits: 3 actions × 3 subjects
+		      \begin{itemize}[leftmargin=1.2em]
+			      \item \textit{Actions:} Read (r), Write (w), Execute (x)
+			      \item \textit{Subjects:} Owner, Group, Others
+		      \end{itemize}
+	\end{itemize}
+	\textit{Directories:} Read → list files; Write → add/remove files; Exec → traverse (cd).\\
+	\includegraphics[width=1\textwidth]{assets/permissions.png}
+	\textbf{Permission check order:}\\
+	1. If process UID = file owner → check owner bits.\\
+	2. Else if GID matches → check group bits.\\
+	3. Else → check “other” bits.\\
+	\textit{Root (UID 0)} bypasses all checks.\\[0.3em]
+	\textbf{Changing Permissions.}\\
+	\textbf{chmod.} modify permission bits. \textit{\texttt{chmod +r file}, \texttt{chmod 666 file}}.\\
+	\textbf{chown.} change file owner/group(opt.) \texttt{chown root:staff /srv/config}\\
+	\textbf{chgrp.} change file group. \texttt{chgrp www-data /var/www}\\
+	\textbf{Special Rights.}\\
+	\textbf{suid (set user ID).} run program with owner’s privileges.\\
+	\texttt{- rws r-x r-x 1 root root /bin/passwd}\\
+	$\rightarrow$ allows normal users to change passwords without full root access.\\
+	$\ominus$ dangerous if exploited, in TCB.\\
+	\textbf{sgid (set group ID).} run program with group’s privileges.\\
+	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\
+	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own (e.g. \texttt{/tmp}).\\
+	\texttt{d rwx rwx rwt 10 root tmp /tmp}\\
+	\textbf{Special Users.}\\
+	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
+	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
+	$\oplus$ flexible, simple model, widely adopted.\\
+	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\
 \end{minipage}
 \end{document}
 
