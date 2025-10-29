@@ -13,6 +13,11 @@ notes/
 └── ba2/    # Semester 2
 ```
 
+## BA5 - Semester 5
+
+- **computer-security-midterm-cheasheet** - Computer Security midterm reference
+
+
 ## BA4 - Semester 4
 
 - **introduction-to-machine-learning** - IML course summary
