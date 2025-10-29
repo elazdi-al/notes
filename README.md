@@ -31,12 +31,3 @@ notes/
 ## BA2 - Semester 2
 
 - **fundamentals-of-digital-systems** - Digital systems notes
-
-## Building
-
-Most documents use LaTeX:
-
-```bash
-cd <course-folder>
-pdflatex main.tex
-```
