@@ -63,9 +63,9 @@
 \begin{minipage}[t]{0.49\textwidth}
 	\noindent\textbf{CompSec Properties}
 	\begin{itemize}
-		\item[-] \textbf{Confidentiality}. prevention of unauthorized disclosure of information.
-		\item[-] \textbf{Integrity.} prevention of unauthorized modification of information.
-		\item[-] \textbf{Availability.} prevention of unauthorized denial of service or access to information and resources.
+		\item[-] \textbf{Confidentiality}. prevention of unauthorized disclosure of information. \textit{authorized users may read a file}
+		\item[-] \textbf{Integrity.} prevention of unauthorized modification of information. \textit{authorized programs may write a file}
+		\item[-] \textbf{Availability.} prevention of unauthorized denial of service or access to information and resources.\\ \textit{authorized services can access a file}
 		\item[-] \textbf{Authenticity.} assurance that entities (users, systems, or data) are genuine and can be verified as such.
 		\item[-] \textbf{Anonymity.} protection of an individual's identity from being disclosed or linked to specific actions or data.
 		\item[-] \textbf{Non-repudiation.} assurance that a party in a communication cannot deny the authenticity of their signature or the sending of a message.
@@ -73,36 +73,33 @@
 	\noindent\textbf{The Adversary.} malicious entity aiming at breaching the security policy and \textbf{will} choose the optimal way to use her ressources to mount an attack that violates the security properties.\\
 	\noindent \textbf{Threat Model.} describes the ressources available to the adversary and their capabilities \textit{(has access to internet, but doesn't have access to the internal network of the company.)}\\
 	\noindent \textbf{Threat.} Who might attack which assets, using what resources, with what goal, how, and with what probability\\
-	\noindent \textbf{Vulnerability.} Specific weakness that could be exploited by adversaries with interest in a lot of different assets \textit{(API is not protected, password appears in plain text\dots)}\\
-	\noindent \textbf{Harm.} The bad thing that could happen when the \textbf{threat} materializes. \textit{(adversary steals the money, learns my password\dots)}
+	\noindent \textbf{Vulnerability.} Specific weakness that could be exploited by adversaries with interest in a lot of different assets \textit{(API is not protected, password appears in plain text\dots)}
 \end{minipage}
 \hfill
 \noindent
 \begin{minipage}[t]{0.49\textwidth}
-	\noindent \textbf{Security Policy}\\
-	A high level description of the security properties that must hold in the system in relation to assets and principals
+	\noindent \textbf{Harm.} The bad thing that could happen when the \textbf{threat} materializes. \textit{(adversary steals the money, learns my password\dots)}
+	\noindent \textbf{Security Policy.} high level description of the security properties that must hold in the system in relation to assets and principals
 	\begin{itemize}
-		\item[-] \textbf{Assets (objects).} anything with value (data, files , memory) that needs to be protected
+		\item[-] \textbf{Assets (objects).} anything with value (data, files, memory) that needs protection.
 		\item[-] \textbf{Principals (subjects).} people, computer programs, services
 	\end{itemize}
-	\textit{Confidentiality.} authorized users may read a file\\
-	\textit{Integrity.} authorized programs may write a file\\
-	\textit{Availability.} authorized services can access a file\\
 	\noindent \textbf{Security Mechanism.} Technical mechanism used to ensure that the security policy is not violated by an adversary within the threat model, \textbf{we can only prepare for threats we're aware of} \\\textit{(Policy. ensure messages cannot be read by anyone but the sender and the receiver, Mechanism. encrypt the message before sending)}
 	\noindent \textbf{Composition of Security Mechanisms}
 	\begin{itemize}
 		\item[-] \textbf{Defence in depth.} As long as one remains unbroken the Security Policy isn't broken) \textit{(two-factor auth)}
-		\item[-] \textbf{Weakest Link.} if anyone fails the Security Policy is broken security questions in case of a lost password, no need to know the password but just the answer
+		\item[-] \textbf{Weakest Link.} if anyone fails the Security Policy, it is broken. \textit{(security questions for a lost password, just need to know the answer.\dots)}
 	\end{itemize}
-	\textit{Humans are also part of the mechanism and allow vulnerabilities like phishing attacks, bad use of passwords\dots)}\\
-	\noindent  \textbf{To show a system is secure. (under a \textit{specific} threat model)} \\
-	Attacker - Just one way to violate \textbf{one} security property is enough (within the threat model).\\
-	Defender - No adversary strategy can violate the security policy.\\
-	\noindent \textbf{Security Argument}\\
-	Rigorous argument that the security mechanisms in place are indeed effective in maintaining the security policy subject to the assumptions of the Threat Model.
-\end{minipage}\\[8px]
+	\textit{Humans can be vulnerabilities - phishing attacks, bad use of passwords\dots)}\\
+	\noindent \textbf{To show a system is secure. (under a \textit{specific} threat model)}
+	\begin{itemize}
+		\item[] Attacker - Just one way to violate \textbf{one} security property is enough.
+		\item[] Defender - No adversary strategy can violate the security policy.
+	\end{itemize}
+	\noindent \textbf{Security Argument.} Rigorous argument that the security mechanisms in place are indeed effective in maintaining the security policy subject to the assumptions of the Threat Model.
+\end{minipage}\\[5px]
 \hline
-\vspace{8px}
+\vspace{5px}
 \noindent \begin{minipage}[htp]{0.49\textwidth}
 	\noindent \textbf{Principles of CompSec.}
 	\begin{itemize}
@@ -163,6 +160,54 @@
 \end{minipage}
 
 \newpage
-\textbf{Access Control}
+\vspace*{-20px}
+\begin{minipage}[htp]{0.49\textwidth}
+	\textbf{Access Control.}
+	Security mechanism that ensures that all accesses and actions on objects by principals are within the security policy.\\
+	\textbf{no} \textit{chicken soup (checks everywhere in code), use a reference monitor, module used all over code checking for \textbf{subjects} and \textbf{actions}}\\
+	\textbf{Discretionary Access Control (DAC).}
+	Object owners assign permissions, ownership of resources. \textit{Linux, Social Networks}\\
+	\textbf{Mandatory Access Control (MAC).} Central security policy assigns permissions, usually for organizations with need for central control. \textit{Military, Hospital Environments, Banking}.\\
+	\textbf{Access Control Matrix.} \textbf{abstract representation} of all permitted triplets of (subject, object, access right) within a system.
+	\includegraphics[width=1\textwidth]{assets/access-control-matrix.png}
+	\textit{Complexity.} $O(f\cdot u)$\\
+	\textbf{Access Control List (ACL).} associate permissions to objects, stores permissions close to the resource.\\
+	\textit{file1: {(Alice,read/write)}},
+	\textit{file2: {(Bob, read/write)}},\\
+	\textit{file3: {(Alice,read),(Bob,read/write)}}\\
+	$\oplus$ easy to determine who can access a resource and to revoke rights by resource.\\
+	$\ominus$ difficult to check all users rights, to remove all permissions for a user. it's also difficult to delegate perms.\\
+	\textbf{Role Based Access Control (RBAC).} access granted based on user roles and predefined permissions. systems have too many subjects (that come and go) $\rightarrow$ large dynamic ACLs.\\
+	Subjects are often similar to each other and get assigned the same rights.\\
+	1. Assign permissions to roles, \quad 2. Assign roles to subjects\\
+	3. Subjects select a role, they have the permissions of the active role\\[0.1em]
+	Problems: role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege.\\
+	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are (typically) broader, less specialized, often representing organizational units rather than specific functions.
+	\begin{itemize}
+		\item[1.] Assign permissions to groups
+		\item[2.] Assign subjects to groups
+		\item[3.] Subjects have the combined permissions of all their groups
+	\end{itemize}
+	Problems: coarse granularity, overlapping group memberships, inconsistent permissions, difficult to manage if users belong to many groups.\\
+	\textit{In case of \textbf{Negative Permissions} check negative permissions first before group, think of system crashes before checking negatives.}\\[2px]
+	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}, stores permissions close to the user/process.\\
+	\textit{Alice: \{(file1, read/write), (file3, read)\}}\\
+	\textit{Bob: \{(file2, read/write), (file3, read/write)\}}\\
+	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
+	$\ominus$ difficult to determine who can access a given resource, and to revoke rights by resource.\\
+\end{minipage}
+\hfill
+\begin{minipage}[htp]{0.49\textwidth}
+	\textbf{Ambient Authority.} an action succeeds if the subject only specifies the \textit{operation} and the \textit{object name}, not the specific authority used. $\ominus$ leads to accidental misuse of authority, programs may act with more rights than intended. $\rightarrow$ Confused Deputy Problem.\\
+	\textbf{Confused Deputy Problem.} when a program (deputy) is tricked into misusing its authority on behalf of another subject. \textit{students ask a professor (who has access) to open a staff-only room, the professor unintentionally bypasses policy.}\\
+	\textit{Compiler example:} Alice runs compiler(input, bill) $\Rightarrow$ compiler (with write access to bill) overwrites billing file.\\
+	$\Rightarrow$ Alice uses compiler’s authority to modify bill indirectly.\\
+	$\ominus$ ambient authority allows unintended privilege use.\\
+	$\oplus$ \textbf{Solutions:}\\
+	1. Restrict privileged process access.\\
+	2. Make privileged process check user’s authorization.\\
+	3. Use \textbf{Capabilities} to explicitly delegate rights.\\
+
+\end{minipage}
 \end{document}
 
