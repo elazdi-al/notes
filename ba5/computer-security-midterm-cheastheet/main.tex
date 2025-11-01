@@ -1,5 +1,5 @@
 \documentclass[8pt]{article}
-\usepackage[top=0.2in, bottom=0.2in, left=0.1in, right=0.1in]{geometry} % Adjust margins individually
+\usepackage[top=0in, bottom=0in, left=0.06in, right=0.06in]{geometry} % Adjust margins individually
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumitem}
 \usepackage{graphicx} % Required for \includegraphics
@@ -59,37 +59,32 @@
 \end{titlepage}
 
 \small
-\vspace*{-23px}
 \noindent
 \begin{minipage}[t]{0.49\textwidth}
 	\noindent\textbf{CompSec Properties}
-	\begin{itemize}
-		\item[-] \textbf{Confidentiality}. prevention of unauthorized disclosure of information. \textit{authorized users may read a file}
-		\item[-] \textbf{Integrity.} prevention of unauthorized modification of information. \textit{authorized programs may write a file}
-		\item[-] \textbf{Availability.} prevention of unauthorized denial of service or access to information and resources.\\ \textit{authorized services can access a file}
-		\item[-] \textbf{Authenticity.} assurance that entities (users, systems, or data) are genuine and can be verified as such.
-		\item[-] \textbf{Anonymity.} protection of an individual's identity from being disclosed or linked to specific actions or data.
-		\item[-] \textbf{Non-repudiation.} assurance that a party in a communication cannot deny the authenticity of their signature or the sending of a message.
-	\end{itemize}
+	- \textbf{Confidentiality}. prevent unauthorized disclosure of information. \textit{authorized users may read a file}\\
+	- \textbf{Integrity.} prevent unauthorized modification of information. \textit{authorized programs may write a file}\\
+	- \textbf{Availability.} prevent unauthorized denial of service or access to information and resources. \textit{authorized services can access a file}\\
+	- \textbf{Authenticity.} assurance that entities (users, systems, or data) are genuine and can be verified as such.\\
+	- \textbf{Anonymity.} protection of an individual's identity from being disclosed or linked to specific actions or data.\\
+	- \textbf{Non-repudiation.} assurance that a party in a communication cannot deny the authenticity of their signature or the sending of a message.\\
 	\noindent\textbf{The Adversary.} malicious entity aiming at breaching the security policy and \textbf{will} choose the optimal way to use its ressources to mount an attack that violates the security properties.\\
 	\noindent \textbf{Threat Model.} describes the ressources available to the adversary and their capabilities \textit{(has access to internet, but doesn't have access to the internal network of the company.)}\\
 	\noindent \textbf{Threat.} Who might attack which assets, using what resources, with what goal, how, and with what probability\\
-	\noindent \textbf{Vulnerability.} Specific weakness that could be exploited by adversaries with interest in a lot of different assets \textit{(API is not protected, password appears in plain text\dots)}
+	\noindent \textbf{Vulnerability.} Specific weakness that adversaries could exploit with interest in a lot of assets \textit{(API is not protected, password appears in plain text\dots)}
 \end{minipage}
 \hfill
 \noindent
 \begin{minipage}[t]{0.49\textwidth}
 	\noindent \textbf{Harm.} The bad thing that could happen when the \textbf{threat} materializes. \textit{(adversary steals the money, learns my password\dots)}\\
-	\noindent \textbf{Security Policy.} high level description of the security properties that must hold in the system in relation to assets and principals.
-	\begin{itemize}
-		\item[-] \textbf{Assets (objects).} anything with value (data, files, memory) that needs protection.
-		\item[-] \textbf{Principals (subjects).} people, computer programs, services
-	\end{itemize}
+	\noindent \textbf{Security Policy.} high level description of the security properties that must hold in the system in relation to assets and principals.\\
+	- \textbf{Assets (objects).} anything with value (data, files, memory) needing protection.\\
+	- \textbf{Principals (subjects).} people, computer programs, services.\\
 	\noindent \textbf{Security Mechanism.} Technical mechanism used to ensure that the security policy is not violated by an adversary within the threat model, \textbf{we can only prepare for threats we're aware of} \\\textit{(Policy. ensure messages cannot be read by anyone but the sender and the receiver, Mechanism. encrypt the message before sending)}\\
 	\noindent \textbf{Composition of Security Mechanisms}
 	\begin{itemize}
 		\item[-] \textbf{Defence in depth.} As long as one remains unbroken the Security Policy isn't broken) \textit{(two-factor auth)}
-		\item[-] \textbf{Weakest Link.} if anyone fails the Security Policy, it is broken. \textit{(security questions for a lost password, just need to know the answer.\dots)}
+		\item[-] \textbf{Weakest Link.} if anyone fails the Security Policy, it is broken. \textit{(security questions for a lost password $\rightarrow$ just need to know the answer.\dots)}
 	\end{itemize}
 	\textit{Humans can be vulnerabilities - phishing attacks, bad use of passwords\dots)}\\
 	\noindent \textbf{To show a system is secure. (under a \textit{specific} threat model)}
@@ -97,115 +92,103 @@
 		\item[] Attacker - Just one way to violate \textbf{one} security property is enough.
 		\item[] Defender - No adversary strategy can violate the security policy.
 	\end{itemize}
-	\noindent \textbf{Security Argument.} Rigorous argument that the security mechanisms in place are indeed effective in maintaining the security policy subject to the assumptions of the Threat Model.
+	\noindent \textbf{Security Argument.} Rigorous argument that security mechanisms in place are effective in maintaining security policy subject to assumptions on Threat Model.
 \end{minipage}\\[3px]
 \hline
 \vspace{3px}
-\noindent \begin{minipage}[htp]{0.49\textwidth}
-	\noindent \textbf{Principles of CompSec.}
-	\begin{itemize}
-		\item[1.] \textbf{Economy of mechanism}\\
-		      Keep the security mechanism/implementation design as simple and small as possible. Why ?
-		      \begin{itemize}
-			      \item[a.] Easier to audit and verify.
-			      \item[b.] Testing is not appropriate to evaluate security.
-		      \end{itemize}
-		      \noindent \textbf{Trusted Computing Base (TCB).}\\
-		      Every component of the system on which the security policy relies upo hardware, firmware, software. \\The TCB is trusted to operate correctly for the security policy to hold. $\to$ If something goes wrong in it, the security policy may be violated\\
-		      It \textbf{must} be kept small to ease verification (economy of mechanism) and diminish the attack surface
-
-		\item[2.]\textbf{Fail-safe defaults.} Base access decisions on permission rather than exclusion. \textit{(Whitelist, do not blacklist)} \\
-		      If something fails, be as secure as it does not fail errors / uncertainty should error on the side of the security policy. \textbf{Don't} try to fix on error! (\textit{Automated doors: if they cannot close, stay open})
-		\item[3.]  \textbf{Complete mediation.}
-		      \textbf{Every} access to every object must be checked for authority
-		      A Reference Monitor mediates all actions from subjects on objects and ensures they are according to the policy. Tradeoff time\_to\_check vs. time\_to\_use
-		\item[4.] \textbf{Open design} The design should not be secret
-		      \begin{itemize}
-			      \item Always design as if the enemy knows the system.
-			      \item When you design...
-			            \begin{itemize}
-				            \item	Crypto. Only keep the key secret
-				            \item Authentication. Only keep the password secret
-				            \item Obfuscation. Only keep the used noise secret
-			            \end{itemize}
-		      \end{itemize} assuming the thread model can't get a hold of the system is unrealistic (employee corruption, ...)
-	\end{itemize}
+\noindent \begin{minipage}[t]{0.49\textwidth}
+	\noindent \textbf{Principles of CompSec.}. 1. \textbf{Economy of mechanism}
+	Keep security mechanism design simple and small $\Rightarrow$ Easier to audit and verify, testing is \textbf{not} appropriate to evaluate security.\\
+	\noindent - \textbf{Trusted Computing Base (TCB).} Every component of the system on which the security policy relies upon \textit{hardware, firmware, software}. \\The TCB is trusted to operate correctly for the security policy to hold. $\to$ If something goes wrong in it, the security policy may be violated\\
+	\textbf{must} be kept small to easy verification / diminish the attack surface\\
+	2. \textbf{Fail-safe defaults.} Base access decisions on permission rather than exclusion. \textit{(Whitelist, do not blacklist)} \\
+	If something fails, be as secure as it does not fail errors / uncertainty should error on the side of the security policy.\\
+	3. \textbf{Complete mediation.}. \textbf{Every} access to every object must be checked for authority. A \textbf{Reference Monitor} mediates all actions from subjects on objects and ensures they are according to the policy. \textit{\warning time to check vs. time to use}\\
+	4. \textbf{Open design} The design should not be secret \textit{Always design as if the enemy knows the system. (for Crypto, only secret is key. for Authentication, Only secret is password. for Obfuscation, Only used secret is noise.)}.\textbf{assuming the thread model can't get a hold of the system is unrealistic (employee corruption, ...)}
 \end{minipage}
 \hfill
-\noindent \begin{minipage}[htp]{0.49\textwidth}
-	\begin{itemize}
-		\item[5.] \textbf{Separation of privilege.}	No single accident, deception, or breach of trust is sufficient to compromise the protected information
-		      \begin{itemize}
-			      \item \textbf{Privilege.}\
-			            A privilege allows a user to perform an action on a computer system that may have security consequences. \textit{(create a file in a directory, access a device, write to a socket for communicating over the internet\dots)}
-		      \end{itemize}
-
-		\item[6.] \textbf{Least Privilege.}\\
-		      Every program and every user of the system should operate using the least set of privileges necessary to complete the job. \textit{Rights are added as needed, discarded after use. Users should get to know about things if they \textbf{have} to.}
-
-		\item[7.] \textbf{Least Common Mechanism}\\
-		      Minimize the amount of mechanism common to more than one user and depended on by all users. Every shared mechanism represents a potential information path between users.
-		\item[8.] \textbf{Psychological acceptability}
-		      It is essential that the human interface be designed for ease of use, so that users routinely and automatically apply the protection mechanisms correctly. \textit{(hide complexity, keep ressources as accessible as before,mental model of users must match security policy/mechanisms, cultural acceptability\dots)}
-		\item[9.] \textbf{Work Factor}\\
-		      Compare the cost of breaking the mechanism with the resources of a potential attacker. \textit{(cost of compromising insiders, cost of finding a bug, monetization\dots)}
-		\item[10.] \textbf{Compromise recording}\
-		      Reliably record that a compromise of information has occurred [...] in place of more elaborate mechanisms that completely prevent loss.
-		      (\textit{keep tamper-evidence logs, what if you cannot recover them? (confidentiality), how to keep integrity ? (Blockchain), logs may be a vulnerability ? (Privacy), logging the log ? (Availability)}\ldots)
-	\end{itemize}
+\noindent \begin{minipage}[t]{0.49\textwidth}
+	5. \textbf{Separation of privilege.}	No single accident, deception, or breach of trust is sufficient to compromise the protected information\\
+	- \textbf{Privilege.} A privilege allows a user to perform an action on a computer system that may have security consequences. \textit{(create a file in a directory\dots)}\\
+	6. \textbf{Least Privilege.} Every program and every user of the system should operate using the least set of privileges necessary to complete the job. \textit{Rights are added on need, discarded after use. Users should only know about things if they \textbf{have} to.}\\
+	7. \textbf{Least Common Mechanism} Minimize the amount of mechanism common to more than one user and depended on by all users. Every shared mechanism represents a potential information path between users.\\
+	8. \textbf{Psychological acceptability.}
+	It is essential that the human interface be designed for ease of use, so that users routinely and automatically apply the protection mechanisms correctly. \textit{(hide complexity, cultural acceptability\dots)}\\
+	9. \textbf{Work Factor}\\
+	Compare the cost of breaking the mechanism with the resources of a potential attacker. \textit{(cost of compromising insiders, cost of finding a bug, monetization\dots)}\\
+	10. \textbf{Compromise recording} Detect and record security breaches with tamper-evident logs, ensuring traceability, integrity, confidentiality, and availability of recorded data.
 \end{minipage}\\[3px]
 \hline
 \vspace*{3px}
-\begin{minipage}[htp]{0.49\textwidth}
+\begin{minipage}[t]{0.49\textwidth}
 	\textbf{Access Control.}
 	Security mechanism that ensures all accesses and actions on objects by principals are within the security policy.\\
 	\textbf{no} \textit{chicken soup (checks everywhere in code), use a reference monitor, module used all over code checking for \textbf{subjects} and \textbf{actions}}\\
 	\textbf{Discretionary Access Control (DAC).}
 	Object owners assign permissions, ownership of resources. \textit{Linux, Social Networks}\\
-	\textbf{Mandatory Access Control (MAC).} Central security policy assigns permissions, usually for organizations with need for central control. \textit{Military, Hospital Environments, Banking}.\\
+	\textbf{Mandatory Access Control (MAC).} Central security policy assigns permissions, usually for organizations with need for central control. \textit{Military, Hospital,\ldots}.\\
 	\textbf{Access Control Matrix.} \textbf{abstract representation} of all permitted triplets of (subject, object, access right) within a system.\\
-	\includegraphics[width=1\textwidth]{assets/access-control-matrix.png}\\
+	\begin{center} \vspace*{-15px} \includegraphics[width=0.8\textwidth]{assets/access-control-matrix.png} \vspace{-10px}\end{center}\\
 	\textit{Complexity.} $O(f\cdot u)$\\
-\end{minipage}
-\hfill
-\begin{minipage}[htp]{0.49\textwidth}
-	\textbf{User \& Group Identities.}\\
-	Most modern systems rely on DAC.\\
-	\textbf{UIDs / GIDs.} numerical identifiers for users and groups.\\
-	\textit{/etc/passwd:} \texttt{username:password:UID:GID:info:home:shell}\\
-	\textit{/etc/group:} defines secondary groups.\\
-	Each user has a home directory and belongs to one or more groups.\\
-	\textbf{UNIX Model.} Everything is a file.\\
-	\includegraphics[width=1\textwidth]{assets/permissions.png}\\
-	\textbf{Directories.}\\ Read → list files; Write → add/remove files; Exec → traverse (cd).\\
-\end{minipage}
-\newpage
-\vspace*{-20px}
-\begin{minipage}[t]{0.49\textwidth}
 	\textbf{Access Control List (ACL).} associate permissions to objects, stores permissions close to the resource.\\
 	\textit{file1: {(Alice,read/write)}},
 	\textit{file2: {(Bob, read/write)}},\\
 	\textit{file3: {(Alice,read),(Bob,read/write)}}\\
 	$\oplus$ easy to determine who can access a resource and to revoke rights by resource.\\
-	$\ominus$ difficult to check all users rights, to remove all permissions for a user. it's also difficult to delegate perms.\\
+	$\ominus$ hard to check all users rights, to remove all perms. for a user, delegate perms.\\
 	\textbf{Role Based Access Control (RBAC).} access granted based on user roles and predefined permissions. systems have too many subjects (that come and go) $\rightarrow$ large dynamic ACLs.\\
 	Subjects are often similar to each other and get assigned the same rights.\\
 	1. Assign permissions to roles, \quad 2. Assign roles to subjects\\
-	3. Subjects have the permissions of their assigned role\\[0.1em]
+	3. Subjects have the permissions of their assigned role\\
 	$\ominus$ role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege.\\
-	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are (typically) broader, less specialized, often representing organizational units rather than specific functions.
-	\begin{itemize}
-		\item[1.] Assign permissions to groups
-		\item[2.] Assign subjects to groups
-		\item[3.] Subjects have the combined permissions of all their groups
-	\end{itemize}
+	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}\\
+	\textit{Alice: \{(file1, read/write)\}} \; \textit{Bob: \{(file2, read/write), (file3, read/write)\}}\\
+	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
+	$\ominus$ hard to determine who can access a resource or to revoke rights by resource.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+	\textbf{User \& Group Identities.} Most modern systems rely on DAC.\\
+	\textbf{UIDs / GIDs.} numerical identifiers for users and groups.\\
+	\textit{/etc/passwd:} \texttt{username:password:UID:GID:info:home:shell}\\
+	\textit{/etc/group:} defines secondary groups.\\
+	Each user has a home directory and belongs to one or more groups.\\
+	\textbf{UNIX Model.} Everything is a file.\\
+	\includegraphics[width=0.9\textwidth]{assets/permissions.png}\\[-5px]
+	\textbf{Directories.} Read → list files; Write → add/remove files; Exec → traverse (cd).\\
+	\textbf{Permission check order:} 1. If process UID = file owner → check owner bits.\\
+	2. Else if GID matches → check group bits.\\
+	3. Else → check “other” bits.\\
+	\textit{Root (UID 0)} bypasses all checks.\\
+	\begin{minipage}[htp]{0.48\textwidth}
+		\textbf{Changing Permissions.}\\
+		\textbf{chmod.} modify permission bits. \\\texttt{chmod +r file}, \texttt{chmod 666 file}.\\
+		\textbf{chown.} change file owner/group(opt.) \\\texttt{chown root:staff /srv/config}\\
+		\textbf{chgrp.} change file group. \\\texttt{chgrp www-data /var/www}\\
+	\end{minipage}
+	\begin{minipage}[htp]{0.51\textwidth}
+		\textbf{Special Rights.}\\
+		\textbf{suid (set user ID).} run program with owner’s privileges. \textit{puts s in x field of owner}\\
+		\texttt{chmod u+s filename}\\
+		\textit{allows normal users to change passwords without full root access.}\\
+	\end{minipage}\\[-8px]
+	\textbf{sgid (set group ID).} run program with group’s privileges.\\
+	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\
+	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own.\\
+	\texttt{d rwx rwx rwt 10 root tmp /tmp}
+	\textbf{Special Users.}\\
+	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
+	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
+	$\oplus$ flexible, simple model, widely adopted.\\
+	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\
+\end{minipage}
+\newpage
+\begin{minipage}[t]{0.49\textwidth}
+	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are (typically) broader, less specialized, often representing organizational units rather than specific functions.\\
+	1. Assign permissions to groups \quad 2. Assign subjects to groups\\
+	3. Subjects have the combined permissions of all their groups\\
 	$\ominus$ coarse granularity, overlapping group memberships, inconsistent permissions, difficult to manage if users belong to many groups.\\
 	\textit{In case of \textbf{Negative Permissions} check negative permissions first before group, think of system crashes before checking negatives.}\\[2px]
-	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}, stores permissions close to the user/process.\\
-	\textit{Alice: \{(file1, read/write), (file3, read)\}}\\
-	\textit{Bob: \{(file2, read/write), (file3, read/write)\}}\\
-	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
-	$\ominus$ difficult to determine who can access a given resource, and to revoke rights by resource.\\
 	\textbf{Ambient Authority.} an action succeeds if the subject only specifies the \textit{operation} and the \textit{object name}, not the specific authority used. \\
 	$\ominus$ leads to accidental misuse of authority, programs may act with more rights than intended. $\rightarrow$ Confused Deputy Problem.\\
 	\textbf{Confused Deputy Problem.} when a program (deputy) is tricked into misusing its authority on behalf of another subject.\\
@@ -215,46 +198,9 @@
 	1. Restrict privileged process access.\\
 	2. Make privileged process check user’s authorization.\\
 	3. Use \textbf{Capabilities} to explicitly delegate rights.\\
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.49\textwidth}
-	\textbf{Permission check order:}\\
-	1. If process UID = file owner → check owner bits.\\
-	2. Else if GID matches → check group bits.\\
-	3. Else → check “other” bits.\\
-	\textit{Root (UID 0)} bypasses all checks.\\[0.3em]
-	\textbf{Changing Permissions.}\\
-	\textbf{chmod.} modify permission bits. \textit{\texttt{chmod +r file}, \texttt{chmod 666 file}}.\\
-	\textbf{chown.} change file owner/group(opt.) \texttt{chown root:staff /srv/config}\\
-	\textbf{chgrp.} change file group. \texttt{chgrp www-data /var/www}\\
-	\textbf{Special Rights.}\\
-	\textbf{suid (set user ID).} run program with owner’s privileges.\\
-	\texttt{chmod u+s filename}
-	\texttt{- rws r-x r-x 1 root root /bin/passwd}\\
-	$\rightarrow$ allows normal users to change passwords without full root access.\\
-	$\ominus$ dangerous if exploited, in TCB.\\
-	\textbf{sgid (set group ID).} run program with group’s privileges.\\
-	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\
-	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own (e.g. \texttt{/tmp}).\\
-	\texttt{d rwx rwx rwt 10 root tmp /tmp}\\
-	\textbf{Special Users.}\\
-	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
-	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
-	$\oplus$ flexible, simple model, widely adopted.\\
-	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\
-	\textbf{Windows: DACL.} Controls access to objects via list of ACEs (Access Control Entries).
-	\begin{itemize}
-		\item[]	\textbf{ACE.} \texttt{<Type, Principal, Permissions, Flags>}.
-		      \begin{itemize}
-			      \item[-] \textbf{Types.} \texttt{Allow / Deny} (negative / positive). Deny takes precedence and ordered with Denied permissions first.
-			      \item[-] \textbf{Principal.} User or group (SID).
-			      \item[-] \textbf{Permissions.} Fine-grained rights\textit{(Read, Write, Execute, Delete...)}
-			      \item[-] \textbf{Flags.} Inheritance, propagation, object-specific.
-		      \end{itemize}
-		\item[] \textbf{Access Tokens.} Thread/process carries user + group SIDs checked against DACL.
-		\item[] \textbf{Least Privilege.} Users run limited by default; elevation via “Run as administrator”
-	\end{itemize}
-	\textbf{Security Model.} a design pattern for a specific security property or set of properties.
+	\hline
+	\vspace{3px}
+	\textbf{Security Model.} a design pattern for a set of properties.\\
 	(\warning not covered by model - who are the subjects? what are the objects? what mechanisms to use to implement it?)\\
 	\textbf{Bell-La Padula (BLP).} security model where Subjects S and objects O are associated to a level of Confidentiality.\\
 	- Access rights. Execute, Read, Append, Write.\\
@@ -265,7 +211,7 @@
 	\textit{eg. $(\text{Secret}, \{ \text{Nuclear, Army} \}) \geq (\text{Confidential}, \{ \text{Army} \})$}\\
 	- \textbf{Clearance.} max security level a subject has been assigned. \textit{clearance-level($S_i$).}\\
 	- \textbf{Current Security level.} subjects can operate at lower security levels. \textit{current-level($S_{i}$)}.\\
-	\textbf{BLP to create Confidentiality Policies.}\\Properties:
+	\textbf{BLP to create Confidentiality Policies.}
 	\begin{itemize}
 		\item[] \textbf{Simple Security Property.} if (subject, object, w/r) is a current access, $\implies$ level(subject) dominates level(object). \textbf{(SUBJECTS CAN'T READ UP)}
 		\item[] \textbf{Star Property.} If a subject has simultaneous "observe" (r,w) access $O_{1}$ and "alter" $(a, w)$  access to $O_2$ then level $O_2$ dominates level $O_1$.\\
@@ -276,6 +222,62 @@
 	\end{itemize}
 	\textbf{Covert Channels.} Any channel that allows information flows contrary to the security policy, \textit{Storage channels(shared counters, \dots), Timing channels(queuing time\dots).} \warning Least Common Mechanism.\\
 	\textit{can be mitigated by adding noise or isolation(no high $\leftrightarrow$ level communication).}
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+	\fbox{
+		\begin{minipage}[t]{0.98\textwidth}
+			\textbf{Windows: DACL.} Controls access to objects via list of ACEs.\\
+			\textbf{ACE (Acces Control Entry).} \texttt{<Type, Principal, Permissions, Flags>}.
+			\begin{itemize}
+				\item[-] \textbf{Types.} \texttt{Allow / Deny} (negative / positive). Deny takes precedence and ordered with Denied permissions first.
+				\item[-] \textbf{Principal.} User or group (SID).
+				\item[-] \textbf{Permissions.} Fine-grained rights\textit{(Read, Write, Execute, Delete...)}
+				\item[-] \textbf{Flags.} Inheritance, propagation, object-specific.
+			\end{itemize}
+			\textbf{Access Tokens.} Thread/process carries user + group SIDs checked against DACL.\\
+			\textbf{Least Privilege.} Users run limited by default; elevation via “Run as admin.”
+		\end{minipage}}\\
+	\textbf{BIBA (Integrity).} Security model where subjects $S$ and objects $O$ are associated to a level of \textbf{Integrity} (trustworthiness).\\
+	Access rights. Read (Observe), Write (Modify)\\
+	\textbf{Clearance.} max \textbf{integrity} level assigned to a subject. \textit{clearance-level($S_i$).}\\
+	\textbf{Current Level.} subjects may operate at lower \textbf{integrity}. \textit{current-level($S_i$)}.\\
+	\textbf{BIBA to create Integrity Policies.}\\
+	\textbf{Simple Integrity Property.} If $(s,o,r)$ is a current access, then $\text{level}(s)$ dominates $\text{level}(o)$.\\\textbf{(SUBJECTS CAN'T READ DOWN)} $\Rightarrow$ prevents contamination from low to high.
+	\textbf{$\ast$-Integrity Property.} If $(s,o,w)$ is a current access, then $\text{level}(o)$ \emph{does not} dominate $\text{level}(s)$.\\
+	\textbf{(SUBJECTS CAN'T WRITE UP)} $\Rightarrow$ prevents low from corrupting high state.\\
+	\textbf{Discretionary Property (DAC).} Subject must still have explicit permission for the access (r, w, x) per the access control matrix.\\
+	\textbf{Basic Integrity Theorem (induction).} If the initial state is integrity-secure and all state transitions satisfy BIBA properties, then all reachable states preserve integrity.\\
+	\textbf{BIBA Low-Water-Mark Variants (taint-tracking).}\\
+	1) \textit{For Subjects:} Subjects start at their max integrity.\\ On read, $\text{current-level}(s) = \min(\text{current-level}(s), \text{level}(o))$.\\
+	\textit{Effect:} once tainted, subject sinks; prevents writing up thereafter.\\
+	2) \textit{For Objects:} On write by $s$, $\text{level}(o) = \min(\text{level}(o), \text{level}(s))$.\\
+	\textit{Effect:} objects “sink” easily; can cause integrity collapse.\\
+	\textit{Mitigation:} replicate high/low objects; sanitize before promotion; detect/flag unexpected level drops.
+
+	\textbf{Invocation Controls.}\\
+	- \textit{Simple Invocation:} allow $s$ to invoke $t$ only if $\text{level}(s)$ dominates $\text{level}(t)$.\\
+	\textit{Goal:} block low principals from laundering influence via higher code.\\
+	- \textit{Controlled Invocation:} allow $s$ to invoke $t$ only if $\text{level}(t)$ dominates $\text{level}(s)$.\\
+	\textit{Goal:} gate low$\rightarrow$high access through trusted invokers; requires strict validation.
+
+	\textbf{Sanitization (lifting low $\rightarrow$ high).}\\
+	- \textit{Fail-safe default:} deny by default; elevate only after checks pass.\\
+	- \textit{Whitelist over blacklist:} validate that \emph{all} required properties of “good” hold.\\
+	- \textit{Context-aware:} encoding, schema, range, semantics, and provenance checks.\\
+	\textit{Note:} Sanitization bugs commonly break integrity guarantees.
+
+	\textbf{Supporting Principles.}\\
+	- \textbf{Separation of Duties:} split critical actions across principals.\\
+	- \textbf{Rotation of Duties:} limit tenure and constrain concurrent roles.\\
+	- \textbf{Secure Logging:} tamper-evident, consistent logs for detection/recovery.
+
+	\textbf{Information Flow Intuition.}\\
+	- \textit{Allowed:} High$\rightarrow$High, Low$\rightarrow$Low, High$\rightarrow$Low (write down), Low$\rightarrow$Low (read up).\\
+	- \textit{Forbidden:} Low$\rightarrow$High (write up), High$\leftarrow$Low (read down).\\
+	\textit{Goal:} High-integrity computations behave as if no adversary influenced inputs or state.
+
 \end{minipage}
 \end{document}
 
