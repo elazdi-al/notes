@@ -1,5 +1,5 @@
-\documentclass[8pt]{article}
-\usepackage[top=0in, bottom=0in, left=0.06in, right=0.06in]{geometry} % Adjust margins individually
+\documentclass[9pt, a4paper]{extarticle}
+\usepackage[a4paper, top=0in, bottom=0in, left=0.05in, right=0.05in]{geometry} % Minimal margins
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumitem}
 \usepackage{graphicx} % Required for \includegraphics
@@ -18,7 +18,7 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{5pt plus 1pt minus 1pt}
 \usepackage{setspace}
-\setstretch{0.97}
+\setstretch{0.98}
 \pagestyle{empty}
 \setlength{\parskip}{0pt}      % space between paragraphs
 \setlength{\parindent}{0pt}    % optional: remove indentation
@@ -26,6 +26,9 @@
 % Redefine the textblock environment
 \let\originaltextblock\textblock
 \let\endoriginaltextblock\endtextblock
+% Adjust vertical centering of the existing \warning symbol
+\let\oldwarning\warning
+\renewcommand{\warning}{\raisebox{0.3ex}{\oldwarning}}
 
 \renewenvironment{textblock}[2][]{%
     \originaltextblock[#1]{#2}%
@@ -41,26 +44,29 @@
 \begin{document}
 \begin{titlepage}
 	\centering
+	% Moderately larger size hierarchy
+	\makeatletter
+	\renewcommand{\Huge}{\@setfontsize\Huge{26pt}{30pt}}
+	\renewcommand{\LARGE}{\@setfontsize\LARGE{20pt}{24pt}}
+	\renewcommand{\Large}{\@setfontsize\Large{16pt}{20pt}}
+	\renewcommand{\large}{\@setfontsize\large{13pt}{16pt}}
+	\makeatother
+
 	\vspace*{1cm}
 	{\Huge \textbf{Computer Security - CheatSheet}} \\
-	\vspace{20px}
+	\vspace{20pt}
 	{\LARGE IN~BA5 - Thomas Bourgeat} \\
 	\vspace*{1cm}
 	{\Large Notes by Ali EL AZDI} \\
 	\vfill
 
-	\begin{justify}
-
-	\end{justify}
-	\vspace*{100px}
-
 	{\large October 26th, 2025}
-	\vspace*{20px}
+	\vspace*{60px}
 \end{titlepage}
 
 \small
 \noindent
-\begin{minipage}[t]{0.49\textwidth}
+\begin{minipage}[t]{0.495\textwidth}
 	\noindent\textbf{CompSec Properties}
 	- \textbf{Confidentiality}. prevent unauthorized disclosure of information. \textit{authorized users may read a file}\\
 	- \textbf{Integrity.} prevent unauthorized modification of information. \textit{authorized programs may write a file}\\
@@ -71,11 +77,11 @@
 	\noindent\textbf{The Adversary.} malicious entity aiming at breaching the security policy and \textbf{will} choose the optimal way to use its ressources to mount an attack that violates the security properties.\\
 	\noindent \textbf{Threat Model.} describes the ressources available to the adversary and their capabilities \textit{(has access to internet, but doesn't have access to the internal network of the company.)}\\
 	\noindent \textbf{Threat.} Who might attack which assets, using what resources, with what goal, how, and with what probability\\
-	\noindent \textbf{Vulnerability.} Specific weakness that adversaries could exploit with interest in a lot of assets \textit{(API is not protected, password appears in plain text\dots)}
+	\noindent \textbf{Vulnerability.} Specific weakness that adversaries could exploit with interest in a lot of assets \textit{(API is not protected, password appears in plain text\dots)}\\
 \end{minipage}
 \hfill
 \noindent
-\begin{minipage}[t]{0.49\textwidth}
+\begin{minipage}[t]{0.495\textwidth}
 	\noindent \textbf{Harm.} The bad thing that could happen when the \textbf{threat} materializes. \textit{(adversary steals the money, learns my password\dots)}\\
 	\noindent \textbf{Security Policy.} high level description of the security properties that must hold in the system in relation to assets and principals.\\
 	- \textbf{Assets (objects).} anything with value (data, files, memory) needing protection.\\
@@ -93,11 +99,12 @@
 		\item[] Defender - No adversary strategy can violate the security policy.
 	\end{itemize}
 	\noindent \textbf{Security Argument.} Rigorous argument that security mechanisms in place are effective in maintaining security policy subject to assumptions on Threat Model.
-\end{minipage}\\[3px]
+\end{minipage}\\[1px]
 \hline
-\vspace{3px}
-\noindent \begin{minipage}[t]{0.49\textwidth}
-	\noindent \textbf{Principles of CompSec.}. 1. \textbf{Economy of mechanism}
+\vspace{1px}
+\noindent \begin{minipage}[t]{0.495\textwidth}
+	\noindent \textbf{Principles of CompSec.}\\
+	1. \textbf{Economy of mechanism}
 	Keep security mechanism design simple and small $\Rightarrow$ Easier to audit and verify, testing is \textbf{not} appropriate to evaluate security.\\
 	\noindent - \textbf{Trusted Computing Base (TCB).} Every component of the system on which the security policy relies upon \textit{hardware, firmware, software}. \\The TCB is trusted to operate correctly for the security policy to hold. $\to$ If something goes wrong in it, the security policy may be violated\\
 	\textbf{must} be kept small to easy verification / diminish the attack surface\\
@@ -107,7 +114,7 @@
 	4. \textbf{Open design} The design should not be secret \textit{Always design as if the enemy knows the system. (for Crypto, only secret is key. for Authentication, Only secret is password. for Obfuscation, Only used secret is noise.)}.\textbf{assuming the thread model can't get a hold of the system is unrealistic (employee corruption, ...)}
 \end{minipage}
 \hfill
-\noindent \begin{minipage}[t]{0.49\textwidth}
+\noindent \begin{minipage}[t]{0.495\textwidth}
 	5. \textbf{Separation of privilege.}	No single accident, deception, or breach of trust is sufficient to compromise the protected information\\
 	- \textbf{Privilege.} A privilege allows a user to perform an action on a computer system that may have security consequences. \textit{(create a file in a directory\dots)}\\
 	6. \textbf{Least Privilege.} Every program and every user of the system should operate using the least set of privileges necessary to complete the job. \textit{Rights are added on need, discarded after use. Users should only know about things if they \textbf{have} to.}\\
@@ -117,78 +124,35 @@
 	9. \textbf{Work Factor}\\
 	Compare the cost of breaking the mechanism with the resources of a potential attacker. \textit{(cost of compromising insiders, cost of finding a bug, monetization\dots)}\\
 	10. \textbf{Compromise recording} Detect and record security breaches with tamper-evident logs, ensuring traceability, integrity, confidentiality, and availability of recorded data.
-\end{minipage}\\[3px]
+\end{minipage}\\[1px]
 \hline
-\vspace*{3px}
-\begin{minipage}[t]{0.49\textwidth}
+\vspace*{1px}
+\begin{minipage}[t]{0.495\textwidth}
 	\textbf{Access Control.}
 	Security mechanism that ensures all accesses and actions on objects by principals are within the security policy.\\
-	\textbf{no} \textit{chicken soup (checks everywhere in code), use a reference monitor, module used all over code checking for \textbf{subjects} and \textbf{actions}}\\
+	\textbf{no} \textit{chicken soup (checks everywhere in code), use a reference monitor, module used all over code checking for \textbf{subjects} and \textbf{actions}}\\[1px]
 	\textbf{Discretionary Access Control (DAC).}
-	Object owners assign permissions, ownership of resources. \textit{Linux, Social Networks}\\
-	\textbf{Mandatory Access Control (MAC).} Central security policy assigns permissions, usually for organizations with need for central control. \textit{Military, Hospital,\ldots}.\\
+	Object owners assign permissions, ownership of resources. \textit{Linux, Social Networks}\\[1px]
+	\textbf{Mandatory Access Control (MAC).} Central security policy assigns permissions, usually for organizations with need for central control. \textit{Military, Hospital,\ldots}.\\[1px]
 	\textbf{Access Control Matrix.} \textbf{abstract representation} of all permitted triplets of (subject, object, access right) within a system.\\
-	\begin{center} \vspace*{-15px} \includegraphics[width=0.8\textwidth]{assets/access-control-matrix.png} \vspace{-10px}\end{center}\\
-	\textit{Complexity.} $O(f\cdot u)$\\
+	\begin{center} \vspace*{-11px} \includegraphics[width=0.8\textwidth]{assets/access-control-matrix.png} \vspace{-6px}\end{center}\\
+	\textit{Complexity.} $O(f\cdot u)$\\[1px]
 	\textbf{Access Control List (ACL).} associate permissions to objects, stores permissions close to the resource.\\
 	\textit{file1: {(Alice,read/write)}},
 	\textit{file2: {(Bob, read/write)}},\\
 	\textit{file3: {(Alice,read),(Bob,read/write)}}\\
 	$\oplus$ easy to determine who can access a resource and to revoke rights by resource.\\
-	$\ominus$ hard to check all users rights, to remove all perms. for a user, delegate perms.\\
+	$\ominus$ hard to check all users rights, to remove all perms. for a user, delegate perms.\\[1px]
 	\textbf{Role Based Access Control (RBAC).} access granted based on user roles and predefined permissions. systems have too many subjects (that come and go) $\rightarrow$ large dynamic ACLs.\\
 	Subjects are often similar to each other and get assigned the same rights.\\
 	1. Assign permissions to roles, \quad 2. Assign roles to subjects\\
 	3. Subjects have the permissions of their assigned role\\
 	$\ominus$ role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege.\\
-	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}\\
-	\textit{Alice: \{(file1, read/write)\}} \; \textit{Bob: \{(file2, read/write), (file3, read/write)\}}\\
-	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
-	$\ominus$ hard to determine who can access a resource or to revoke rights by resource.
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.49\textwidth}
-	\textbf{User \& Group Identities.} Most modern systems rely on DAC.\\
-	\textbf{UIDs / GIDs.} numerical identifiers for users and groups.\\
-	\textit{/etc/passwd:} \texttt{username:password:UID:GID:info:home:shell}\\
-	\textit{/etc/group:} defines secondary groups.\\
-	Each user has a home directory and belongs to one or more groups.\\
-	\textbf{UNIX Model.} Everything is a file.\\
-	\includegraphics[width=0.9\textwidth]{assets/permissions.png}\\[-5px]
-	\textbf{Directories.} Read → list files; Write → add/remove files; Exec → traverse (cd).\\
-	\textbf{Permission check order:} 1. If process UID = file owner → check owner bits.\\
-	2. Else if GID matches → check group bits.\\
-	3. Else → check “other” bits.\\
-	\textit{Root (UID 0)} bypasses all checks.\\
-	\begin{minipage}[htp]{0.48\textwidth}
-		\textbf{Changing Permissions.}\\
-		\textbf{chmod.} modify permission bits. \\\texttt{chmod +r file}, \texttt{chmod 666 file}.\\
-		\textbf{chown.} change file owner/group(opt.) \\\texttt{chown root:staff /srv/config}\\
-		\textbf{chgrp.} change file group. \\\texttt{chgrp www-data /var/www}\\
-	\end{minipage}
-	\begin{minipage}[htp]{0.51\textwidth}
-		\textbf{Special Rights.}\\
-		\textbf{suid (set user ID).} run program with owner’s privileges. \textit{puts s in x field of owner}\\
-		\texttt{chmod u+s filename}\\
-		\textit{allows normal users to change passwords without full root access.}\\
-	\end{minipage}\\[-8px]
-	\textbf{sgid (set group ID).} run program with group’s privileges.\\
-	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\
-	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own.\\
-	\texttt{d rwx rwx rwt 10 root tmp /tmp}
-	\textbf{Special Users.}\\
-	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
-	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
-	$\oplus$ flexible, simple model, widely adopted.\\
-	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\
-\end{minipage}
-\newpage
-\begin{minipage}[t]{0.49\textwidth}
 	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are (typically) broader, less specialized, often representing organizational units rather than specific functions.\\
 	1. Assign permissions to groups \quad 2. Assign subjects to groups\\
 	3. Subjects have the combined permissions of all their groups\\
 	$\ominus$ coarse granularity, overlapping group memberships, inconsistent permissions, difficult to manage if users belong to many groups.\\
-	\textit{In case of \textbf{Negative Permissions} check negative permissions first before group, think of system crashes before checking negatives.}\\[2px]
+	\textit{In case of \textbf{Negative Permissions} check negative permissions first before group, think of system crashes before checking negatives.}\\[1px]
 	\textbf{Ambient Authority.} an action succeeds if the subject only specifies the \textit{operation} and the \textit{object name}, not the specific authority used. \\
 	$\ominus$ leads to accidental misuse of authority, programs may act with more rights than intended. $\rightarrow$ Confused Deputy Problem.\\
 	\textbf{Confused Deputy Problem.} when a program (deputy) is tricked into misusing its authority on behalf of another subject.\\
@@ -198,36 +162,40 @@
 	1. Restrict privileged process access.\\
 	2. Make privileged process check user’s authorization.\\
 	3. Use \textbf{Capabilities} to explicitly delegate rights.\\
-	\hline
-	\vspace{3px}
-	\textbf{Security Model.} a design pattern for a set of properties.\\
-	(\warning not covered by model - who are the subjects? what are the objects? what mechanisms to use to implement it?)\\
-	\textbf{Bell-La Padula (BLP).} security model where Subjects S and objects O are associated to a level of Confidentiality.\\
-	- Access rights. Execute, Read, Append, Write.\\
-	- Objects are associated to a Security Level = (Classification, {set of categories}).\\
-	\textit{\{(Unclassified < Confidentiality < Secret < Top Secret), \{NATO, Crypto, Nuclear\}\}}\\
-	\textbf{Dominance Relationship.} Transitive, There always is a Top and Bottom, \\Only partial ordering (some pairs of elements can't be compared). \\
-	A security level $(l_1, c_1)$ dominates $(l_2, c_2)$ if and only if $l_{2} \leq l_{1}$ and $c_{2} \subseteq c_{1}$.\\
-	\textit{eg. $(\text{Secret}, \{ \text{Nuclear, Army} \}) \geq (\text{Confidential}, \{ \text{Army} \})$}\\
-	- \textbf{Clearance.} max security level a subject has been assigned. \textit{clearance-level($S_i$).}\\
-	- \textbf{Current Security level.} subjects can operate at lower security levels. \textit{current-level($S_{i}$)}.\\
-	\textbf{BLP to create Confidentiality Policies.}
-	\begin{itemize}
-		\item[] \textbf{Simple Security Property.} if (subject, object, w/r) is a current access, $\implies$ level(subject) dominates level(object). \textbf{(SUBJECTS CAN'T READ UP)}
-		\item[] \textbf{Star Property.} If a subject has simultaneous "observe" (r,w) access $O_{1}$ and "alter" $(a, w)$  access to $O_2$ then level $O_2$ dominates level $O_1$.\\
-		      \textbf{(SUBJECTS CAN'T WRITE DOWN)}. \textit{changing object's perms is write-like}.
-		\item[] \textbf{Discretionary Property.}
-		      A subject may only access an object if it has explicit permission for that specific type of access (r, w, x, etc.) defined by the access control matrix.
-		\item[] \textbf{Basic Security Theorem(induction).} if all state transitions are secure, and the initial state is secure, then every subsequent state is secure regardless of the input.
-	\end{itemize}
-	\textbf{Covert Channels.} Any channel that allows information flows contrary to the security policy, \textit{Storage channels(shared counters, \dots), Timing channels(queuing time\dots).} \warning Least Common Mechanism.\\
-	\textit{can be mitigated by adding noise or isolation(no high $\leftrightarrow$ level communication).}
-
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.49\textwidth}
+\begin{minipage}[t]{0.495\textwidth}
+	\textbf{User \& Group Identities.} Most modern systems rely on DAC.\\[1px]
+	\textbf{UIDs / GIDs.} numerical identifiers for users and groups.\\
+	\textit{/etc/passwd:} \texttt{username:password:UID:GID:info:home:shell}\\
+	\textit{/etc/group:} defines secondary groups.\\
+	Each user has a home directory and belongs to one or more groups.\\[1px]
+	\textbf{UNIX Model.} Everything is a file.\\[1px]
+	\includegraphics[width=0.9\textwidth]{assets/permissions.png}\\[-1px]
+	\textbf{Directories.} Read → list files; Write → add/remove files; Exec → traverse (cd).\\[1px]
+	\textbf{Permission check order:} 1. If process UID = file owner → check owner bits.\\
+	2. Else if GID matches → check group bits.\\
+	3. Else → check “other” bits.\\
+	\textit{Root (UID 0)} bypasses all checks.\\[1px]
+	\textbf{Changing Permissions.}\\
+	\textbf{chmod.} modify permission bits. \texttt{chmod +r file}, \texttt{chmod 666 file}.\\
+	\textbf{chown.} change file owner/group(opt.) \texttt{chown root:staff /srv/config}\\
+	\textbf{chgrp.} change file group. \texttt{chgrp www-data /var/www}\\[1px]
+	\textbf{Special Rights.}\\
+	\textbf{suid (set user ID).} run program with owner’s privileges. \textit{puts s in owner's x field}\\
+	\texttt{chmod u+s filename}\\
+	\textit{allows normal users to change passwords without full root access.}\\[1px]
+	\textbf{sgid (set group ID).} run program with group’s privileges.\\
+	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\[1px]
+	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own.\\
+	\texttt{d rwx rwx rwt 10 root tmp /tmp}[1px]
+	\textbf{Special Users.}\\
+	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
+	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
+	$\oplus$ flexible, simple model, widely adopted.\\
+	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\[1px]
 	\fbox{
-		\begin{minipage}[t]{0.98\textwidth}
+		\begin{minipage}[t]{0.95\textwidth}
 			\textbf{Windows: DACL.} Controls access to objects via list of ACEs.\\
 			\textbf{ACE (Acces Control Entry).} \texttt{<Type, Principal, Permissions, Flags>}.
 			\begin{itemize}
@@ -238,30 +206,68 @@
 			\end{itemize}
 			\textbf{Access Tokens.} Thread/process carries user + group SIDs checked against DACL.\\
 			\textbf{Least Privilege.} Users run limited by default; elevation via “Run as admin.”
-		\end{minipage}}\\
-	\textbf{BIBA (Integrity).} Security model where subjects $S$ and objects $O$ are associated to a level of \textbf{Integrity} (trustworthiness).\\
-	Access rights. Read (Observe), Write (Modify)\\
-	\textbf{Clearance.} max \textbf{integrity} level assigned to a subject. \textit{clearance-level($S_i$).}\\
-	\textbf{Current Level.} subjects may operate at lower \textbf{integrity}. \textit{current-level($S_i$)}.\\
-	\textbf{BIBA to create Integrity Policies.}\\
-	\textbf{Simple Integrity Property.} If $(s,o,r)$ is a current access, then $\text{level}(s)$ dominates $\text{level}(o)$.\\\textbf{(SUBJECTS CAN'T READ DOWN)} $\Rightarrow$ prevents contamination from low to high.
-	\textbf{$\ast$-Integrity Property.} If $(s,o,w)$ is a current access, then $\text{level}(o)$ \emph{does not} dominate $\text{level}(s)$.\\
-	\textbf{(SUBJECTS CAN'T WRITE UP)} $\Rightarrow$ prevents low from corrupting high state.\\
-	\textbf{Discretionary Property (DAC).} Subject must still have explicit permission for the access (r, w, x) per the access control matrix.\\
-	\textbf{Basic Integrity Theorem (induction).} If the initial state is integrity-secure and all state transitions satisfy BIBA properties, then all reachable states preserve integrity.\\
+		\end{minipage}}\\[1px]
+	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}\\
+	\textit{Alice: \{(file1, read/write)\}} \; \textit{Bob: \{(file2, read/write), (file3, read/write)\}}
+	\\
+	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
+	$\ominus$ hard to determine who can access a resource or to revoke rights by resource.
+\end{minipage}
+\newpage
+\begin{minipage}[t]{0.495\textwidth}
+	\textbf{Security Model.} a design pattern for a set of properties.\\
+	(\warning not covered by model - who are the subjects? what are the objects? what mechanisms to use to implement it?)
+	\hline
+	\vspace*{1px}
+	\textbf{Bell-La Padula (BLP).} security model where Subjects S and objects O are associated to a level of Confidentiality.\\
+	- Access rights. Execute, Read, Append, Write.\\
+	- Objects are associated to a Security Level = (Classification, {set of categories}).\\
+	\textit{\{(Unclassified < Confidentiality < Secret < Top Secret), \{NATO, Crypto, Nuclear\}\}}\\
+	\textbf{Dominance Relationship.} Transitive, There always is a Top and Bottom, \\Only partial ordering (some pairs of elements can't be compared). \\
+	A security level $(l_1, c_1)$ dominates $(l_2, c_2)$ if and only if $l_{2} \leq l_{1}$ and $c_{2} \subseteq c_{1}$.\\
+	\textit{eg. $(\text{Secret}, \{ \text{Nuclear, Army} \}) \geq (\text{Confidential}, \{ \text{Army} \})$}\\
+	\textbf{Clearance.} max security level a subject has been assigned. \textit{clearance-level($S_i$).}\\
+	\textbf{Current Security level.} subjects can operate at lower security levels. \textit{current-level($S_{i}$)}.\\
+	\textbf{BLP to create Confidentiality Policies.}
+	\begin{itemize}[itemsep=2pt]
+		\item[] \textbf{Simple Security Property.}\\
+		      if (subject, object, w/r) is a current access, $\implies$ level(subject) dominates level(object). \textbf{(SUBJECTS CAN'T READ UP)}
+		\item[] \textbf{Star Property.} If a subject has simultaneous "observe" (r,w) access $O_{1}$ and "alter" $(a, w)$  access to $O_2$ then level $O_2$ dominates level $O_1$.\\
+		      \textbf{(SUBJECTS CAN'T WRITE DOWN)}. \textit{changing object's perms is write-like}.
+		\item[] \textbf{Discretionary Property.}
+		      A subject may only access an object if it has explicit permission for that specific type of access (r, w, x, etc.) defined by the access control matrix.
+		\item[] \textbf{Basic Security Theorem(induction).} if all state transitions are secure, and the initial state is secure, then every subsequent state is secure regardless of the input.
+	\end{itemize}
+	\hline
+	\vspace*{1px}
+	\textbf{Covert Channels.} Any channel that allows information flows contrary to the security policy, \textit{Storage channels(shared counters, \dots), Timing channels(queuing time\dots).} \warning Least Common Mechanism.\\
+	\textit{can be mitigated by adding noise or isolation(no high $\leftrightarrow$ level communication).}
+	\hline
+	\vspace*{1px}
+	\textbf{BIBA (Integrity).} Security model where subjects $S$ and objects $O$ are associated to a level of \textbf{Integrity} (trustworthiness). Access rights. Read (Observe), Write (Modify)\\
+	\textbf{BIBA to create Integrity Policies.}
+	\begin{itemize}[itemsep=2pt]
+		\item[] \textbf{Simple Integrity Property.}\\
+		      If $(s,o,r)$ is a current access, then $\text{level}(s)$ dominates $\text{level}(o)$.\\
+		      \textbf{(SUBJECTS CAN'T READ DOWN)} $\Rightarrow$ prevents contamination from low to high.
+		\item[]\textbf{$\ast$-Integrity Property.}\\ If $(s,o,w)$ is a current access, then $\text{level}(o)$ \emph{does not} dominate $\text{level}(s)$.\\
+		      \textbf{(SUBJECTS CAN'T WRITE UP)} $\Rightarrow$ prevents low from corrupting high state.
+		\item[] \textbf{Discretionary Property (DAC).} Subject must still have explicit permission for the access (r, w, x) per the access control matrix.
+		\item[]	\textbf{Basic Integrity Theorem (induction).} If the initial state is integrity-secure and all state transitions satisfy BIBA properties, then all reachable states preserve integrity.
+	\end{itemize}
 	\textbf{BIBA Low-Water-Mark Variants (taint-tracking).}\\
-	1) \textit{For Subjects:} Subjects start at their max integrity.\\ On read, $\text{current-level}(s) = \min(\text{current-level}(s), \text{level}(o))$.\\
-	\textit{Effect:} once tainted, subject sinks; prevents writing up thereafter.\\
-	2) \textit{For Objects:} On write by $s$, $\text{level}(o) = \min(\text{level}(o), \text{level}(s))$.\\
-	\textit{Effect:} objects “sink” easily; can cause integrity collapse.\\
-	\textit{Mitigation:} replicate high/low objects; sanitize before promotion; detect/flag unexpected level drops.
-
+	1. \textit{For Subjects.} Subjects start at their max integrity.\\ On read, $\text{current-level}(s) = \min(\text{current-level}(s), \text{level}(o))$.\\
+	$\Rightarrow$ once tainted, subject sinks; prevents writing up thereafter.\\
+	2. \textit{For Objects.} On write by $s$, $\text{level}(o) = \min(\text{level}(o), \text{level}(s))$.\\
+	$\Rightarrow$ objects “sink” easily; can cause integrity collapse.\\
+	\textit{Mitigation:} replicate high/low objects; sanitize before promotion; detect/flag unexpected level drops.\\
 	\textbf{Invocation Controls.}\\
-	- \textit{Simple Invocation:} allow $s$ to invoke $t$ only if $\text{level}(s)$ dominates $\text{level}(t)$.\\
-	\textit{Goal:} block low principals from laundering influence via higher code.\\
-	- \textit{Controlled Invocation:} allow $s$ to invoke $t$ only if $\text{level}(t)$ dominates $\text{level}(s)$.\\
-	\textit{Goal:} gate low$\rightarrow$high access through trusted invokers; requires strict validation.
-
+	\textbf{Simple Invocation.} only allow subjects to invoke subjects with a label they dominate.\\
+	$\oplus$ protect high integrity data from misues by low integrity principals\\
+	$\ominus$ what level is the output ?\\
+	\textbf{Controlled Invocation.} Only allow subjects to invoke subjects that dominate them.
+	$\oplus$ prevents corruption of high integrity data\\
+	$\ominus$ hard to detect polluting information.\\
 	\textbf{Sanitization (lifting low $\rightarrow$ high).}\\
 	- \textit{Fail-safe default:} deny by default; elevate only after checks pass.\\
 	- \textit{Whitelist over blacklist:} validate that \emph{all} required properties of “good” hold.\\
@@ -272,12 +278,110 @@
 	- \textbf{Separation of Duties:} split critical actions across principals.\\
 	- \textbf{Rotation of Duties:} limit tenure and constrain concurrent roles.\\
 	- \textbf{Secure Logging:} tamper-evident, consistent logs for detection/recovery.
-
-	\textbf{Information Flow Intuition.}\\
-	- \textit{Allowed:} High$\rightarrow$High, Low$\rightarrow$Low, High$\rightarrow$Low (write down), Low$\rightarrow$Low (read up).\\
-	- \textit{Forbidden:} Low$\rightarrow$High (write up), High$\leftarrow$Low (read down).\\
-	\textit{Goal:} High-integrity computations behave as if no adversary influenced inputs or state.
-
+	\hline
+	\vspace{1px}
+	\textbf{Chinese Wall Model.}\\
+	All objects are associated with a label denoting their origin.\\
+	\textit{(Pepsi, Coca-Cola, Microsoft Audit, Microsoft Investments)}\\
+	Define \textbf{conflict sets} of labels.
+	\{\textit{Pepsi, Coca-Cola}\}, \{\textit{Microsoft Audit, Microsoft Investments}\}.\\
+	Subjects are associated with a \textbf{history} of their accesses to objects and their labels.\\
+	\textbf{Access Rules.}\\
+	A subject can access an object (read or write) \textbf{only if} the access does not allow\\
+	information flow between items with labels in the same conflict set.\\
+	\begin{minipage}[t]{0.38\textwidth}
+		\textbf{Example (Direct Flow).}\\
+		1. Access to Pepsi (\textit{OK})\\
+		2. Access to Microsoft Invest (\textit{OK})\\
+		3. Access to Coca-Cola (\textit{Denied})
+	\end{minipage}
+	\begin{minipage}[t]{0.63\textwidth}
+		\textbf{Example (Indirect Flow).}\\
+		1. Alice accesses Pepsi\\
+		2. Bob accesses Coca-Cola and IBM\\
+		3. Alice tries to access IBM (\textit{Denied.indirect link via Bob})
+	\end{minipage}\\[3px]
+	\textbf{Sanitization.}\\
+	Allows more flexibility by “un-labeling” some items, enabling controlled sharing or reuse of data.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.495\textwidth}
+	\textbf{Cryptography.}\\
+	\textbf{Data in transit.} Securing communications. \\\textbf{Data at rest.} Securing stored informations\\
+	Let C the Ciphertext, K the Key, M the Message/Plaintext\\
+	$C = E_K(M)$ and $M = D_K(C)$\\
+	\textbf{Keyspace.} \\The total number of possible keys that can be used in an encryption algorithm.\\
+	\textbf{Invertibility Requirment.}\\$\forall K, M, D_K(E_K(M)) = M$ (otherwise message can't be recovered)\\
+		\textbf{Security Requirement.} Functions should be hard to invert without knowing K.\\
+		Ideal Case - adversary must try every possible combination of keys (bruteforce).\\[1px]
+		\textit{Caesar's Cipher}\\
+		- Encryption. Shift each letter by a fixed number (K)\\
+		- Decryption. Shift each letter by a fixed number (-K)\\
+		Keyspace. Only 25 possible keys.\\
+		So $\log_{2}(25)=4.6$ bits of security, too small for real-world use.\\[3px]
+		\textit{The Substitution Cipher}\\
+		- Each Letter is mapped to a unique, different letter, defined by a permutation of a 26 letters alphabet.\\
+		Keyspace. $26! \approxeq 4.03*10^{26}$\\
+		Both can be broken using \textbf{Frequency Analysis Attack}.\\[1px]
+		\textbf{Frequency Analysis.} Use statistical properties of the language.\\
+		1. Most frequent letter in English is 'e'. \quad 2. Identify most frequent letter in Ciphertext.\\
+		3. Map it to 'e'.\\
+		\textbf{Ideally}, An N-bit key should offer security as close to N bits as possible (require $2^n$ attempts), if not the algorithm is considered \textbf{broken}.\\
+		\textbf{Types of Adversaries.} security models
+		\begin{itemize}
+			\item[-] Passive Eavesdropper - adversary can only read the ciphertext
+			\item[-] Active Attacker - adversary can influence the system \textit{(corruption of one of parties, \ldots)}
+		\end{itemize}
+		\textbf{Known Plaintext Attack.(KPA)} Active model where the attacker is given access to multiple pairs (M, C) corresponding to messages and their corresponding ciphertext, all encrypted with a secret K.\\
+		\textbf{From these pairs, she tries to guess key K to decrypt other messages}
+		\textit{realistic because of message headers, }\\[1px]
+		\textbf{Chosen Plaintext Attack (CPA)}:\\
+		- Suppose Eve convinces Alice to encrypt chosen messages with the secret key\\
+		- $\forall m, \text{Eve gets access to } E_{K}(m)$. Eve has access to an Encryption Oracle.\\
+		\textit{(realistic - suppose she gets access to an encrypted messaging app for limited time, or to an encryption api). \\very broken if Eve chooses to encrypt entire alphahabet, revealing the key instantly.}\\[1px]
+		\textbf{Side-Channels Attacks}\\
+		- Timing attack - Eve measure how long it takes for a given message to get encrypted or a ciphertext to be decrypted\\
+		- Power Analysis - Eve observes the energy consumed by the device doing the crypto.\\[1px]
+		\textbf{One-Time-Pad (OTP).}\\
+		\textit{Goal - Remove frequency analysis}\\
+		- Use a key of random bits as along as the message.\\
+		- $Enc(k, m) = m \oplus k$\quad
+		- $Dec(k, m) = Enc(k, m) \oplus k$\\
+		Key should be random for every sent message.
+		Otherwise attacker can collect information about the message.\\[3px]
+		OTP is technically \textbf{Perfectly Secure}.\\
+		- For any ciphertext C, every possible plaintext M is equally likely\\
+		- The key K is uniformly random, so C gives the adversary zero new information about M.\\
+		Formally (Perfect Secrecy): $\forall m, c, P(M = m | E_{k}(m)=c) = P(M = m)$.\\
+		Guarantees \textbf{confidentiality} \quad $\ominus$ message-length/used once keys.\\[1px]
+		\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
+		1. Eve flips the first of C to get C'\\
+		2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus K$\\[1px]
+		\textbf{Symmetric Cryptography Schemes} Encryption and decryption done with the \textbf{same key}\\
+		- \textbf{Block Ciphers.} Operate on fixed-size blocks \textit{(128bits)}. \\
+		\textit{AES (Advanced Encryption Standard)}\\
+		- \textbf{Stream Ciphers.} Operate on bit/byte at a time, like pseudo-OTP.\\
+		\textbf{Symmetric Cryptographic key}
+		\begin{itemize}
+			\item[-] \textbf{Known to both parties.} \\Partners must agree on the key before starting using the primitive
+			\item[-] \textbf{Reused.} \\The keys is pre-shared once and then reused \textit{(but keys have a "duration")}
+			\item[-] \textbf{Must be secret.} \\Reveling the key eliminates any protection provided by the primitive
+		\end{itemize}
+		\textbf{Stream Ciphers - The pseudo-OTP.} emulate OTP while solving key-length problem.\\
+		1.Shared secret short Key (K) \\
+		2. Key Stream Generator - Uses K and an Initialization Vector (IV) to produce an arbitrary long, pseudo-random bit stream (S).\\
+		(generator needs a key as main seed to generate a predictably random sequence, an iv for the sequence to start differently on each run)\\
+		3. Encryption. $C = M \oplus S$\\
+	$\oplus$ Speed, Low Error propagation(errors in one bit do not affect subsequent symbols)\\
+	$\ominus$ Low Diffusion (a change in a bit only affects one bit), Susceptibility to Modification (low diffusion makes it easier to tamper)\\
+	$\ominus$ key stream generators are periodic because seed is finite. Thus, we need period long enough to not an issue (avoiding frequency analysis)\\
+		\textbf{Linear Feedback Shift Register for Key Stream Generators}\\
+		build a """random""" sequence of bits using a linear recurrence relation on a sequence of bit. For example: Starting with a state $a_{0}, a_{1}, a_{2}, a_{3}$\quad$a_{n} = a_{n-3} \oplus a_{n-4}$\\
+	$\oplus$ Easy to build, and to analyze.\\
+		\textbf{Randomness of LFSR}\\
+		- if characteristic polynomial of the recurrence relation of the LFSR is primitive. The maximum possible number of states before repeating - For an L-bit register, the maximum period is $2^L -1$ states\\
+	- **distribution property.** As a consequence, the sequence generated exhibit good distribution properties. Every possible non-zero state appears exactly once in a cycle.\\
+	However, the underlying operation is **linear**. (some algorithms can recover this with just a subsequence of the stream)
 \end{minipage}
 \end{document}
 
