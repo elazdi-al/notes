@@ -111,7 +111,7 @@
 	2. \textbf{Fail-safe defaults.} Base access decisions on permission rather than exclusion. \textit{(Whitelist, do not blacklist)} \\
 	If something fails, be as secure as it does not fail errors / uncertainty should error on the side of the security policy.\\
 	3. \textbf{Complete mediation.}. \textbf{Every} access to every object must be checked for authority. A \textbf{Reference Monitor} mediates all actions from subjects on objects and ensures they are according to the policy. \textit{\warning time to check vs. time to use}\\
-	4. \textbf{Open design} The design should not be secret \textit{Always design as if the enemy knows the system. (for Crypto, only secret is key. for Authentication, Only secret is password. for Obfuscation, Only used secret is noise.)}.\textbf{assuming the thread model can't get a hold of the system is unrealistic (employee corruption, ...)}
+	4. \textbf{Open design} The design should not be secret \textit{Always design as if the enemy knows the system. (Crypto-only secret is key.Authentication-Only secret is password.for Obfuscation-Only used secret is noise.)}.\textbf{assuming the thread model can't get a hold of the system is unrealistic (employee corruption, ...)}
 \end{minipage}
 \hfill
 \noindent \begin{minipage}[t]{0.495\textwidth}
@@ -280,15 +280,12 @@
 	- \textbf{Secure Logging:} tamper-evident, consistent logs for detection/recovery.
 	\hline
 	\vspace{1px}
-	\textbf{Chinese Wall Model.}\\
-	All objects are associated with a label denoting their origin.\\
+	\textbf{Chinese Wall Model.} All objects are associated with a label denoting their origin.\\
 	\textit{(Pepsi, Coca-Cola, Microsoft Audit, Microsoft Investments)}\\
 	Define \textbf{conflict sets} of labels.
 	\{\textit{Pepsi, Coca-Cola}\}, \{\textit{Microsoft Audit, Microsoft Investments}\}.\\
 	Subjects are associated with a \textbf{history} of their accesses to objects and their labels.\\
-	\textbf{Access Rules.}\\
-	A subject can access an object (read or write) \textbf{only if} the access does not allow\\
-	information flow between items with labels in the same conflict set.\\
+	\textbf{Access Rules.} A subject can access an object (read or write) \textbf{only if} the access does not allow information flow between items with labels in the same conflict set.\\
 	\begin{minipage}[t]{0.38\textwidth}
 		\textbf{Example (Direct Flow).}\\
 		1. Access to Pepsi (\textit{OK})\\
@@ -300,88 +297,90 @@
 		1. Alice accesses Pepsi\\
 		2. Bob accesses Coca-Cola and IBM\\
 		3. Alice tries to access IBM (\textit{Denied.indirect link via Bob})
-	\end{minipage}\\[3px]
+	\end{minipage}\\[2px]
 	\textbf{Sanitization.}\\
-	Allows more flexibility by “un-labeling” some items, enabling controlled sharing or reuse of data.
+	Allows more flexibility by “un-labeling” some items$\to$controlled sharing/reuse of data.
+	\hline
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.495\textwidth}
 	\textbf{Cryptography.}\\
-	\textbf{Data in transit.} Securing communications. \\\textbf{Data at rest.} Securing stored informations\\
-	Let C the Ciphertext, K the Key, M the Message/Plaintext\\
+	\textbf{Data in transit.} Securing communications. \textbf{Data at rest.} Securing stored informations\\
+	Let C the Ciphertext, K the Key, M the Message/Plaintext.
 	$C = E_K(M)$ and $M = D_K(C)$\\
-	\textbf{Keyspace.} \\The total number of possible keys that can be used in an encryption algorithm.\\
-	\textbf{Invertibility Requirment.}\\$\forall K, M, D_K(E_K(M)) = M$ (otherwise message can't be recovered)\\
-		\textbf{Security Requirement.} Functions should be hard to invert without knowing K.\\
-		Ideal Case - adversary must try every possible combination of keys (bruteforce).\\[1px]
+	\textbf{Keyspace.} Number of possible keys that can be used in an encryption algorithm.\\
+	\textbf{Invertibility Requirment.}$\forall K, M | D_K(E_K(M)) = M$ (otherwise can't recover message)\\
+	\textbf{Security Requirement.} Functions should be hard to invert without knowing K.\\
+	Ideal Case - adversary must try every possible combination of keys (bruteforce).\\[1px]
+	\begin{minipage}[t]{0.6\textwidth}
 		\textit{Caesar's Cipher}\\
 		- Encryption. Shift each letter by a fixed number (K)\\
 		- Decryption. Shift each letter by a fixed number (-K)\\
-		Keyspace. Only 25 possible keys.\\
-		So $\log_{2}(25)=4.6$ bits of security, too small for real-world use.\\[3px]
-		\textit{The Substitution Cipher}\\
-		- Each Letter is mapped to a unique, different letter, defined by a permutation of a 26 letters alphabet.\\
-		Keyspace. $26! \approxeq 4.03*10^{26}$\\
-		Both can be broken using \textbf{Frequency Analysis Attack}.\\[1px]
-		\textbf{Frequency Analysis.} Use statistical properties of the language.\\
-		1. Most frequent letter in English is 'e'. \quad 2. Identify most frequent letter in Ciphertext.\\
-		3. Map it to 'e'.\\
-		\textbf{Ideally}, An N-bit key should offer security as close to N bits as possible (require $2^n$ attempts), if not the algorithm is considered \textbf{broken}.\\
-		\textbf{Types of Adversaries.} security models
-		\begin{itemize}
-			\item[-] Passive Eavesdropper - adversary can only read the ciphertext
-			\item[-] Active Attacker - adversary can influence the system \textit{(corruption of one of parties, \ldots)}
-		\end{itemize}
-		\textbf{Known Plaintext Attack.(KPA)} Active model where the attacker is given access to multiple pairs (M, C) corresponding to messages and their corresponding ciphertext, all encrypted with a secret K.\\
-		\textbf{From these pairs, she tries to guess key K to decrypt other messages}
-		\textit{realistic because of message headers, }\\[1px]
-		\textbf{Chosen Plaintext Attack (CPA)}:\\
-		- Suppose Eve convinces Alice to encrypt chosen messages with the secret key\\
-		- $\forall m, \text{Eve gets access to } E_{K}(m)$. Eve has access to an Encryption Oracle.\\
-		\textit{(realistic - suppose she gets access to an encrypted messaging app for limited time, or to an encryption api). \\very broken if Eve chooses to encrypt entire alphahabet, revealing the key instantly.}\\[1px]
-		\textbf{Side-Channels Attacks}\\
-		- Timing attack - Eve measure how long it takes for a given message to get encrypted or a ciphertext to be decrypted\\
-		- Power Analysis - Eve observes the energy consumed by the device doing the crypto.\\[1px]
-		\textbf{One-Time-Pad (OTP).}\\
-		\textit{Goal - Remove frequency analysis}\\
-		- Use a key of random bits as along as the message.\\
-		- $Enc(k, m) = m \oplus k$\quad
-		- $Dec(k, m) = Enc(k, m) \oplus k$\\
-		Key should be random for every sent message.
-		Otherwise attacker can collect information about the message.\\[3px]
-		OTP is technically \textbf{Perfectly Secure}.\\
-		- For any ciphertext C, every possible plaintext M is equally likely\\
-		- The key K is uniformly random, so C gives the adversary zero new information about M.\\
-		Formally (Perfect Secrecy): $\forall m, c, P(M = m | E_{k}(m)=c) = P(M = m)$.\\
-		Guarantees \textbf{confidentiality} \quad $\ominus$ message-length/used once keys.\\[1px]
-		\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
-		1. Eve flips the first of C to get C'\\
-		2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus K$\\[1px]
-		\textbf{Symmetric Cryptography Schemes} Encryption and decryption done with the \textbf{same key}\\
-		- \textbf{Block Ciphers.} Operate on fixed-size blocks \textit{(128bits)}. \\
-		\textit{AES (Advanced Encryption Standard)}\\
-		- \textbf{Stream Ciphers.} Operate on bit/byte at a time, like pseudo-OTP.\\
-		\textbf{Symmetric Cryptographic key}
-		\begin{itemize}
-			\item[-] \textbf{Known to both parties.} \\Partners must agree on the key before starting using the primitive
-			\item[-] \textbf{Reused.} \\The keys is pre-shared once and then reused \textit{(but keys have a "duration")}
-			\item[-] \textbf{Must be secret.} \\Reveling the key eliminates any protection provided by the primitive
-		\end{itemize}
-		\textbf{Stream Ciphers - The pseudo-OTP.} emulate OTP while solving key-length problem.\\
-		1.Shared secret short Key (K) \\
-		2. Key Stream Generator - Uses K and an Initialization Vector (IV) to produce an arbitrary long, pseudo-random bit stream (S).\\
-		(generator needs a key as main seed to generate a predictably random sequence, an iv for the sequence to start differently on each run)\\
-		3. Encryption. $C = M \oplus S$\\
+		Keyspace. Only 25 possible keys. \\$\log_{2}(25)=4.6$ bits of security (too small).
+	\end{minipage}
+	\begin{minipage}[t]{0.4\textwidth}
+		\textit{The Substitution Cipher message}\\
+		Each Letter is mapped to a unique, different letter, defined by a permutation of a 26 letters alphabet.\\
+		Keyspace. $26! \approxeq 4.03*10^{26}$
+	\end{minipage}\\
+	Both can be broken using \textbf{Frequency Analysis Attack}.\\[2px]
+	\textbf{Frequency Analysis.} Use statistical properties of the language.\\
+	1. Most frequent letter in English is 'e'.\;2. Identify most frequent letter in Ciphertext.\\
+	3. Map it to 'e'.\\
+	\textbf{Ideally}, An N-bit key should offer security as close to N bits as possible (require $2^n$ attempts), if not the algorithm is considered \textbf{broken}.\\
+	\textbf{Types of Adversaries.} security models
+	\begin{itemize}
+		\item[-] Passive Eavesdropper - adversary can only read the ciphertext
+		\item[-] Active Attacker - adversary can influence the system \textit{(corruption of one of parties, \ldots)}
+	\end{itemize}
+	\textbf{Known Plaintext Attack.(KPA)} Active model where the attacker is given access to multiple pairs (M, C) corresponding to messages and their corresponding ciphertext, all encrypted with a secret K.\\
+	\textbf{From these pairs, she tries to guess key K to decrypt other messages}
+	\textit{realistic because of message headers, }\\[1px]
+	\textbf{Chosen Plaintext Attack (CPA)}:\\
+	- Suppose Eve convinces Alice to encrypt chosen messages with the secret key\\
+	- $\forall m, \text{Eve gets access to } E_{K}(m)$. Eve has access to an Encryption Oracle.\\
+	\textit{(realistic - suppose she gets access to an encrypted messaging app for limited time, or to an encryption api). \\very broken if Eve chooses to encrypt entire alphahabet, revealing the key instantly.}\\[1px]
+	\textbf{Side-Channels Attacks}\\
+	- Timing attack - Eve measure how long it takes for a given message to get encrypted or a ciphertext to be decrypted\\
+	- Power Analysis - Eve observes the energy consumed by the device doing the crypto.\\[1px]
+	\textbf{One-Time-Pad (OTP).}\\
+	\textit{Goal - Remove frequency analysis}\\
+	- Use a key of random bits as along as the message.\\
+	- $Enc(k, m) = m \oplus k$\quad
+	- $Dec(k, m) = Enc(k, m) \oplus k$\\
+	Key should be random for every sent message.
+	Otherwise attacker can collect information about the message.\\[3px]
+	OTP is technically \textbf{Perfectly Secure}.\\
+	- For any ciphertext C, every possible plaintext M is equally likely\\
+	- The key K is uniformly random, so C gives the adversary zero new information about M.\\
+	Formally (Perfect Secrecy): $\forall m, c, P(M = m | E_{k}(m)=c) = P(M = m)$.\\
+	Guarantees \textbf{confidentiality} \quad $\ominus$ message-length/used once keys.\\[1px]
+	\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
+	1. Eve flips the first of C to get C'\\
+	2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus K$\\[1px]
+	\textbf{Symmetric Cryptography Schemes} Encryption and decryption done with the \textbf{same key}\\
+	- \textbf{Block Ciphers.} Operate on fixed-size blocks \textit{(128bits)}. \\
+	\textit{AES (Advanced Encryption Standard)}\\
+	- \textbf{Stream Ciphers.} Operate on bit/byte at a time, like pseudo-OTP.\\
+	\textbf{Symmetric Cryptographic key}
+	\begin{itemize}
+		\item[-] \textbf{Known to both parties.} \\Partners must agree on the key before starting using the primitive
+		\item[-] \textbf{Reused.} \\The keys is pre-shared once and then reused \textit{(but keys have a "duration")}
+		\item[-] \textbf{Must be secret.} \\Reveling the key eliminates any protection provided by the primitive
+	\end{itemize}
+	\textbf{Stream Ciphers - The pseudo-OTP.} emulate OTP while solving key-length problem.\\
+	\textbf{1.} Shared secret short Key (K) \quad \textbf{2.} Key Stream Generator - Uses K and Initialization Vector (IV) $\rightarrow$ an arbitrary long, pseudo-random bit stream (S).\quad \textbf{3.} Encryption. $C = M \oplus S$\\
+	\textit{(generator needs a key as main seed to generate a predictably random sequence, an iv for the sequence to start differently on each run)}\\
 	$\oplus$ Speed, Low Error propagation(errors in one bit do not affect subsequent symbols)\\
 	$\ominus$ Low Diffusion (a change in a bit only affects one bit), Susceptibility to Modification (low diffusion makes it easier to tamper)\\
 	$\ominus$ key stream generators are periodic because seed is finite. Thus, we need period long enough to not an issue (avoiding frequency analysis)\\
-		\textbf{Linear Feedback Shift Register for Key Stream Generators}\\
-		build a """random""" sequence of bits using a linear recurrence relation on a sequence of bit. For example: Starting with a state $a_{0}, a_{1}, a_{2}, a_{3}$\quad$a_{n} = a_{n-3} \oplus a_{n-4}$\\
-	$\oplus$ Easy to build, and to analyze.\\
-		\textbf{Randomness of LFSR}\\
-		- if characteristic polynomial of the recurrence relation of the LFSR is primitive. The maximum possible number of states before repeating - For an L-bit register, the maximum period is $2^L -1$ states\\
-	- **distribution property.** As a consequence, the sequence generated exhibit good distribution properties. Every possible non-zero state appears exactly once in a cycle.\\
-	However, the underlying operation is **linear**. (some algorithms can recover this with just a subsequence of the stream)
+	\fbox{
+		\begin{minipage}[htp]{0.97\textwidth}	\textbf{Linear Feedback Shift Register for Key Stream Generators.} build a """random""" sequence of bits using a linear recurrence relation on a sequence of bit. \\\textit{Example: Starting with state $a_{0}, a_{1}, a_{2}, a_{3}$|$a_{n} = a_{n-3} \oplus a_{n-4}$\;($\oplus$ Easy to build/analyze.)}\\
+			\textbf{Randomness of LFSR.} if characteristic polynomial of the recurrence relation of the LFSR is primitive. The maximum possible number of states before repeating. For an L-bit register, the maximum period is $2^L -1$ states\\
+			\textbf{Distribution property.} As a consequence, the sequence generated exhibit good distribution properties. Every possible non-zero state appears exactly once in a cycle.\\
+			$\ominus$ underlying operation is \textbf{linear}. \textit{(some algorithms can recover this with a stream subsequence)}
+		\end{minipage}
+	}
 \end{minipage}
 \end{document}
 
