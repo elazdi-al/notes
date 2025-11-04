@@ -103,9 +103,8 @@
 		\item[] Defender - No adversary strategy can violate the security policy.
 	\end{itemize}
 	\noindent \textbf{Security Argument.} Rigorous argument that security mechanisms in place are effective in maintaining security policy subject to assumptions on Threat Model.
-\end{minipage}\\[1px]
+\end{minipage}
 \hline
-\vspace{1px}
 \noindent \begin{minipage}[t]{0.495\textwidth}
 	\noindent \textbf{Principles of CompSec.}\\
 	1. \textbf{Economy of mechanism}
@@ -128,9 +127,8 @@
 	9. \textbf{Work Factor}\\
 	Compare the cost of breaking the mechanism with the resources of a potential attacker. \textit{(cost of compromising insiders, cost of finding a bug, monetization\dots)}\\
 	10. \textbf{Compromise recording} Detect and record security breaches with tamper-evident logs, ensuring traceability, integrity, confidentiality, and availability of recorded data.
-\end{minipage}\\[1px]
+\end{minipage}
 \hline
-\vspace*{1px}
 \begin{minipage}[t]{0.495\textwidth}
 	\textbf{Access Control.}
 	Security mechanism that ensures all accesses and actions on objects by principals are within the security policy.\\
@@ -192,7 +190,7 @@
 	\textbf{sgid (set group ID).} run program with group’s privileges.\\
 	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\[1px]
 	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own.\\
-	\texttt{d rwx rwx rwt 10 root tmp /tmp}[1px]
+	\texttt{d rwx rwx rwt 10 root tmp /tmp}\\
 	\textbf{Special Users.}\\
 	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
 	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
@@ -220,12 +218,10 @@
 \footnotesize
 \newpage
 \begin{minipage}[t]{0.495\textwidth}
-	\textbf{Security Model.} a design pattern for a set of properties.\\
-	(\warning not covered by model - who are the subjects? what are the objects? what mechanisms to use to implement it?)
+	\textbf{Security Model.} a design pattern for a set of properties. (\warning not covered by model - who are the subjects? what are the objects? what mechanisms to use to implement it?)
 	\hline
-	\vspace*{1px}
 	\begin{minipage}[t]{0.5\textwidth}
-		\textbf{Bell-La Padula (BLP).} \\security model where Subjects S and objects O are associated to a level of Confidentiality. \\
+		\textbf{Bell-La Padula (BLP).} \\security model where Subjects S and objects O are associated to a level of \textbf{Confidentiality}. \\
 		\textbf{Access rights.} Execute, Read, Append, Write.\\
 		- Objects are associated to a Security Level = (Classification, {set of categories}).\\
 		\textit{\{(Unclassified < Confidentiality < Secret < Top Secret), \{NATO, Crypto, Nuclear\}\}}\\
@@ -247,13 +243,12 @@
 			      A subject may only access an object if it has explicit permission for that specific type of access (r, w, x, etc.) defined by the access control matrix.
 			\item[] \textbf{Basic Security Theorem(induction).} if all state transitions are secure, and the initial state is secure, then every subsequent state is secure regardless of the input.
 		\end{itemize}
-	\end{minipage}
+	\end{minipage}\\
+	\textbf{Declassification.} Removing classification labels from information so it can be shared with lower security levels. \textit{soldier (S) with \textit{Secret} clearance shares sanitized info like “We’ve seen tanks moving” with a lower-level user (U).}
 	\hline
-	\vspace*{1px}
 	\textbf{Covert Channels.} Any channel that allows information flows contrary to the security policy, \textit{Storage channels(shared counters, \dots), Timing channels(queuing time\dots).} \\\warning Least Common Mechanism.
 	\textit{mitigated by adding noise or isolation(no high $\leftrightarrow$ low level communication).}
 	\hline
-	\vspace*{1px}
 	\begin{minipage}[t]{0.5\textwidth}
 		\textbf{BIBA (Integrity).} \\Security model where subjects $S$ and objects $O$ are associated to a level of \textbf{Integrity} (trustworthiness). \textbf{Access rights.} Read (Observe), Write (Modify)\\
 		\textbf{BIBA to create Integrity Policies.}
@@ -293,7 +288,6 @@
 	- \textbf{Rotation of Duties.} Allow a principal only a limited time on any particular role and limit other actions while in this role\\
 	- \textbf{Secure Logging.} Tamper evident log to recover from integrity failures. Consistency of log across multiple entities is key.
 	\hline
-	\vspace{1px}
 	\textbf{Chinese Wall Model.} All objects are associated with a label denoting their origin.\\
 	\textit{(Pepsi, Coca-Cola, Microsoft Audit, Microsoft Investments)}\\
 	Define \textbf{conflict sets} of labels.
@@ -315,7 +309,7 @@
 	\textbf{Sanitization.}\\
 	Allows more flexibility by “un-labeling” some items$\to$controlled sharing/reuse of data.
 	\hline
-	\textbf{All together - Bob sends a message to Alice}\\
+	\textbf{All together (Asymmetric Cryptography) - Bob sends a message to Alice}\\
 	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{1. Get public keys (via PKI).}\\
 		Bob retrieves Alice’s encryption public key $PK_{\text{Alice}}$ and verification public key $PK_{\text{Alice}}$.\\
@@ -326,19 +320,34 @@
 		Bob uses his secret signing key $SK_{\text{Bob}}$ to generate a digital signature. $\text{Sign}_{SK_{\text{Bob}}}(h(M))$.\\
 		\textbf{4. Encrypt the message.}\\
 		Bob encrypts the message using Alice’s encryption public key $PK_{\text{Alice}}$: $E_{PK_{\text{Alice}}}(M)$.\\
-		Allows: only Alice, who holds the matching secret key $SK_{\text{Alice}}$, to read the message.\\
+		Allows: only Alice, who holds the matching secret key $SK_{\text{Alice}}$, to read the message.
 	\end{minipage}\hfill
 	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{5. Send encrypted message and signature.}\\
 		Bob sends $E_{PK_{\text{Alice}}}(M)$,$\text{Sign}_{SK_{\text{Bob}}}(h(M))$ to Alice.\\
 		Allows: transmission over untrusted channels while maintaining confidentiality and authenticity.\\
 		\textbf{6. Decrypt the message}\\
-		Alice uses her secret encryption key $SK_{\text{Alice}}$ to decrypt:\\
-		$D_{SK_{\text{Alice}}}(E_{PK_{\text{Alice}}}(M)) = M$.\\
+		Alice uses her secret encryption key $SK_{\text{Alice}}$ to decrypt. $D_{SK_{\text{Alice}}}(E_{PK_{\text{Alice}}}(M)) = M$.\\
 		\textbf{7. Verify the signature.}\\
 		Alice computes $h(M)$ and verifies Bob’s signature with his verification public key $PK_{\text{Bob}}$:\\
 		$V_{PK_{\text{Bob}}}(M, S) = \text{True}$ if valid.\\
-		Allows: Alice to confirm the message was indeed sent by Bob and was not modified.\\
+		Allows: Alice to confirm the message was indeed sent by Bob and was not modified.
+	\end{minipage}\\
+	\textbf{Authenticity.} only sender can generate a valid signature, allowing the server to verify the sender’s identity and preventing impersonation. \textbf{Integrity.} Any message change invalidates signature, ensuring tampering is detectable. \textbf{Non-repudiation.} only sender can produce the valid signature $\rightarrow$ they can't deny later having sent the message.	\hline
+	\begin{minipage}[t]{0.45\textwidth}
+		\textbf{Block Cipher - Electronic Code Block (ECB).}\\ encrypt each message block independently using the same key.\\
+		1. The message $M$ is divided into blocks.\\$M = M_1 M_2 M_3 M_4$.\\
+			2. Each block is encrypted separately $C_i = E_K(M_i)$.\\
+			3. Decryption. $M_i = D_K(C_i)$.\\
+			\warning If ($M_i = M_j$) $\Rightarrow$ ($C_i = C_j$) $\Rightarrow$ (freq. analysis)
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.53\textwidth}
+		\textbf{Block Cipher - Cipher Block Chaining (CBC)} \\
+		add randomness/inter-block dependence by chaining blocks.\\
+		$C_0 = \text{IV}$ \quad	\textbf{Encryption.} $ C_i = E_K(M_i \oplus C_{i-1})$\\
+		\textbf{Decryption.}$M_i = D_K(C_i) \oplus C_{i-1}$\\
+		IV must be random / isn't a ciphertext block but needed for decryption.\\
+		- If IV incorrect, only first plaintext block will decrypt incorrectly, later blocks remain unaffected.
 	\end{minipage}
 \end{minipage}
 \hfill
@@ -364,7 +373,6 @@
 	\end{minipage}\\
 	Both can be broken using \textbf{Frequency Analysis Attack}.
 	\hline
-	\vspace{1px}
 	\textbf{Frequency Analysis.} Use statistical properties of the language.\\
 	1. Most frequent letter in English is 'e'.\; 2. Identify most frequent letter in Ciphertext. \; 3. Map it to 'e'.\\
 	\textbf{Ideally}, An N-bit key should offer security as close to N bits as possible (require $2^n$ attempts), if not the algorithm is considered \textbf{broken}.\\
@@ -373,13 +381,13 @@
 		\item[-] Passive Eavesdropper - adversary can only read the ciphertext
 		\item[-] Active Attacker - adversary can influence the system \textit{(corruption of one of parties, \ldots)}
 	\end{itemize}
-	\begin{minipage}[t]{0.42\textwidth}
-		\textbf{Known Plaintext Attack.(KPA)}\\Active security model. Attacker gets access to some pairs, (message, ciphertext), all encrypted with secret K.\\
+	\begin{minipage}[t]{0.4\textwidth}
+		\textbf{Known Plaintext Attack (KPA).}\\Active security model. Attacker gets access to some pairs, (message, ciphertext), all encrypted with secret K.\\
 		\textbf{From these pairs, she tries to guess key K to decrypt other messages}\\
 		\textit{realistic because of message headers, message headers ("From:...", timestamps...)}
 	\end{minipage}
-	\begin{minipage}[t]{0.58\textwidth}
-		\textbf{Chosen Plaintext Attack (CPA)}:\\
+	\begin{minipage}[t]{0.6\textwidth}
+		\textbf{Chosen Plaintext Attack (CPA).}\\
 		- Suppose Eve convinces Alice to encrypt chosen messages with the secret key\\
 		- $\text{For all } m, \text{Eve gets access to } E_{K}(m)$. Eve has access to an Encryption Oracle.\\
 		\textit{(realistic, she could get access to an encrypted messaging app for limited time, or to an encryption api). \\
@@ -389,7 +397,7 @@
 	- Timing attack - Eve measure how long it takes for a given message to get encrypted or a ciphertext to be decrypted\\
 	- Power Analysis - Eve observes the energy consumed by the device doing the crypto.
 	\hline\\
-	\begin{minipage}[t]{0.5\textwidth}
+	\begin{minipage}[t]{0.45\textwidth}
 		\textbf{One-Time-Pad (OTP).}\\
 		\textit{Goal - Remove frequency analysis}\\
 		- Use a key of random bits as along as the message.\\
@@ -398,7 +406,7 @@
 		Key should be random for every sent message.
 		Otherwise attacker can collect information about the message.
 	\end{minipage}
-	\begin{minipage}[t]{0.5\textwidth}
+	\begin{minipage}[t]{0.55\textwidth}
 		OTP is \textbf{Perfectly Secure}.\\
 		- For any ciphertext C, every possible plaintext M is equally likely\\
 		- Key K is uniformly random, so C gives the adversary zero new information about M.\\
@@ -407,14 +415,13 @@
 	\end{minipage}
 	\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
 	1. Eve flips the first of C to get C'\\
-	2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus K$\\[1px]
-	\begin{minipage}[t]{0.45\textwidth}
-		\textbf{Symmetric Cryptography Schemes}\\Encryption and decryption done with the \textbf{same key}\\
-		- \textbf{Block Ciphers.} Operate on fixed-size blocks \textit{(128bits)}. \\
-		\textit{AES (Advanced Encryption Standard)}\\
+	2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus \Delta$\\
+	\begin{minipage}[t]{0.39\textwidth}
+		\textbf{Symmetric Cryptography Schemes}\\Encryption/decryption done with the \textbf{same key}\\
+		- \textbf{Block Ciphers.} Operate on fixed-size blocks.\\
 		- \textbf{Stream Ciphers.} Operate on bit/byte at a time, like pseudo-OTP.
-	\end{minipage}
-	\begin{minipage}[t]{0.54\textwidth}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.59\textwidth}
 		\textbf{Symmetric Cryptographic key}\\
 		-\textbf{Known to both parties.} Partners must agree on the key before starting using the primitive\\
 		-\textbf{Reused.} The keys is pre-shared once and then reused \textit{(but keys have a "duration")}\\
@@ -438,7 +445,7 @@
 		\end{minipage}
 	}\\
 	Symmetric ciphers are fast, but require a \textbf{pre-shared secret key}\\
-	\textbf{Diffie-Hellman Setup.} Alice, Bob (and Eve) know large public parameters: a prime number p and a generator g\\
+	\textbf{Diffie-Hellman Setup.} Alice, Bob (and Eve) know large public parameters:prime p/generator g\\
 	\begin{minipage}[htp]{0.5\textwidth}
 		\textit{Alice's Actions}\\
 		1. Chooses \textbf{private} secret a.\\
@@ -468,12 +475,29 @@
 		\textit{she can read, modify, and relay all communication.}
 	\end{minipage}\hline
 	\textbf{Asymetric Cryptography.} Encryption using a public–private key pair. Public key can be stored on a public server, the \textbf{Public Key Infrastructure (PKI)}.\\
-	\textbf{Hash Functions.}maps any-length message to a fixed-size output using a hash function. $h(M) = H$
+	\textbf{Hash Functions.} maps any-length message to a fixed-size output using a hash function. $h(M) = H$
 	\textbf{Security properties.}
 	1. \textbf{Pre-image resistance.} Given $H = h(M)$, it is hard to find $M$.\\
 	2. \textbf{Second pre-image resistance.} Given $M$, it is hard to find another $M' \ne M$ such that $h(M') = h(M)$.\\
 	3. \textbf{Collision resistance.} It is hard to find any two values $M$ and $M'$ such that $h(M) = h(M')$.
 	\hline
+	\begin{minipage}[t]{0.35\textwidth}
+		\textbf{Block Cipher - Counter Mode (CTR)}\\add randomness per-block without inter-block dependencies.\\
+		\textbf{Encrypt.} $C_i = M_i \oplus E_K(\text{Nonce}+i)$.\\
+		\textbf{Decrypt.} $M_i = C_i \oplus E_K(\text{Nonce}+i)$.\\
+		Nonce must be unique (never with same key) reuse leaks keystream.\hline
+		\textbf{Message Authentication Code (MAC).} short tag computed from a message and secret key(pre-shared) to verify message \textbf{integrity} and \textbf{authenticity}.\\
+	\end{minipage}
+	\begin{minipage}[t]{0.65\textwidth}
+		\textbf{Block Cipher - CBC-MAC.} turns block cipher into MAC by chaining message blocks with encryption.\\
+		$C_0 = IV $\;\textbf{Encrypt.} $C_i = E_K(M_i \oplus C_{i-1})$\;$\text{MAC}_K(M_1, \ldots, M_n) = C_n$\\
+		deterministic. fixed IV $\rightarrow$ same message/same MAC.\\
+		\warning message length must be known and fixed; otherwise, extension attacks are possible (e.g., using $M | (T \oplus M')$).
+		\hline
+		\textbf{1. Encrypt-and-MAC.} send $E_K(P₁P₂)$ and $MAC_K(P₁P₂)$. protects plaintext only, not ciphertext; inefficient and leaks repetition.\\
+		\textbf{2. MAC-then-Encrypt} send $E_K(P₁P₂||MAC_K(P₁P₂))$. hides MAC and provides confidentiality but ciphertext can be altered undetected.\\
+		\textbf{3. Encrypt-then-MAC} send $E_K(P₁P₂||MAC_K(E_K(P₁P₂))$. \textbf{authenticates} ciphertext, ensures \textbf{confidentiality/integrity} \checkmark
+	\end{minipage}
 \end{minipage}
 \end{document}
 
