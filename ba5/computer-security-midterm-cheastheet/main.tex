@@ -149,7 +149,7 @@
 	Subjects are often similar to each other and get assigned the same rights.\\
 	1. Assign permissions to roles, \quad 2. Assign roles to subjects\\
 	3. Subjects have the permissions of their assigned role\\
-	$\ominus$ role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege.\\
+	$\ominus$ role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege + least privilege.\\
 	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are broader, represent organizational units instead than specific functions.\\
 	1. Assign permissions to groups \quad 2. Assign subjects to groups\\
 	3. Subjects have the combined permissions of all their groups\\
@@ -188,12 +188,14 @@
 	\texttt{chmod u+s filename}\\
 	\textit{allows normal users to change passwords without full root access.}\\[1px]
 	\textbf{sgid (set group ID).} run program with group’s privileges.\\
+	\textit{on a directory - creating a file inside gets folder's group}\\
 	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\[1px]
 	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own.\\
 	\texttt{d rwx rwx rwt 10 root tmp /tmp}\\
 	\textbf{Special Users.}\\
 	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
-	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.\\
+	\texttt{sudo} run as root \quad \texttt{su [username]} switch to account(default is root)\\
+	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.(least privilege)\\
 	$\oplus$ flexible, simple model, widely adopted.\\
 	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\[1px]
 	\fbox{
@@ -352,6 +354,7 @@
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.495\textwidth}
+	\vspace*{-7px}
 	\textbf{Cryptography.}\\
 	\textbf{Data in transit.} Securing communications. \textbf{Data at rest.} Securing stored informations\\
 	Let C the Ciphertext, K the Key, M the Message/Plaintext.
@@ -412,10 +415,17 @@
 		- Key K is uniformly random, so C gives the adversary zero new information about M.\\
 		\textbf{Perfect Secrecy.}\\$\forall m, c, P(M = m | E_{k}(m)=c) = P(M = m)$.\\
 			Guarantees \textbf{confidentiality} \\ $\ominus$ message-length/used once keys.
+	\end{minipage}\\
+	\begin{minipage}[t]{0.6\textwidth}
+		\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
+		1. Eve flips the first of C to get C'\\
+		2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus \Delta$
 	\end{minipage}
-	\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
-	1. Eve flips the first of C to get C'\\
-	2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus \Delta$\\
+	\begin{minipage}[t]{0.4\textwidth}
+		\textit{Reuse of key Attack.}
+		Send two messages of length 5 with key reuse.\\
+		$C_1 \oplus C_2 = M_1 \oplus M_2$
+	\end{minipage}\\
 	\begin{minipage}[t]{0.39\textwidth}
 		\textbf{Symmetric Cryptography Schemes}\\Encryption/decryption done with the \textbf{same key}\\
 		- \textbf{Block Ciphers.} Operate on fixed-size blocks.\\
@@ -482,7 +492,7 @@
 	3. \textbf{Collision resistance.} It is hard to find any two values $M$ and $M'$ such that $h(M) = h(M')$.
 	\hline
 	\begin{minipage}[t]{0.35\textwidth}
-		\textbf{Block Cipher - Counter Mode (CTR)}\\add randomness per-block without inter-block dependencies.\\
+		\textbf{Block Cipher - Counter Mode}\\add randomness per-block without inter-block dependencies. \\\textbf{(parallel)}\\
 		\textbf{Encrypt.} $C_i = M_i \oplus E_K(\text{Nonce}+i)$.\\
 		\textbf{Decrypt.} $M_i = C_i \oplus E_K(\text{Nonce}+i)$.\\
 		Nonce must be unique (never with same key) reuse leaks keystream.\hline
@@ -494,9 +504,9 @@
 		deterministic. fixed IV $\rightarrow$ same message/same MAC.\\
 		\warning message length must be known and fixed; otherwise, extension attacks are possible (e.g., using $M | (T \oplus M')$).
 		\hline
-		\textbf{1. Encrypt-and-MAC.} send $E_K(P₁P₂)$ and $MAC_K(P₁P₂)$. protects plaintext only, not ciphertext; inefficient and leaks repetition.\\
-		\textbf{2. MAC-then-Encrypt} send $E_K(P₁P₂||MAC_K(P₁P₂))$. hides MAC and provides confidentiality but ciphertext can be altered undetected.\\
-		\textbf{3. Encrypt-then-MAC} send $E_K(P₁P₂||MAC_K(E_K(P₁P₂))$. \textbf{authenticates} ciphertext, ensures \textbf{confidentiality/integrity} \checkmark
+		\textbf{1. Encrypt-and-MAC.} send $E_K(P_1P_2)$ and $MAC_K(P_1P_2)$. protects plaintext only, not ciphertext; inefficient and leaks repetition.\\
+		\textbf{2. MAC-then-Encrypt} send $E_K(P_1P_2||MAC_K(P_1P_2))$. hides MAC and provides confidentiality but ciphertext can be altered undetected.\\
+		\textbf{3. Encrypt-then-MAC} send $E_K(P_1P_2||MAC_K(E_K(P_1P_2))$. \textbf{authenticates} ciphertext, ensures \textbf{confidentiality/integrity} \checkmark
 	\end{minipage}
 \end{minipage}
 \end{document}
