@@ -71,13 +71,24 @@ $\gamma_0, \gamma_1 : [a,b] \to \Omega$
 with $\gamma_0(a) = \gamma_1(a)$ and $\gamma_0(b) = \gamma_1(b)$,
 there exists a continuous homotopy
 $\Gamma : [a,b]\times[0,1] \to \Omega$
-that deforms $\gamma_0$ into $\gamma_1$ within $\Omega$ while keeping the endpoints fixed.
-\smallskip \newline
-\noindent\textbf{Curve in } $\mathbb{R}^n$: Given $\gamma : [a,b] \to \mathbb{R}^n$,$ \int_{\gamma} F \cdot d\mathbf{l} = \int_a^b \big\langle F(\gamma(t)), \gamma'(t)\big\rangle \, dt, \quad \int_{\gamma} f(\mathbf{x}) \, ds = \int_a^b f\big(\gamma(t)\big)\,\|\gamma'(t)\| \, dt.$\\
+that deforms $\gamma_0$ into $\gamma_1$ within $\Omega$ while keeping the endpoints fixed.\\[-2pt]
+\noindent\textbf{Curve in } $\mathbb{R}^n$: Given $\gamma : [a,b] \to \mathbb{R}^n$,$ \int_{\gamma} F \cdot d\mathbf{l} = \int_a^b \big\langle F(\gamma(t)), \gamma'(t)\big\rangle \, dt, \quad \int_{\gamma} f(\mathbf{x}) \, ds = \int_a^b f\big(\gamma(t)\big)\,\|\gamma'(t)\| \, dt.$ \fbox{\begin{minipage}[t]{0.22\textwidth}
+\footnotesize
+\noindent $\nabla \cdot (\vec{A} \times \vec{B}) = (\nabla \times \vec{A}) \cdot \vec{B} - \vec{A} \cdot (\nabla \times \vec{B})$\\
+\noindent $\operatorname{div} (\nabla f) = \Delta f$ \\
+\noindent $\operatorname{rot} (\nabla f) = 0$\\
+\noindent $\operatorname{div} (\operatorname{rot} \vec{F}) = 0$
+\noindent $\nabla (fg) = f \nabla g + g \nabla f$\\
+\noindent $\operatorname{rot} (f \vec{F}) = \nabla f \times \vec{F} + f \operatorname{rot} (\vec{F})$\\
+\noindent $\operatorname{div} (f \vec{F}) = f \operatorname{div} (\vec{F}) + \langle \vec{F}, \nabla f \rangle$\\
+\end{minipage}} \vspace{-50px}
+\\
 \noindent\textbf{Surface in } $\mathbb{R}^3$:
 Given $\sigma : D \subset \mathbb{R}^2 \to \mathbb{R}^3$, $\sigma(u,v)$,
 \vspace{-10px}
+
 \[
+\hspace{-110px}
 \iint_{\sigma} F \cdot d\mathbf{S}
 = \iint_D \big\langle F(\sigma(u,v)), \frac{\partial \sigma}{\partial u}\times\frac{\partial \sigma}{\partial v}\big\rangle \,du\,dv.
 \quad
@@ -162,7 +173,6 @@ $$\gamma(t) = \big(x(t), y(t)\big), \, \mathbf{n}(t) = \frac{\big(y'(t), -x'(t)\
 \mathbf{n}(u, v) = \frac{\frac{\partial \sigma}{\partial u} \times \frac{\partial \sigma}{\partial v}}
 {\left\|\frac{\partial \sigma}{\partial u} \times \frac{\partial \sigma}{\partial v}\right\|}, \; \text{!\,not necessarly outward}
 $$
-\vfill
 \vspace{-10px}
 \subsubsection*{Vector Calculus Theorems}
 \vspace{-10px}
@@ -179,19 +189,20 @@ Let \( \Omega \subseteq \mathbb{R}^2 \) be a regular domain with a positively or
 Let \( \Omega \subseteq \mathbb{R}^2 \) be a regular domain with a positively oriented boundary \( \partial \Omega \), and \( F \in C^1(\overline{\Omega}, \mathbb{R}^2) \). Then
 \vspace{-10px}\[
 \iint_{\Omega} \operatorname{div} F(x, y) \, dx \, dy = \int_{\partial \Omega} F \cdot n \, dl = \int_a^b \left\langle F(\gamma(t)), (\gamma_2'(t), -\gamma_1'(t)) \right\rangle dt.
-\]\vspace{-10px}
+\]
 \end{minipage}
 \\
 \begin{minipage}[htp]{0.49\textwidth}
 \noindent\textbf{Divergence Theorem (Space)}
 Let \( \Omega \subseteq \mathbb{R}^3 \) be a regular domain, \( n : \partial \Omega \to \mathbb{R}^3 \) a continuous outward unit normal vector field, and \( F \in C^1(\overline{\Omega}, \mathbb{R}^3) \). Then
-\[
+\[\hspace{-10px}
 \iiint_{\Omega} \operatorname{div} F(x,y,z) \, dx \, dy \, dz = \iint_{\partial \Omega} F \cdot n \, ds = \iint_{A} \langle F(\sigma); \frac{\partial \sigma}{\partial u} \wedge \frac{\partial \sigma}{\partial v} \rangle \, du \, dv
 \]
 
 \end{minipage}
 \hfill
 \begin{minipage}[htp]{0.49\textwidth}
+  \vspace{-10px}
 \noindent\textbf{Stokes' Theorem}
 Let \( \Omega \subseteq \mathbb{R}^3 \) be an open set, \( \Sigma \subseteq \Omega \) a piecewise smooth orientable surface, and \( F \in C^1(\Omega, \mathbb{R}^3) \), then
 \vspace{-10px}
@@ -202,7 +213,7 @@ Let \( \Omega \subseteq \mathbb{R}^3 \) be an open set, \( \Sigma \subseteq \Ome
 = \int_{a}^{b} F(\gamma(t)) \cdot \gamma'(t) \, dt
 \]
 
-\end{minipage}\\
+\end{minipage}\\ \vspace{-10px}
 \begin{minipage}[t]{0.27\textwidth}
     \centering
   \noindent  \textbf{Polar (2D)} \\[4pt]
@@ -259,8 +270,7 @@ Let \( \Omega \subseteq \mathbb{R}^3 \) be an open set, \( \Sigma \subseteq \Ome
     \end{bmatrix};
     \) \\[4pt]
     \( \rho \geq 0, \; \phi \in [0, \pi], \; \theta \in [0, 2\pi] \).
-\end{minipage}
-
+\end{minipage}\\
 \noindent \textbf{Distribution Theory} \\
 Let $\mathcal{D}'$ be the set of distributions over $\mathbb{R}$, the set of linear continuous functionals over $\mathcal{D}$,
 $
@@ -298,33 +308,70 @@ A distribution $T \in \mathcal{D}'$ satisfies: \vspace{-13px}\hspace{170px}\fbox
 \noindent \textbf{Higher-Order Derivatives} $\forall n \in \mathbb{N}$, $T^{(n)}(\varphi) = (-1)^n T(\varphi^{(n)})$. \\ \vspace*{-30px}
 \noindent
 \begin{minipage}[t]{0.24\textwidth}
-    \textbf{Dirac Delta}\\
-    $\delta(\varphi) = \varphi(0)$ for all $\varphi \in \mathcal{D}.$\\ \smallskip \\
-    \includegraphics[width=1.05\linewidth]{images/dirac_delta.png}
+  \textbf{Dirac Delta}\\
+  $\delta(\varphi) = \varphi(0)$ for all $\varphi \in \mathcal{D}.$\\
+  $\delta'(\varphi) = -\varphi'(0)$ for all $\varphi \in \mathcal{D}.$
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.24\textwidth}
-    \textbf{Dirac Comb}\\
-    $\Delta_T(x) = \sum_{n \in \mathbb{Z}} \delta(x - nT),$\\
-    $T > 0$ is the period.\smallskip \\
-    \includegraphics[width=1.05\linewidth]{images/dirac_comb.png}
+  \textbf{Dirac Comb}\\
+  $\Delta_T(x) = \sum_{n \in \mathbb{Z}} \delta(x - nT),$\\
+  $T > 0$ is the period. \\
+  $\Delta_T'(x) = \sum_{n \in \mathbb{Z}} \delta'(x - nT).$
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.24\textwidth}
-    \textbf{Scaled Dirac Delta}\\
-    $a \in \mathbb{R}$, $(a\delta)(\varphi) = a \cdot \varphi(0).$ \smallskip \\\\
-    \includegraphics[width=1.05\linewidth]{images/scaled_dirac_delta.png}
+  \textbf{Scaled Dirac Delta}\\
+  $a \in \mathbb{R},$ $(a\delta)(\varphi) = a \cdot \varphi(0).$ \\
+  $(a\delta)'(\varphi) = -a \cdot \varphi'(0).$
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.24\textwidth}
-    \textbf{Heaviside Step}\\
-    $H(x) =
-    \begin{cases}
-      0 & \text{if } x < 0,\\
-      1 & \text{if } x \geq 0.
-    \end{cases}$ \\
-    \includegraphics[width=1.05\linewidth]{images/heaviside.png}
+  \small
+  \textbf{Heaviside Step $H'(x) = \delta(x).$}\\
+  $H(x) =
+  \begin{cases}
+    0 & \text{if } x < 0,\\
+    1 & \text{if } x \geq 0.
+  \end{cases}$ \\
+
+\end{minipage}\\ \vfill
+\begin{minipage}[t]{0.5\textwidth}
+  \small
+  \noindent \textbf{Regular Distribution}\\
+  For any (locally) integrable function \(f\) on \(\mathbb{R}\):\\
+ $
+  \langle f, \varphi\rangle := \int_{\mathbb{R}} f(x)\varphi(x)\,dx.
+  $
+
+  1. \emph{Finiteness:}
+$
+  |\langle f, \varphi\rangle| \leq \int_{\mathbb{R}} |f(x)|\,|\varphi(x)|\,dx \leq C \max_{x \in \mathbb{R}}|\varphi(x)|, \\
+  C := \int_{\mathbb{R}} |f(x)|\,dx.
+$\\
+  2. \emph{Linearity:} For scalars \(\alpha, \beta\) and \(\varphi, \psi \in \mathcal{D}\): \\
+$
+  \langle f, \alpha \varphi + \beta \psi\rangle = \alpha \langle f, \varphi\rangle + \beta \langle f, \psi\rangle. \\
+$
+  3. \emph{Continuity:}
+$
+  |\langle f, \varphi\rangle| \leq C \max_{x \in \mathbb{R}}|\varphi(x)|.
+$
 \end{minipage}
+\hfill
+\hspace{-10px}\fbox{
+\begin{minipage}[t]{0.5\textwidth}
+\small
+Let $\Omega \subseteq \mathbb{R}^n$.\\
+\textbf{Convex} if $\forall x, y \in \Omega$, the line segment from $x$ to $y$ is within $\Omega$. \\
+\textbf{Star-shaped} if $\exists z \in \Omega$ such that $\forall x \in \Omega$, the line segment from $z$ to $x$ is within $\Omega$.
+\noindent $\operatorname{rot} (\operatorname{rot} \vec{F}) = -\Delta \vec{F} + \operatorname{grad} (\operatorname{div} \vec{F})$\\
+\noindent $\operatorname{div} (f \operatorname{grad} g) = f \Delta g + \nabla f \cdot \nabla g$\\
+\noindent $\nabla \cdot (f \vec{A}) = (\nabla f) \cdot \vec{A} + f (\nabla \cdot \vec{A})$\\
+\noindent $\Delta (fg) = f \Delta g + 2 \nabla f \cdot \nabla g + g \Delta f$
+\end{minipage}}
+
+\newpage
 % Reduce paragraph spacing/indentation:
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
@@ -434,7 +481,7 @@ If $f$ is $T$-periodic, continuous, and piecewise $C^1$, then
 If $f$ is $T$-periodic, continuous, and piecewise $C^1$, then
 \[
   \int Ff(x)\,dx
-  = \sum_{n=1}^\infty \frac{2}{T n \pi} \left[ a_n \sin\left(\tfrac{2\pi n}{T}x\right)
+  = \sum_{n=1}^\infty \frac{T}{2 n \pi} \left[ a_n \sin\left(\tfrac{2\pi n}{T}x\right)
         - b_n \cos\left(\tfrac{2\pi n}{T}x\right) \right] + C
 \]
 \[
@@ -474,7 +521,7 @@ u(x)=u^g(x)+u^f(x) \quad (\text{superposition principle}).
 \]
 \vspace{-5px}
 \[
-g(x)=\frac{1}{2k}\,e^{-k|x|},
+g(x)=\sqrt{\frac{\pi}{2}} \frac{1}{k}\,e^{-k|x|},
 \quad
 \widehat{g}(\alpha)=\frac{1}{\alpha^2 + k^2},
 \]
@@ -500,7 +547,10 @@ For \( \phi : \mathbb{R} \to \mathbb{C} \), \vspace{-5px}
 \[ \vspace{-5px}
   c_{n} = \tfrac{1}{2}(a_{n} - i\,b_{n}),\
   c_{-n} = \tfrac{1}{2}(a_{n} + i\,b_{n}),\
-  c_{0} = \tfrac{a_{0}}{2}.
+  c_{0} = \tfrac{a_{0}}{2}.\]\[
+  a_{n} = c_n + c_{-n}\
+  a_{0} = 2 c_0 \
+  b_n = \operatorname{Re}(c_{-n} - c_n)
 \]
 
 \noindent \textbf{Fourier Series on $[0,L]$}\\
@@ -569,7 +619,7 @@ Let \(f,g:\mathbb{R} \to \mathbb{R}\) such that
 
     \textbf{Convolution} \\
     $\mathcal{F}[f * g](\alpha)
-    = \sqrt{2\pi} \,\hat{f}(\alpha)\,\hat{g}(\alpha).$ \\[4pt]
+    = \sqrt{2\pi} \,\hat{f}(\alpha)\,\hat{g}(\alpha)$ \\[4pt]
     \columnbreak
 
     \textbf{Differentiation} \\[2pt]
@@ -579,9 +629,13 @@ Let \(f,g:\mathbb{R} \to \mathbb{R}\) such that
     $\mathcal{F}\!\Bigl\{\int_{-\infty}^x f(\xi)\,d\xi\Bigr\}
         = \dfrac{1}{i\alpha}\,\hat{f}(\alpha), \ \alpha \neq 0$ \\[4pt]
 
+    \textbf{Differentiation of Transform} \\[2pt]
+    $
+    \mathcal{F}\big((-ix)^n f(x)\big)(\alpha) = \frac{\partial^n}{\partial \alpha^n} \hat{f}(\alpha) \\[4pt]
+    $\\
     \textbf{Multiplication} \\
     $
-\mathcal{F}\{f(x) \cdot g(x)\} = \frac{1}{\sqrt{2\pi}} \left( \mathcal{F}\{f(x)\} * \mathcal{F}\{g(x)\} \right)
+\mathcal{F}\{f(x) \cdot g(x)\} = \sqrt{2\pi}\left( \mathcal{F}\{f(x)\} * \mathcal{F}\{g(x)\} \right)
 $ \\[4pt]
   \end{multicols}
 \end{minipage}
@@ -594,10 +648,12 @@ $\sin(a \pm b) = \sin a\cos b \pm \cos a\sin b,$ \\[3pt]
 $\cos a\cos b = \tfrac{1}{2}\bigl[\cos(a - b) + \cos(a + b)\bigr],$ \\[3pt]
 $\sin a\sin b = \tfrac{1}{2}\bigl[\cos(a - b) - \cos(a + b)\bigr],$ \\[3pt]
 $\sin a\cos b = \tfrac{1}{2}\bigl[\sin(a + b) + \sin(a - b)\bigr],$ \\[3pt]
-$\cos a\sin b = \tfrac{1}{2}\bigl[\sin(a + b) - \sin(a - b)\bigr].$
+$\cos a\sin b = \tfrac{1}{2}\bigl[\sin(a + b) - \sin(a - b)\bigr].$\\[3pt]
+$cos(n \pi) = (-1)^n$
 \normalsize
 \end{multicols}
 \endgroup
 
 
 \end{document}
+
