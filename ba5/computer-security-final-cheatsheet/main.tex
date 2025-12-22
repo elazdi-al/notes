@@ -1,0 +1,80 @@
+\documentclass[9pt, a4paper]{extarticle}
+\usepackage[a4paper, top=0in, bottom=0in, left=0.05in, right=0.05in]{geometry} % Minimal margins
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{graphicx} % Required for \includegraphics
+\usepackage{ragged2e}
+
+\usepackage{fourier}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{array} % For better column definitions
+\usepackage{booktabs} % For improved table aesthetics
+\usepackage{subfiles}                % For subfiles compilation
+
+\raggedbottom
+\setlist[itemize]{leftmargin=1em}
+\newcommand{\dist}[2]{\left\langle #1,\, #2 \right\rangle}
+\setlength{\TPHorizModule}{0.1mm} % Set horizontal units to millimeters
+\setlength{\TPVertModule}{0.1mm}  % Set vertical units to millimeters
+\usepackage{multicol}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\usepackage{setspace}
+\setstretch{0.98}
+\pagestyle{empty}
+\setlength{\parskip}{0pt}      % space between paragraphs
+\setlength{\parindent}{0pt}    % optional: remove indentation
+\setlist{nosep, topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt}
+% Redefine the textblock environment
+\let\originaltextblock\textblock
+\let\endoriginaltextblock\endtextblock
+% Adjust vertical centering of the existing \warning symbol
+\let\oldwarning\warning
+\renewcommand{\warning}{\raisebox{0.3ex}{\oldwarning}}
+
+\makeatletter
+\renewcommand{\hline}{\noalign{\vskip 2px}\hrule\@height\arrayrulewidth\@width\linewidth\noalign{\vskip 2px}}
+\makeatother
+
+\renewenvironment{textblock}[2][]{%
+    \originaltextblock[#1]{#2}%
+    \fcolorbox{red}{white}{%
+    \begin{minipage}{#2}%
+}{%
+    \end{minipage}%
+    }%
+    \endoriginaltextblock
+}
+
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	% Moderately larger size hierarchy
+	\makeatletter
+	\renewcommand{\Huge}{\@setfontsize\Huge{26pt}{30pt}}
+	\renewcommand{\LARGE}{\@setfontsize\LARGE{20pt}{24pt}}
+	\renewcommand{\Large}{\@setfontsize\Large{16pt}{20pt}}
+	\renewcommand{\large}{\@setfontsize\large{13pt}{16pt}}
+	\makeatother
+
+	\vspace*{1cm}
+	{\Huge \textbf{Computer Security - CheatSheet}} \\
+	\vspace{20pt}
+	{\LARGE IN~BA5 - Thomas Bourgeat} \\
+	\vspace*{1cm}
+	{\Large Notes by Ali EL AZDI} \\
+	\vfill
+
+	{\large October 26th, 2025}
+	\vspace*{60px}
+\end{titlepage}
+
+\small
+\noindent
+\\
+\newpage
+\\
+\subfile{midterm}
+\end{document}
+
