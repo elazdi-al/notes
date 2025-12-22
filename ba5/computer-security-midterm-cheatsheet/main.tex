@@ -70,6 +70,9 @@
 
 \small
 \noindent
+\\
+\newpage
+\\
 \begin{minipage}[t]{0.495\textwidth}
 	\noindent\textbf{CompSec Properties}
 	- \textbf{Confidentiality}. prevent unauthorized disclosure of information. \textit{authorized users may read a file}\\
@@ -504,9 +507,8 @@
 		deterministic. fixed IV $\rightarrow$ same message/same MAC.\\
 		\warning message length must be known and fixed; otherwise, extension attacks are possible (e.g., using $M | (T \oplus M')$).
 		\hline
-		\textbf{1. Encrypt-and-MAC.} send $E_K(P_1P_2)$ and $MAC_K(P_1P_2)$. protects plaintext only, not ciphertext; inefficient and leaks repetition.\\
-		\textbf{2. MAC-then-Encrypt} send $E_K(P_1P_2||MAC_K(P_1P_2))$. hides MAC and provides confidentiality but ciphertext can be altered undetected.\\
-		\textbf{3. Encrypt-then-MAC} send $E_K(P_1P_2||MAC_K(E_K(P_1P_2))$. \textbf{authenticates} ciphertext, ensures \textbf{confidentiality/integrity} \checkmark
+		\textbf{1. Encrypt-and-MAC.} send $E_K(P_1P_2)$ and $MAC_K(P_1P_2)$. integrity of plaintext but no integrity on ciphertext/may reveal info on ciphertext. \textbf{2. MAC-then-Encrypt} send $E_K(P_1P_2||MAC_K(P_1P_2))$. hides MAC and provides confidentiality/integrity on plaintext but no integrity ciphertext.\\
+		\textbf{3. Encrypt-then-MAC} send $E_K(P_1P_2)||MAC_K(E_K(P_1P_2)$. \textbf{authenticates} ciphertext, ensures \textbf{confidentiality/integrity} \checkmark
 	\end{minipage}
 \end{minipage}
 \end{document}
