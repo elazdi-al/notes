@@ -77,28 +77,61 @@
 \\
 \subfile{midterm}\\
 \begin{minipage}[t]{0.495\textwidth}
-	\textbf{Authentication.} the process of verifying a claimed identity.\\
-	\textit{Passwords.} secret shared between user and system.\\
-	\textit{Problems} to be solved\\
-	- \textbf{Secure transfer.} password may be eavesdropped when communicated.\\
-	1. Encrypting password makes it unreadable to eavesdropper \\(\warning \textbf{Replay-Attacks.} sending same request without needing the password)\\
-	2. \textbf{Challenge-Response} protocol solves this.
+	\textbf{Authentication.} the process of verifying a claimed identity. (Prove who you are.)\\
+	\textbf{Passwords.} secret shared between user and system.\\
+	\textit{Problems}:
+	\begin{itemize}
+		\item[-] \textbf{Secure transfer.} password may be eavesdropped when communicated.\\
+		      \textit{Encrypting makes password unreadable to eavesdropper, but still allows copy and send.} (\warning \textbf{Replay-Attacks.} sending same request without needing the password)\\
+		      \textbf{Challenge-Response} protocol solves this.
+		      \begin{enumerate}
+			      \item Principal declares they want to login.
+			      \item System authenticating principal sends a \textbf{challenge} (a random value).
+			      \item Principal encrypts password \textit{together} with the challenge.(ensures password is never encrypted with same value and encryption is fresh)
+			      \item After checking password, system authenticating \textit{must} delete the challenge.
+		      \end{enumerate}
+
+		\item[–] \textbf{Secure check.} naïve checks may leak information about the password.\\
+		      \textbf{Check Options:}
+		      \begin{enumerate}
+			      \item Letter by letter - Time to check leaks the number of correct checked letters. (Timing channel)
+			      \item Check everything - Same time regardless of input (hashing solves this by default).
+		      \end{enumerate}
+
+		\item[-] \textbf{Secure storage.} if stolen entire system is compromised.\\
+		      Passwords must be stored to be checked against but \textit{not stored in clear} $\rightarrow$ an adversary can read them and impersonate users.\\
+		      \textbf{
+			      Storage Options :}
+		      \begin{enumerate}
+			      \item Encrypted Passwords - requires key to be stored in same system as database, not secure.
+			      \item Hashed Passwords - Not a solution, hashing does \textbf{not} require a key. \warning passwords are not truly random.$\rightarrow$Database can be downloaded and compared against hash of most common passwords (\textbf{Dictionary Attack)}.
+			      \item Hashed + Salted Passwords (Do this !) - \textbf{Salt.} unique random value generated per password. \textbf{We store}: $(\text{username}, H('123456'||\text{salt}_n), \text{salt}_n)$. \\ Dictionary attacks are still possible but same passwords are undetectable.\\
+			            \textit{Principal} asks to login$\rightarrow$\textit{System} sends Challenge$\rightarrow$\textit{Principal} sends encrypted password with Challenge $\rightarrow$\textit{System} checks Challenge, decrypts, looks up hash by username, hashes plaintext with salt and checks if same as stored.
+		      \end{enumerate}
+
+		\item[-] \textbf{Secure passwords.} easy-to-remember passwords tend to be easy to guess
+	\end{itemize}
+
+	\textbf{Biometrics.} measurement and statistical analysis of people's unique physical characteristics(fingerprint, face, \ldots).\\
+	\textbf{Biometrics Authentication.}
 	\begin{enumerate}
-		\item[a)] Principal declares they want to login.
-		\item[b)] System authenticating principal sends a \textbf{challenge} (a random number).
-		\item[c)] Principal encrypts password \textit{together} with the challenge.
-		\item[] (ensures password is never encrypted with same value and encryption is fresh)
-		\item[d)] After checking password, system authenticating \textbf{must} delete the challenge.
+		\item \textbf{Enrollment.} biometric is captured by a sensor and processed to be converted in a stream of bits(Biometric Template). \textbf{Capture} $\rightarrow$ \textbf{Process} $\rightarrow$ \textbf{Store}.
+		\item \textbf{Verification.} biometric is captured, processed and compared against the stored one. \textbf{Capture} $\rightarrow$ \textbf{Process} $\rightarrow$ \textbf{Compare}. (threshold for match vs. no match).\\ Balance between False Positives (wrongly authenticated) and False Negatives(wrongly rejected).
 	\end{enumerate}
-	- \textbf{Secure check.} naïve checks may leak information about the password.\\
-	- \textbf{Secure storage.} if stolen entire system is compromised.\\
-	Passwords must be stored to be checked against.\\ Passwords must not be stored in clear otherwise an adversary can read them and impersonate users.\\
-	\textbf{Options :}
+	Storing / Processing can happen locally($\oplus$ privacy) / remotely($\oplus$ security).\\
+	\textbf{Authentication Tokens.} by proving ownership of a token. (Smart Card, \ldots)
 	\begin{enumerate}
-		\item Store password encrypted - requires key to be stored in same system as database, not secure.
-		\item Store password as hash of its value. Not a solution, hashing does \textbf{not} require a key, passwords are not truly random. \\Database can be downloaded and compared against hash of most common passwords (\textbf{Dictionary Attack)}.
+		\item Offline - Device and Server establish a common \textit{seed} (random value) \& synchronize their clocks.
+		\item When Device wants identity:
+		      \begin{enumerate}
+			      \item Server asks to prove it.
+			      \item They both compute $n=\frac{{now} - start}{interval}$. \textit{Current interval since start.}
+			      \item Device applies a \textbf{keyed} function (pre-shared key) n times on the initial seed.
+			      \item Device sends result to Server. (encrypted, eavesdropper can't have the seed).
+			      \item Server computes same value and checks against the one received.
+		      \end{enumerate}
 	\end{enumerate}
-	- \textbf{Secure passwords.} easy-to-remember passwords tend to be easy to guess\\
+	Can't be a hashing function (hash functions aren't keyed!, eavesdropper could compute $h_k(seed)$ for any k after the one observed.).
 \end{minipage}
 \end{document}
 
