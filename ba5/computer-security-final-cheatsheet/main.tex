@@ -75,6 +75,30 @@
 \\
 \newpage
 \\
-\subfile{midterm}
+\subfile{midterm}\\
+\begin{minipage}[t]{0.495\textwidth}
+	\textbf{Authentication.} the process of verifying a claimed identity.\\
+	\textit{Passwords.} secret shared between user and system.\\
+	\textit{Problems} to be solved\\
+	- \textbf{Secure transfer.} password may be eavesdropped when communicated.\\
+	1. Encrypting password makes it unreadable to eavesdropper \\(\warning \textbf{Replay-Attacks.} sending same request without needing the password)\\
+	2. \textbf{Challenge-Response} protocol solves this.
+	\begin{enumerate}
+		\item[a)] Principal declares they want to login.
+		\item[b)] System authenticating principal sends a \textbf{challenge} (a random number).
+		\item[c)] Principal encrypts password \textit{together} with the challenge.
+		\item[] (ensures password is never encrypted with same value and encryption is fresh)
+		\item[d)] After checking password, system authenticating \textbf{must} delete the challenge.
+	\end{enumerate}
+	- \textbf{Secure check.} naïve checks may leak information about the password.\\
+	- \textbf{Secure storage.} if stolen entire system is compromised.\\
+	Passwords must be stored to be checked against.\\ Passwords must not be stored in clear otherwise an adversary can read them and impersonate users.\\
+	\textbf{Options :}
+	\begin{enumerate}
+		\item Store password encrypted - requires key to be stored in same system as database, not secure.
+		\item Store password as hash of its value. Not a solution, hashing does \textbf{not} require a key, passwords are not truly random. \\Database can be downloaded and compared against hash of most common passwords (\textbf{Dictionary Attack)}.
+	\end{enumerate}
+	- \textbf{Secure passwords.} easy-to-remember passwords tend to be easy to guess\\
+\end{minipage}
 \end{document}
 
