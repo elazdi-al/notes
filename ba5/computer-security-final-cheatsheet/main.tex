@@ -91,7 +91,7 @@
 			      \item After checking password, system authenticating \textit{must} delete the challenge.
 		      \end{enumerate}
 
-		\item[–] \textbf{Secure check.} naïve checks may leak information about the password.\\
+		\item[-] \textbf{Secure check.} naïve checks may leak information about the password.\\
 		      \textbf{Check Options:}
 		      \begin{enumerate}
 			      \item Letter by letter - Time to check leaks the number of correct checked letters. (Timing channel)
@@ -112,13 +112,15 @@
 		\item[-] \textbf{Secure passwords.} easy-to-remember passwords tend to be easy to guess
 	\end{itemize}
 
-	\textbf{Biometrics.} measurement and statistical analysis of people's unique physical characteristics(fingerprint, face, \ldots).\\
+	\textbf{Biometrics.} measurement and statistical analysis of people's unique physical characteristics(fingerprint, face, \ldots).
+	\hline
 	\textbf{Biometrics Authentication.}
 	\begin{enumerate}
 		\item \textbf{Enrollment.} biometric is captured by a sensor and processed to be converted in a stream of bits(Biometric Template). \textbf{Capture} $\rightarrow$ \textbf{Process} $\rightarrow$ \textbf{Store}.
 		\item \textbf{Verification.} biometric is captured, processed and compared against the stored one. \textbf{Capture} $\rightarrow$ \textbf{Process} $\rightarrow$ \textbf{Compare}. (threshold for match vs. no match).\\ Balance between False Positives (wrongly authenticated) and False Negatives(wrongly rejected).
 	\end{enumerate}
-	Storing / Processing can happen locally($\oplus$ privacy) / remotely($\oplus$ security).\\
+	Storing / Processing can happen locally($\oplus$ privacy) / remotely($\oplus$ security).
+	\hline
 	\textbf{Authentication Tokens.} by proving ownership of a token. (Smart Card, \ldots)
 	\begin{enumerate}
 		\item Offline - Device and Server establish a common \textit{seed} (random value) \& synchronize their clocks.
@@ -132,6 +134,90 @@
 		      \end{enumerate}
 	\end{enumerate}
 	Can't be a hashing function (hash functions aren't keyed!, eavesdropper could compute $h_k(seed)$ for any k after the one observed.).
+	\hline
+
+	\begin{minipage}[t]{0.67\textwidth}
+		\textbf{Security Engineering process.}
+		\begin{enumerate}[leftmargin=10px]
+			\item Define a security policy (principals, assets, properties) and a threat model.
+			\item Define security mechanisms that support policy of threat model.
+			\item Build an implementation supporting the mechanisms
+		\end{enumerate}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.33\textwidth}
+		\textbf{Attack Engineering process.} \\exploit weaknesses introduced during the security
+		engineering process due to carelessness, lack of knowledge, or errors.
+	\end{minipage}\\
+	\textbf{Threat Modelling.} process to identify threats / unprotected resources.
+	\begin{itemize}
+		\item[-] Attack Trees - represent goal as the root and ways to achieve it as branches.
+		\item[-] STRIDE - identify system entities, events, and boundaries of the system. (Spoofing, Tampering, Repudation, Information disclosure, Denial of service, Elevation of privileges).
+		\item[-] PASTA - start from buisness goals, processes, and use cases. Find threats in buisness model, assess impact, prioritize on risk.
+	\end{itemize}
+	\textbf{Methods.}
+	\begin{itemize}
+		\item[-] \textbf{GET.} requests a resource; parameters are appended to the URL as query key–value pairs after "?", separated by `\&`.
+		      \[
+			      \underbrace{\texttt{http://}}_{\text{protocol}}
+			      \underbrace{\texttt{www.mywebsite.com}}_{\text{hostname / domain}}
+			      \underbrace{\texttt{/apparel}}_{\text{directory}}
+			      \underbrace{\texttt{/skirt.php}}_{\text{filename}}
+			      \underbrace{\texttt{?sku=123\&lang=en\&sect=silk}}_{\text{query parameters}}
+		      \]
+		\item[-] \textbf{POST.} creates or updates a resource; sends data in the request body (not the URL) and typically modifies server data.\\
+		      \texttt{POST /test/demo\_form.php HTTP/1.1}\\
+		      \texttt{Host: w3schools.com}\\
+		      \texttt{name1=value1\&name2=value2}
+	\end{itemize}
+	\textbf{Cookies.} small piece of data stored by browser on client (creates HTTP "sessions"). \textit{also used to track users.}. \textbf{Ambient Authority} is used with cookies.
+	\textit{logged into bank.com $\rightarrow$ cookies stored for bank.com. \textbf{Any} (!CSRF) new HTTP requests to this website \textbf{will include all cookies} to continue session}.\\
+	\textbf{URL.} standardized address that specifies a resource’s access method, host, and path.
+	\[
+		\underbrace{\texttt{http://}}_{\text{protocol}}\;
+		\underbrace{\texttt{www.mywebsite.com}}_{\text{hostname / domain}}\;
+		\underbrace{\texttt{/apparel}}_{\text{directory}}\;
+		\underbrace{\texttt{/skirt.php}}_{\text{filename}}
+	\]
+	\textbf{HTML.} a markup language that uses tags to structure content and tell the browser how to render a webpage.\\
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+	\textbf{PHP.} a server-side scripting language for dynamic web pages; uses variables and request/session data (`\$\_GET`, `\$\_POST`, `\$\_SESSION`) and outputs HTML with `echo`.\\
+	Lifetime of a GET/POST request.
+	\begin{enumerate}[leftmargin=15px]
+		\item Browser sends HTTP GET/POST request.
+		\item Web Server receives requests and identifies if it's a static asset(.jpg, etc\dots) or dynamic(.php).
+		\item PHP interpreter executes called .php
+		\item Sends response to web browser
+	\end{enumerate}
+	\textbf{Common Weaknesses Enumeration (CWE).}\\ database of software errors leading to vulnerabilities.
+	\begin{enumerate}
+		\item \textbf{CWE 1 - Insecure Interaction Between Components.} unchecked information sent between different components.
+		      \begin{enumerate}
+			      \item \textbf{CWE 78 - OS Command Injection.} application embeds unvalidated user input into an OS command, allowing attackers to execute arbitrary commands \textit{ls /home/$user}.
+
+			      \item \textbf{CWE 79 - Cross Site Scripting.} application embeds unvalidated user input into dynamically generated web content, causes browser to execute injected scripts.\\
+			            \textbf{Common Forms.}\\
+			            \texttt{<img src=x onerror=alert(1)>;}\\
+			            \texttt{<svg onload=alert(1)>;}\\
+			            \texttt{<body onload=alert(1)>;}\\
+			            \texttt{<a href=javascript:alert(1)>click</a>;}
+			      \item \textbf{CWE 362 - Cross Site Request Forgery.} malicious website makes a state-changing action using user’s session cookie for another website.\\
+			            \fbox{
+				            \begin{minipage}[htp]{0.82\textwidth}
+					            \textbf{Same Origin Policy (SOP).} web browser security mechanism that restricts scripts from one origin from reading data from another origin. An origin is a (protocol, host, port) \textit{http:\/\/example.com}. \\
+					            This doesn't prevent CSRF as it's based on sending a request and that the browser naturally attaches cookies of the destination domain in request (unless special setting).
+				            \end{minipage}}\\
+			            \textbf{Solutions:}\\
+			            For every state-changing endpoint:\\
+			            - Check Origin header and only allow exact origin.\\
+			            - If Origin missing, require Referer and ensure it starts with expected origin, else reject.\\
+			            \textit{Keep GET side-effect free; Require a CSRF token (challenge) on every state-changing request; For high-riks actions require re-auth.}
+		      \end{enumerate}
+		\item \textbf{CWE 2 - Risky Ressource Management.} not properly managed creation, usage, transfer, or destruction of important system resources
+
+		\item \textbf{CWE 3 - Porous Defenses.} defensive techniques misused, abused, or just ignored
+	\end{enumerate}
 \end{minipage}
 \end{document}
 
