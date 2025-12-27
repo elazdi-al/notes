@@ -212,17 +212,17 @@
 			            \begin{minipage}[t]{0.45\textwidth}
 				            \texttt{navigator.userAgent}\\
 				            Returns the browser identification string; increases fingerprinting surface.\\
-				            \textit{Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36}\\\vfill
+				            \textit{Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36}\\
 				            \texttt{window.location.replace(url)}\\
-				            Forces navigation to \texttt{url} without adding a history entry.\\\vfill
+				            Forces navigation to \texttt{url} without adding a history entry.\\
 				            \texttt{document.cookie}\\
 				            Returns all non-\texttt{HttpOnly} cookies for the current origin; exposed session/state cookies allows immediate account compromise if XSS.
 			            \end{minipage}\hfill
 			            \begin{minipage}[t]{0.45\textwidth}
 				            \texttt{document.domain}\\
-				            Gets/sets legacy origin relaxation; useful because it can broaden trust across subdomains and weaken same-origin isolation.\\\vfill
+				            Gets/sets legacy origin relaxation; useful because it can broaden trust across subdomains and weaken same-origin isolation.\\
 				            \texttt{document.referrer}\\
-				            Returns the referrer URL when sent; useful because it can leak sensitive paths or parameters without a strict Referrer-Policy.\\\vfill
+				            Returns the referrer URL when sent; useful because it can leak sensitive paths or parameters without a strict Referrer-Policy.\\
 				            \texttt{document.URL}\\
 				            Returns the full current document URL; useful because secrets in query strings or fragments become directly observable to script and telemetry.
 			            \end{minipage}
