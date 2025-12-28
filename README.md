@@ -8,6 +8,7 @@ Course notes, summaries, and cheatsheets from EPFL.
 
 ```
 notes/
+├── ba5/    # Semester 5
 ├── ba4/    # Semester 4
 ├── ba3/    # Semester 3
 └── ba2/    # Semester 2
@@ -15,7 +16,8 @@ notes/
 
 ## BA5 - Semester 5
 
-- **computer-security-midterm-cheasheet** - Computer Security midterm reference
+- **computer-security-final-cheatsheet** - Computer Security final reference
+- **computer-security-midterm-cheatsheet** - Computer Security midterm reference
 
 
 ## BA4 - Semester 4
