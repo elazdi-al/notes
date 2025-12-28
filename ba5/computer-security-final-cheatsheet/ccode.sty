@@ -1,0 +1,131 @@
+% ccode.sty - Clean C Code Syntax Highlighting for LaTeX
+% Usage: \usepackage{ccode}
+%
+% Provides:
+%   - \begin{ccode}...\end{ccode} environment for C code blocks
+%   - \begin{ccode*}...\end{ccode*} for code with line numbers
+%   - \cinline{...} for inline C code
+%   - Clean, minimal styling that matches document text size
+%   - Auto-gobbles leading whitespace from source indentation
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ccode}[2024/01/01 Clean C Code Syntax Highlighting]
+
+\RequirePackage{listings}
+\RequirePackage{xcolor}
+
+% ============================================================================
+% Color Definitions - Readable, Professional Palette
+% ============================================================================
+
+\definecolor{ccode-keyword}{RGB}{0, 0, 160}         % Dark blue - keywords
+\definecolor{ccode-type}{RGB}{0, 128, 128}          % Teal - types
+\definecolor{ccode-string}{RGB}{163, 21, 21}        % Dark red - strings
+\definecolor{ccode-comment}{RGB}{0, 128, 0}         % Green - comments
+\definecolor{ccode-number}{RGB}{128, 64, 0}         % Brown - numbers
+\definecolor{ccode-preproc}{RGB}{128, 0, 128}       % Purple - preprocessor
+\definecolor{ccode-base}{RGB}{0, 0, 0}              % Black - base text
+
+% ============================================================================
+% Listings Configuration
+% ============================================================================
+
+\lstdefinestyle{ccodestyle}{
+	language=C,
+	% No background
+	backgroundcolor=,
+	% Base style - inherits document font size
+	basicstyle=\ttfamily\color{ccode-base},
+	% Syntax colors
+	keywordstyle=\color{ccode-keyword}\bfseries,
+	keywordstyle=[2]\color{ccode-type},
+	keywordstyle=[3]\color{ccode-preproc},
+	commentstyle=\color{ccode-comment}\itshape,
+	stringstyle=\color{ccode-string},
+	% Keywords - Control flow and operators
+	morekeywords={
+			if, else, for, while, do, switch, case, default,
+			break, continue, return, goto,
+			sizeof, typedef, struct, union, enum,
+			static, extern, const, volatile, register, inline,
+			auto, restrict, _Atomic, _Bool, _Complex, _Imaginary
+		},
+	% Types
+	morekeywords=[2]{
+			void, int, char, short, long, float, double,
+			signed, unsigned, size_t, ssize_t, ptrdiff_t,
+			int8_t, int16_t, int32_t, int64_t,
+			uint8_t, uint16_t, uint32_t, uint64_t,
+			bool, true, false, NULL, FILE
+		},
+	% Preprocessor
+	morekeywords=[3]{
+			define, include, ifdef, ifndef, endif, elif, undef,
+			pragma, error, warning, line
+		},
+	% No frame
+	frame=none,
+	% Left-aligned, minimal margins
+	xleftmargin=0pt,
+	xrightmargin=0pt,
+	aboveskip=\medskipamount,
+	belowskip=\medskipamount,
+	% No line numbers by default
+	numbers=none,
+	% Spacing
+	tabsize=4,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	% Gobble leading whitespace from source indentation
+	gobble=4,
+	% Line breaking
+	breaklines=true,
+	breakatwhitespace=true,
+	breakautoindent=true,
+	postbreak=\mbox{$\hookrightarrow$\space},
+	% Escape to LaTeX
+	escapeinside={(*@}{@*)},
+	% Caption below
+	captionpos=b,
+}
+
+% Style with line numbers
+\lstdefinestyle{ccodestyle-numbered}{
+	style=ccodestyle,
+	numbers=left,
+	numberstyle=\ttfamily\footnotesize\color{gray},
+	numbersep=12pt,
+	stepnumber=1,
+}
+
+% ============================================================================
+% Environment and Command Definitions
+% ============================================================================
+
+% Main C code environment (gobble can be overridden with gobble=N)
+\lstnewenvironment{ccode}[1][]
+{\lstset{style=ccodestyle, #1}}
+{}
+
+% C code with line numbers
+\lstnewenvironment{ccode*}[1][]
+{\lstset{style=ccodestyle-numbered, #1}}
+{}
+
+% Inline C code
+\newcommand{\cinline}[1]{%
+	\lstinline[style=ccodestyle, basicstyle=\ttfamily\color{ccode-base}]{#1}%
+}
+
+% Include C file
+\newcommand{\cfile}[2][]{%
+	\lstinputlisting[style=ccodestyle, gobble=0, #1]{#2}%
+}
+
+% Include C file with line numbers
+\newcommand{\cfilenum}[2][]{%
+	\lstinputlisting[style=ccodestyle-numbered, gobble=0, #1]{#2}%
+}
+
+\endinput

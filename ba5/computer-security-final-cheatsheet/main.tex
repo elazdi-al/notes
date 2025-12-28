@@ -80,36 +80,36 @@
 	\textbf{Authentication.} the process of verifying a claimed identity. (Prove who you are.)\\
 	\textbf{Passwords.} secret shared between user and system.\\
 	\textit{Problems}:
-	\begin{itemize}
-		\item[-] \textbf{Secure transfer.} password may be eavesdropped when communicated.\\
+	\begin{itemize}[leftmargin=10px]
+		\item[I  ] \textbf{Secure transfer.} password may be eavesdropped when communicated.\\
 		      \textit{Encrypting makes password unreadable to eavesdropper, but still allows copy and send.} (\warning \textbf{Replay-Attacks.} sending same request without needing the password)\\
 		      \textbf{Challenge-Response} protocol solves this.
 		      \begin{enumerate}[leftmargin=10px]
 			      \item Principal declares they want to login.
-			      \item System authenticating principal sends a \textbf{challenge} (a random value).
+			      \item System authenticating principal sends a \textbf{Challenge} (a random value).
 			      \item Principal encrypts password \textit{together} with the challenge.(ensures password is never encrypted with same value and encryption is fresh)
-			      \item After checking password, system authenticating \textit{must} delete the challenge.
+			      \item After checking password, System \textit{must} delete the challenge.
 		      \end{enumerate}
 
-		\item[-] \textbf{Secure check.} naïve checks may leak information about the password.\\
+		\item[II ] \textbf{Secure check.} naïve checks may leak information about the password.\\
 		      \textbf{Check Options:}
 		      \begin{enumerate}[leftmargin=10px]
 			      \item Letter by letter - Time to check leaks the number of correct checked letters. (Timing channel)
 			      \item Check everything - Same time regardless of input (hashing solves this by default).
 		      \end{enumerate}
 
-		\item[-] \textbf{Secure storage.} if stolen entire system is compromised.\\
+		\item[III] \textbf{Secure storage.} if stolen entire system is compromised.\\
 		      Passwords must be stored to be checked against but \textit{not stored in clear} $\rightarrow$ an adversary can read them and impersonate users.\\
 		      \textbf{
 			      Storage Options :}
 		      \begin{enumerate}[leftmargin=10px]
-			      \item Encrypted Passwords - requires key to be stored in same system as database, not secure.
-			      \item Hashed Passwords - Not a solution, hashing does \textbf{not} require a key. \warning passwords are not truly random.$\rightarrow$Database can be downloaded and compared against hash of most common passwords (\textbf{Dictionary Attack)}.
-			      \item Hashed + Salted Passwords (Do this !) - \textbf{Salt.} unique random value generated per password. \textbf{We store}: $(\text{username}, H('123456'||\text{salt}_n), \text{salt}_n)$. \\ Dictionary attacks are still possible but same passwords are undetectable.\\
+			      \item Encrypted Passwords. requires key to be stored in same system as database, not secure.
+			      \item Hashed Passwords. Not a solution, hashing does \textbf{not} require a key. \warning passwords are not truly random.$\rightarrow$Database can be downloaded and compared against hash of most common passwords (\textbf{Dictionary Attack)}.
+			      \item Hashed + Salted Passwords (Do this !). \textbf{Salt.} unique random value generated per password. \textbf{We store}: $(\text{username}, H('123456'||\text{salt}_n), \text{salt}_n)$. \\ Dictionary attacks are still possible but same passwords are undetectable.\\
 			            \textit{Principal} asks to login$\rightarrow$\textit{System} sends Challenge$\rightarrow$\textit{Principal} sends encrypted password with Challenge $\rightarrow$\textit{System} checks Challenge, decrypts, looks up hash by username, hashes plaintext with salt and checks if same as stored.
 		      \end{enumerate}
 
-		\item[-] \textbf{Secure passwords.} easy-to-remember passwords tend to be easy to guess
+		\item[IV] \textbf{Secure passwords.} easy-to-remember passwords tend to be easy to guess
 	\end{itemize}
 
 	\textbf{Biometrics.} measurement and statistical analysis of people's unique physical characteristics(fingerprint, face, \ldots).
@@ -134,18 +134,17 @@
 	\end{enumerate}
 	Can't be a hashing function (hash functions aren't keyed!, eavesdropper could compute $h_k(seed)$ for any k after the one observed.).
 	\hline
-	\begin{minipage}[t]{0.67\textwidth}
+	\begin{minipage}[t]{0.6\textwidth}
 		\textbf{Security Engineering process.}
 		\begin{enumerate}[leftmargin=10px]
-			\item Define a security policy (principals, assets, properties) and a threat model.
+			\item Define security policy \textit{(principals, assets, properties)} and a threat model.
 			\item Define security mechanisms that support policy of threat model.
-			\item Build an implementation supporting the mechanisms
+			\item Build implementation to support the mechanisms
 		\end{enumerate}
 	\end{minipage}
 	\hfill
-	\begin{minipage}[t]{0.33\textwidth}
-		\textbf{Attack Engineering process.} \\exploit weaknesses introduced during the security
-		engineering process due to carelessness, lack of knowledge, or errors.
+	\begin{minipage}[t]{0.35\textwidth}
+		\textbf{Attack Engineering process.} \\exploit weaknesses introduced during the security engineering process due to lack of careness/knowledge or errors.
 	\end{minipage}\\
 	\textbf{Threat Modelling.} process to identify threats / unprotected resources.
 	\begin{itemize}
@@ -160,6 +159,7 @@
 			      \item \textbf{Elevation of privilege:} gain higher privileges than allowed. \end{itemize}
 		\item[-] \textbf{PASTA} - start from buisness goals, processes, and use cases. Find threats in buisness model, assess impact, prioritize on risk.
 	\end{itemize}
+	\hline
 	\textbf{Methods.}
 	\begin{itemize}
 		\item[-] \textbf{GET.} requests a resource; parameters are appended to the URL as query key–value pairs after "?", separated by `\&`.\\[-7px]
@@ -242,6 +242,26 @@
 
 		\item \textbf{CWE 3 - Porous Defenses.} defensive techniques misused, abused, or just ignored
 	\end{enumerate}
+	\hline
+	\textbf{Software Security.}\\
+	\begin{minipage}[htp]{0.5\textwidth}
+		\textbf{Stack.} Call frames: locals, args, return addresses; grows down.\\
+		\textbf{Heap.} Dynamic allocations via \texttt{malloc/new}; grows up.\\
+		\textbf{Uninitialized data (BSS).} Global/static zero-initialized storage; zeroed at program start.\\
+		\textbf{Initialized data.} Global/static with explicit initial values; loaded from the executable.\\
+		\textbf{Text.} Executable code (often read-only); mapped from the executable.\\
+		\textbf{Args & env.} \texttt{argv}/environment strings placed at startup near the initial stack.\\
+	\end{minipage}
+	\begin{minipage}[htp]{0.5\textwidth}
+		\begin{center}
+			\includegraphics[width=0.95\textwidth]{assets/stack.png}\\[-1px]
+		\end{center}
+	\end{minipage}\\
+	\textbf{Memory Corruption.} Unintended modification of memory location due to missing / faulty safety checks.
+	\begin{itemize}
+		\item[-] \textbf{Memory Safety - Temporal Error.} try to access memory initially reserved for our program but not reserved anymore.
+		\item[-] \textbf{Memory Safety - Spatial Error.} try to access memory outside the bounds of the allocated region.
+	\end{itemize}
 \end{minipage}
 \end{document}
 
