@@ -180,66 +180,67 @@
 	\end{enumerate}
 	Can't be a hashing function (hash functions aren't keyed!, eavesdropper could compute $h_k(seed)$ for any k after the one observed.).
 	\hline
-	\begin{minipage}[t]{0.6\textwidth}
-		\textbf{Security Engineering process.}
-		\begin{enumerate}[leftmargin=10px]
-			\item Define security policy \textit{(principals, assets, properties)} and a threat model.
-			\item Define security mechanisms that support policy of threat model.
-			\item Build implementation to support the mechanisms
-		\end{enumerate}
+	\begin{minipage}[t]{0.59\textwidth}
+		\textbf{Security Engineering process.}\\
+		1.Define security policy \textit{(principals, assets, properties)} and a threat model. 2.Define security mechanisms that support policy of threat model. 3.Build implementation to support the mechanisms
 	\end{minipage}
 	\hfill
-	\begin{minipage}[t]{0.35\textwidth}
+	\begin{minipage}[t]{0.39\textwidth}
 		\textbf{Attack Engineering process.} \\exploit weaknesses introduced during the security engineering process due to lack of careness/knowledge or errors.
 	\end{minipage}\\
 	\textbf{Threat Modelling.} process to identify threats / unprotected resources.
 	\begin{itemize}
-		\item[-] \textbf{Attack Trees} - represent goal as the root and ways to achieve it as branches.
-		\item[-] \textbf{STRIDE:} 1) Identify assets, principals, trust boundaries, and named flows 2)For each threat: (1) STRIDE category, (2) what changes/abuse happens, (3) which flow it affects, (4) one concrete mitigation.
-		      \begin{itemize}
-			      \item \textbf{Spoofing:} fake identity (user/service).
-			      \item \textbf{Tampering:} unauthorized modification data/messages/code.
-			      \item \textbf{Repudiation:} deny action (no provable record).
-			      \item \textbf{Info disclosure:} leak confidential data/metadata.
-			      \item \textbf{Denial of service:} exhaust/block resources; reduce availability.
-			      \item \textbf{Elevation of privilege:} gain higher privileges than allowed. \end{itemize}
-		\item[-] \textbf{PASTA} - start from buisness goals, processes, and use cases. Find threats in buisness model, assess impact, prioritize on risk.
+		\item[-] \textbf{Attack Trees.} represent goal as the root and ways to achieve it as branches.
+		\item[-] \textbf{STRIDE.} 1) Identify assets, principals, trust boundaries, and named flows \textbf{2) For each threat:} \\
+		      1. STRIDE category, 2.what changes/abuse happens, 3.which flow it affects, 4.concrete mitigation.\\
+		      \textbf{Spoofing:} fake identity (user/service). \textbf{Tampering:} unauthorized edit of data/messages/code.\\
+		      \textbf{Repudiation:} deny action (no provable record). \textbf{Info disclosure:} leak confidential data/metadata.\\
+		      \textbf{Denial of service:} exhaust/block resources/reduce availability. \textbf{Elevation of privilege:} gain higher privileges than allowed.
+		\item[-] \textbf{PASTA.} start from buisness goals, processes, and use cases. Find threats in buisness model, assess impact, prioritize on risk.
 	\end{itemize}
 	\hline
-	\textbf{Methods.}
-	\begin{itemize}
-		\item[-] \textbf{GET.} requests a resource; parameters are appended to the URL as query key–value pairs after "?", separated by `\&`.\\[-7px]
-		      \[
-			      \underbrace{\texttt{http://}}_{\text{protocol}}
-			      \underbrace{\texttt{www.mywebsite.com}}_{\text{hostname / domain}}
-			      \underbrace{\texttt{/apparel}}_{\text{directory}}
-			      \underbrace{\texttt{/skirt.php}}_{\text{filename}}
-			      \underbrace{\texttt{?sku=123\&lang=en\&sect=silk}}_{\text{query parameters}}
-		      \]
-		\item[-] \textbf{POST.} creates or updates a resource; sends data in the request body (not the URL) and typically modifies server data.\\
-		      \texttt{POST /test/demo\_form.php HTTP/1.1}\\
-		      \texttt{Host: w3schools.com}\\
-		      \texttt{name1=value1\&name2=value2}
-	\end{itemize}
-	\textbf{Cookies.} small piece of data stored by browser on client (creates HTTP "sessions"). \textit{also used to track users.}. \textbf{Ambient Authority} is used with cookies.
-	\textit{logged into bank.com $\rightarrow$ cookies stored for bank.com. \textbf{Any} (!CSRF) new HTTP requests to this website \textbf{will include all cookies} to continue session}.\\
-	\textbf{URL.} standardized address that specifies a resource’s access method, host, and path.\\[-7px]
+	\textbf{Methods.}\\
+	- \textbf{GET.} requests a resource; parameters are appended to the URL as query key–value pairs after "?", separated by `\&`.\\[-7px]
 	\[
-		\underbrace{\texttt{http://}}_{\text{protocol}}\;
-		\underbrace{\texttt{www.mywebsite.com}}_{\text{hostname / domain}}\;
-		\underbrace{\texttt{/apparel}}_{\text{directory}}\;
+		\underbrace{\texttt{http://}}_{\text{protocol}}
+		\underbrace{\texttt{www.mywebsite.com}}_{\text{hostname / domain}}
+		\underbrace{\texttt{/apparel}}_{\text{directory}}
 		\underbrace{\texttt{/skirt.php}}_{\text{filename}}
-	\]\\[-7px]
-	\textbf{HTML.} a markup language that uses tags to structure content and tell the browser how to render a webpage.\\
-	\textbf{WEP.} Wi-Fi security protocol that encrypts frames with RC4 (stream cipher with random 24-bit IV). IV repeats frequently, causing keystream reuse and enabling message (and sometimes key) recovery.\\
-	\textbf{PHP.} a server-side scripting language for dynamic web pages; uses variables and request/session data (`\$\_GET`, `\$\_POST`, `\$\_SESSION`) and outputs HTML with `echo`.\\
-	Lifetime of a GET/POST request.
-	\begin{enumerate}[leftmargin=10px]
-		\item Browser sends HTTP GET/POST request.
-		\item Web Server receives requests and identifies if it's a static asset(.jpg,\dots) or dynamic(.php).
-		\item PHP interpreter executes called .php
-		\item Sends response to web browser
-	\end{enumerate}
+		\underbrace{\texttt{?sku=123\&lang=en\&sect=silk}}_{\text{query parameters}}
+	\]
+	\begin{minipage}[t]{0.44\textwidth}
+		- \textbf{POST.} creates or updates a resource; sends data in the request body (not the URL) and typically modifies server data.\\
+		\texttt{POST /test/demo\_form.php HTTP/1.1}\\
+		\texttt{Host: w3schools.com}\\
+		\texttt{name1=value1\&name2=value2}
+	\end{minipage}\hfill\begin{minipage}[t]{0.54\textwidth}
+		\textbf{Cookies.} small piece of data stored by browser on client (creates HTTP "sessions"). \textit{also used to track users.}. \textbf{Ambient Authority} is used with cookies.
+		\textit{logged into bank.com $\rightarrow$ cookies stored for bank.com. \textbf{Any} (!CSRF) new HTTP requests to this website \textbf{will include all cookies} to continue session}.
+	\end{minipage}		\\[2px]
+	\textbf{URL.} standardized address that specifies a resource’s access method, host, and path.\\
+	\textbf{HTML.} markup language using tags to structure content and tell browser how to render a webpage.\\
+	\textbf{WEP.} Wi-Fi security protocol that encrypts frames with \textbf{RC4} (stream cipher with random 24-bit IV). IV repeats frequently, causing keystream reuse and enabling message (and sometimes key) recovery.\\
+	\textbf{PHP.} server-side scripting language for dynamic web pages; uses variables and request/session data (`\$\_GET`, `\$\_POST`, `\$\_SESSION`) and outputs HTML with `echo`.\\
+	\textit{Lifetime of a GET/POST request.}\\
+	1. Browser sends HTTP GET/POST request.\\ 2. Web Server receives requests and identifies if it's a static asset(.jpg,\dots) or dynamic(.php).\\
+	3. PHP interpreter executes called .php 4. Sends response to web browser
+	\hline
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Data Execution Prevention (DEP).} Mark memory pages as writable OR executable, never both. (prevents code injection by making stack/heap non-executable)\\
+		\includegraphics[width=0.75\textwidth]{assets/dep.png}\\
+		$\oplus$ low-overhead/hardware enforced \\$\ominus$ no self-modifying code.
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Code Reuse - Control Flow Hijack.} Bypass DEP by chaining existing executable code (gadgets) instead of injecting new code.\\
+		\textbf{Attack Chain:}
+		\begin{enumerate}[leftmargin=10px]
+			\item \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)
+			\item \textbf{Integrity (*C).} Attacker overwrites return address and adjacent stack data
+			\item \textbf{Location (\&C).} Return address points to \texttt{\&system()}, stack contains \texttt{\&"/bin/sh"}
+			\item \textbf{Usage (*\&C).} CPU dereferences corrupted pointer, jumps to \texttt{system()}
+			\item \textbf{Gadget Chaining.} Existing code (\texttt{system()}) executes with attacker-controlled arguments, no shellcode needed
+		\end{enumerate}
+	\end{minipage}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.49\textwidth}
@@ -259,25 +260,25 @@
 			            \begin{minipage}[t]{0.45\textwidth}
 				            \texttt{navigator.userAgent}\\
 				            Returns the browser identification string; increases fingerprinting surface.\\
-				            \textit{Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36}\\
+				            \textit{Chrome/143.0.0.0 Mobile Safari/537.36}\\
 				            \texttt{window.location.replace(url)}\\
 				            Forces navigation to \texttt{url} without adding a history entry.\\
 				            \texttt{document.cookie}\\
-				            Returns all non-\texttt{HttpOnly} cookies for the current origin; exposed session/state cookies allows immediate account compromise if XSS.
+				            Returns all non-\texttt{HttpOnly} cookies for the current origin; exposed session/state cookies immediate account compromise on XSS.
 			            \end{minipage}\hfill
 			            \begin{minipage}[t]{0.45\textwidth}
 				            \texttt{document.domain}\\
-				            Gets/sets legacy origin relaxation; useful because it can broaden trust across subdomains and weaken same-origin isolation.\\
+				            Gets/sets legacy origin relaxation; can broaden trust across subdomains and weaken same-origin isolation.\\
 				            \texttt{document.referrer}\\
-				            Returns the referrer URL when sent; useful because it can leak sensitive paths or parameters without a strict Referrer-Policy.\\
+				            Returns the referrer URL when sent; can leak sensitive paths/parameters without strict Referrer-Policy.\\
 				            \texttt{document.URL}\\
-				            Returns the full current document URL; useful because secrets in query strings or fragments become directly observable to script and telemetry.
+				            Returns the full current document URL
 			            \end{minipage}
 			      \item \textbf{CWE 362 - Cross Site Request Forgery.} malicious website makes a state-changing action using user’s session cookie for another website.\\
 			            \fbox{
 				            \begin{minipage}[htp]{0.9\textwidth}
 					            \textbf{Same Origin Policy (SOP).} web browser security mechanism that restricts scripts from one origin from reading data from another origin. An origin is a (protocol, host, port) \textit{http:\/\/example.com}. \\
-					            This doesn't prevent CSRF as it's based on sending a request and that the browser naturally attaches cookies of the destination domain in request (unless special setting).
+					            \textit{This doesn't prevent CSRF as it's based on sending a request and that the browser naturally attaches cookies of the destination domain in request (unless special setting).}
 				            \end{minipage}}\\
 			            \textbf{Solutions:}\\
 			            For every state-changing endpoint:\\
@@ -291,7 +292,7 @@
 	\end{enumerate}
 	\hline
 	\textbf{Software Security.}\\[-7px]
-	\begin{minipage}[htp]{0.49\textwidth}
+	\begin{minipage}[htp]{0.47\textwidth}
 		\textbf{Stack.} Call frames: locals, args, return addresses; grows down.\\
 		\textbf{Heap.} Dynamic allocations via \texttt{malloc/new}; grows up.\\
 		\textbf{Uninitialized data (BSS).} Global/static zero-initialized storage; zeroed at program start.\\
@@ -303,47 +304,95 @@
 	\begin{minipage}[htp]{0.49\textwidth}
 		\includegraphics[width=0.95\textwidth]{assets/stack.png}
 	\end{minipage}\\
-	\textbf{Memory Corruption.} \\Unintended modification of memory location due to missing / faulty safety checks.
-	\begin{cc}
-		void vulnerable(int user1, int*array){
-				// missing bound check for user1
-				array[user1] = 42;}
-	\end{cc}
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.44\textwidth}
+		\textbf{Memory Corruption.} \\Unintended modification of memory location due to missing / faulty safety checks.
+		\begin{cc}
+			void vuln(int user1, int*array){
+					// no bound check for user1
+					array[user1] = 42;}
+		\end{cc}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.55\textwidth}
 		\textbf{Memory Safety - Temporal Error.} tried access to memory initially reserved for our program but not reserved anymore.
 		\begin{cc}
 			void vulnerable(char* buf) {
-					free(buf);
-					// variable was freed.
-					buf[12] = 42;
-				}
+					free(buf); // variable was freed.
+					buf[12] = 42;}
 		\end{cc}
-	\end{minipage}\hfill
-	\begin{minipage}[t]{0.49\textwidth}
-		\textbf{Memory Safety - Spatial Error.} tried access to memory outside the bounds of the allocated region.
+	\end{minipage}\\
+	\begin{minipage}[t]{0.39\textwidth}
+		\textbf{Memory Safety - Spatial Error.} \\tried access to memory outside the bounds of the allocated region.
 		\begin{cc}
 			void vulnerable(){
-					char buf[12]; char *ptr = buf[11];
+					char buf[12];
+					char *ptr = buf[11];
 					*ptr++=10;
 					// out of allocated memory
 					*ptr=42;}
 		\end{cc}
-	\end{minipage}\\
-	\begin{minipage}[t]{0.46\textwidth}
-		\textbf{CWE 134 - Uncontrolled Format String.} \\untrusted input formated string, lets attacker inject format specifiers that can leak memory contents.
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.59\textwidth}
+		\textbf{CWE 134 - Uncontrolled Format String.} \\inject format specifiers that can leak memory contents in untrusted input string.\\
+		"\%4\$p":Reads 4th parameter even if doesn't exist\\
+		"\%6\$n":Write to address \textbf{pointed to} by 6th parameter
 		\begin{cc}
-			#include <stdio.h>
 			int main(int argc, char** argv){
 					char buffer[100];
 					strncpy(buffer.argv[1]);
 					printf(buffer);
 					return 0;}
 		\end{cc}
-	\end{minipage}\hfill
-	\begin{minipage}[t]{0.52\textwidth}
-		"\%4\$p"$\to$Reads 4th parameter even if doesn't exist\\
-		"\%6\$n"$\to$Write to address \textbf{pointed to} by 6th parameter
+	\end{minipage}\\
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Code Injection Attack.} \\
+		\textbf{1.} Control unchecked variable. \\
+		\textbf{2.}Overwrite return address. \textbf{3.}Hijack control flow.
+		\textbf{4.} Arbitrary code execution.
+		\begin{cc}
+			void vuln(char* u1){
+					// strlen(u1) < MAX?
+					char tmp[MAX];
+					strcpy(tmp, u1);...
+				} vuln(&exploit);
+		\end{cc}
 	\end{minipage}
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Attack Chain:}\\
+		1. \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)\\
+		2. \textbf{Integrity (*C).} Attacker overwrites return address on stack\\
+		3. \textbf{Location (\&C).} Return address now points to shellcode\\
+		4. \textbf{Usage (*\&C).} CPU dereferences corrupted pointer\\
+		5. \textbf{Code Injection.} Shellcode executes with program privileges
+	\end{minipage}
+	\hline
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Address Space Layout Randomization (ASLR).}\\
+		Loader/OS randomizes memory regions(code/stack/heap/libraries) at load time. Same code, different addresses on each run. (prevents target addresses prediction/breaks gadgets)\\
+		\textit{Limitations:} \\
+		1.Probabilistic defense, not deterministic. \\
+		2.Vulnerable to addresses leaks. \\3.Some regions remain static \textit{x86}.\\
+		4.Performance overhead.
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Stack Canaries.}\\
+		Compiler places random secret value between local buffers and return address. Checked before function returns and abort if corrupted. \\
+		\textit{(detects buffer overflows before control hijack)}\\[-12px]
+		\begin{center}
+			\includegraphics[width=0.7\textwidth]{assets/stack-canaries.png}
+		\end{center}
+		\textit{Limitations:} \\
+		1.Probabilistic, vulnerable to canary leaks.\\
+		2.No protection against targeted writes (jumps over canary).\\
+		3.No protection against reads.\\
+		4.Performance overhead from checks.
+	\end{minipage}
+\end{minipage}\\
+\begin{minipage}[htp]{0.5\textwidth}
+	\textbf{Testing.} process of executing a program to find errors.
+	\textbf{Error.} deviation between observed behavior and specified behavior (a violation of the underlying specification)
+\end{minipage}
+\begin{minipage}[htp]{0.5\textwidth}
+
 \end{minipage}
 \end{document}
 
