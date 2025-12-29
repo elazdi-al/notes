@@ -386,10 +386,95 @@
 		3.No protection against reads.\\
 		4.Performance overhead from checks.
 	\end{minipage}
-\end{minipage}\\
+\end{minipage}\newpage
 \begin{minipage}[htp]{0.5\textwidth}
-	\textbf{Testing.} process of executing a program to find errors.
-	\textbf{Error.} deviation between observed behavior and specified behavior (a violation of the underlying specification)
+	\vspace{3px}
+	\textbf{Testing.} process of executing a program to find errors.(to find bugs/errors and test security properties)\\
+	\textbf{Error.} difference between observed behavior and specified behavior (aviolation of underlying spec)\\
+	\textit{Ideally}, we should \textbf{test} all:
+	\begin{itemize}
+		\item[-] \textbf{Control-flows.} test all path through the program. (all branches)
+		\item[-] \textbf{Data-flow.} test all values used at each location. (all possible values of variables)
+	\end{itemize}
+	Practice is limited by \textit{state explosion} (impossible to test everythig.).\\
+	\begin{minipage}[t]{0.4\textwidth}
+		\textbf{Manual Testing.} \\
+		designed by human heuristic(intuition).
+		\begin{itemize}
+			\item[-] \textbf{Exhaustive.} cover all input (not feasible)
+			\item[-] \textbf{Functional.} cover all requirements (depend on specification)
+			\item[-] \textbf{Random.} automate test generation (incomplete)
+			\item[-] \textbf{Structural.} cover all code (unit testing)
+		\end{itemize}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.58\textwidth}
+		\textbf{Automated Testing.}\\
+		decided algorithmatically\\
+		\textit{(designed to run program/find bugs/enforce properties).}
+		\begin{itemize}
+			\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
+			\item[-] \textbf{Symbolic analysis.} execute program symbolically, keeping track of branch conditions (not scalable)
+			\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
+		\end{itemize}
+	\end{minipage}\\
+	\textbf{Coverage.} Testing needs a metric to measure test suite effectiveness. The intuition is that a software flaw can only be detected if the flawed statement is executed. Therefore, the effectiveness of a test suite depends on how many statements are executed.
+	\begin{itemize}
+		\item[-] \textbf{Statement Coverage.} Measures how many statements (e.g., assignments, comparisons, etc.) in the program have been executed by the test suite.
+		\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
+	\end{itemize}
+	\begin{minipage}[htp]{0.49\textwidth}
+		\textbf{Fuzzing.} random testing technique that mutates input to improve test coverage. \\
+		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.}\\
+		\textbf{Types of Fuzzing:}\\
+		- \textbf{Dumb Fuzzing:} unaware of the input structure; randomly mutates input without guidance.\\
+		- \textbf{Generation-based Fuzzing:} uses model describing valid inputs; generates new input seeds in each round based on model specifications.
+	\end{minipage}\hfill
+	\begin{minipage}[htp]{0.49\textwidth}
+		- \textbf{Mutation-based Fuzzing:} Leverages a set of valid seed inputs; modifies inputs based on feedback from previous rounds. Mutations can be informed by program structure:
+		\begin{itemize}
+			\item[-] \textbf{White-box} (full access to source code and internal logic)
+			\item[-] \textbf{Grey-box} (partial knowledge, typically coverage feedback only)
+			\item[-] \textbf{Black-box} (no internal knowledge, input/output observation only)
+		\end{itemize}
+	\end{minipage}\hline
+	\begin{minipage}[htp]{0.28\textwidth}
+		\textbf{Sanitization.} \\
+		Test cases detect bugs through various mechanisms:
+		\begin{itemize}
+			\item[-] Assertions
+			\item[-] Segmentation faults
+			\item[-] Division by zero traps
+			\item[-] Uncaught exceptions
+			\item[-] Mitigations triggering termination
+		\end{itemize}
+		\textbf{Goal:} Sanitizers enforce policies to detect bugs earlier and increase testing effectiveness.
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[htp]{0.34\textwidth}
+		\textbf{Address Sanitizer (ASan).}\\
+		Detects memory errors by placing red zones around objects and checking them on trigger events. It can detect:
+		\begin{itemize}
+			\item[-] Out-of-bounds accesses to heap, stack, and globals
+			\item[-] Use-after-free
+			\item[-] Use-after-return (configurable)
+			\item[-] Use-after-scope (configurable)
+			\item[-] Double-free and invalid free
+			\item[-] Memory leaks (experimental)
+		\end{itemize}
+		\textbf{Performance:} adds a 2$\times$ slowdown.
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[htp]{0.34\textwidth}
+		\textbf{Undefined Behavior Sanitizer (UBSan).}\\Detects undefined behavior by instrumenting code to trap on typical C/C++ undefined behavior:
+		\begin{itemize}
+			\item[-] Unsigned/misaligned pointers
+			\item[-] Signed integer overflow
+			\item[-] Conversion between floating point types leading to overflow
+			\item[-] Illegal use of NULL pointers
+			\item[-] Illegal pointer arithmetic
+		\end{itemize}
+		\textbf{Performance:} slowdown depends on amount/frequency of checks. only one usable in production.
+	\end{minipage}
+	\hline
+
 \end{minipage}
 \begin{minipage}[htp]{0.5\textwidth}
 
