@@ -252,9 +252,9 @@
 
 			      \item \textbf{CWE 79 - Cross Site Scripting.} application embeds unvalidated user input into dynamically generated web content, causes browser to execute injected scripts.\\
 			            \textbf{Common Script Injections.}\\
-			            \texttt{<img src=x onerror=alert(1)>;}\\
+			            \texttt{<img src=x onerror=alert(1)>;}
 			            \texttt{<svg onload=alert(1)>;}\\
-			            \texttt{<body onload=alert(1)>;}\\
+			            \texttt{<body onload=alert(1)>;}
 			            \texttt{<a href=javascript:alert(1)>text</a>;}\\
 			            \textbf{Useful Functions.}\\
 			            \begin{minipage}[t]{0.45\textwidth}
@@ -374,10 +374,11 @@
 		4.Performance overhead.(requires the system
 		to keep track of all pointers)
 		\hline
-		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks. Properties:
-		1. \textbf{Effectiveness.} \\must prevent or defend against attacks\\
+		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks.\\
+		Properties:\\
+		1. \textbf{Effectiveness.} must prevent/defend attacks\\
 		2. \textbf{Efficiency:} low comp/memory overhead\\
-		3. \textbf{Compatibility:} \\easy deployment (no major software/hardware changes)\\
+		3. \textbf{Compatibility:} easy deployment (no major software/hardware changes)\\
 		\textit{Examples: Sandboxing. isolates process from system resources and other processes. \\DEP, ASLR, Stack canaries.}
 	\end{minipage}\hfill
 	\begin{minipage}[t]{0.49\textwidth}
@@ -398,13 +399,13 @@
 	\vspace{3px}
 	\textbf{Error.} difference between observed behavior and specified behavior (aviolation of underlying spec)\\
 	\begin{minipage}[t]{0.56\textwidth}
-		\textbf{Testing.} process of executing a program to find errors.(to find bugs/errors and test security properties)\\
+		\textbf{Testing.} process of executing a program to find errors.\\\textit{(to find bugs/errors and test security properties)}\\
 		\textit{Ideally}, \textbf{test} all (correct control \textbf{and} data flow required to trigger bugs):
 		\begin{itemize}
 			\item[-] \textbf{Control-flows.} test all path through the program. (all branches)
 			\item[-] \textbf{Data-flow.} test all values used at each location. (all possible values of variables)
 		\end{itemize}
-	\end{minipage}\hfill
+	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.42\textwidth}
 		\textbf{Manual Testing.}\\
 		designed by human heuristic(intuition).\\
@@ -415,9 +416,9 @@
 	\end{minipage}\\
 	Practice is limited by \textit{state explosion} (impossible to test everythig.).\\
 	\textbf{Automated Testing.} decided algorithmatically \textit{(designed to run program/find bugs/enforce properties).}
-	\begin{itemize}
+	\begin{itemize}[leftmargin=4pt, labelsep=1pt]
 		\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
-		\item[-] \textbf{Symbolic analysis.} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths $\Rightarrow$ exponential blowup. Does not scale.
+		\item[-] \textbf{Symbolic analysis.(doesn't scale)} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths$\rightarrow$exponential blowup.
 		\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
 	\end{itemize}
 	\textbf{Coverage.} Testing needs a metric to measure test suite effectiveness. The intuition is that a software flaw can only be detected if the flawed statement is executed. Therefore, the effectiveness of a test suite depends on how many statements are executed.
@@ -426,21 +427,19 @@
 		\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
 	\end{itemize}
 	\begin{minipage}[htp]{0.49\textwidth}
-		\textbf{Fuzzing.} random testing technique that mutates input to improve test coverage ($\oplus$scales very well). \\
+		\textbf{Fuzzing.} random testing that mutates input to improve test coverage ($\oplus$scales very well). \\
 		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.}\\
 		\textbf{Types of Fuzzing:}\\
-		- \textbf{Dumb Fuzzing:} unaware of the input structure; randomly mutates input without guidance.\\
-		- \textbf{Generation-based Fuzzing:} uses model describing valid inputs; generates new input seeds in each round based on model specifications.
+		1.\textbf{Dumb Fuzzing:} not aware of input structure; randomly mutates input without guidance.\\
+		2.\textbf{Generation-based Fuzzing:} uses model describing valid inputs; generates new input seeds in each round based on model specifications.
 	\end{minipage}\hfill
 	\begin{minipage}[htp]{0.49\textwidth}
-		- \textbf{Mutation-based Fuzzing:} Leverages a set of valid seed inputs; modifies inputs based on feedback from previous rounds. Mutations can be informed by program structure:
-		\begin{itemize}
-			\item[-] \textbf{White-box} (full access to source code and internal logic)
-			\item[-] \textbf{Grey-box} (partial knowledge, typically coverage feedback only)
-			\item[-] \textbf{Black-box} (no internal knowledge, input/output observation only)
-		\end{itemize}
+		3. \textbf{Mutation-based Fuzzing:} Leverages a set of valid seed inputs; modifies inputs based on feedback from previous rounds. Mutations can be informed by program structure:\\
+		\textbf{White-box} (full access to code/internal logic)\\
+		\textbf{Grey-box} (partial knowledge, typically coverage feedback only)\\
+		\textbf{Black-box} (no internal knowledge, input/output observation only)
 	\end{minipage}
-	\textbf{Symbolic Execution with Fuzzing.} Whitebox fuzzing uses symbolic execution to generate new seed inputs for unexplored paths when random mutation gets stuck, improving coverage.
+	4. \textbf{Symbolic Execution with Fuzzing.} Whitebox fuzzing uses \textit{Symbolic Analysis} to generate new seed inputs for unexplored paths when random mutation gets stuck, improving coverage.
 	\hline
 	\begin{minipage}[t]{0.32\textwidth}
 		\textbf{Sanitization.} \\
@@ -474,29 +473,25 @@
 		\textbf{Performance.} slowdown depends on amount/frequency of checks.
 	\end{minipage}
 	\hline
-	\textbf{Network Security Properties.}\\
 	\begin{minipage}[htp]{0.52\textwidth}
-		- \textbf{Naming Security.}  association between lower level names \textit{(network addresses)} and higher level names \textit{(Alice)} must not be influenced by adversary. \textit{(Integrity, Authenticity, Availability[naming service])}\\
-		- \textbf{Routing Security.} route over the network and delivery of messages must not be influenced by adversary.\textit{(Integrity, Authenticity, Availability, Authorization)}\\
-		- \textbf{Session Security.} messages within the same session cannot be modified (keep ordering and no adding/removing messages) \textit{(Integrity, Authenticity)}.
+		\textbf{Network Security Properties.}\\
+		-\textbf{Naming Security.} association between lower level names \textit{(network addresses)} and higher level names \textit{(Alice)} must not be influenced by adversary. \textit{(Integrity, Authenticity, Availability[naming service])}\\
+		-\textbf{Routing Security.} route over network and delivery of messages must not be influenced by adversary.\textit{(Integrity, Authenticity, Availability, Authorization)}\\
+		-\textbf{Session Security.} messages within the same session cannot be modified (keep ordering and no adding/removing messages) \textit{(Integrity, Authenticity)}.
 	\end{minipage}\hfill
-	\begin{minipage}[htp]{0.46\textwidth}
+	\begin{minipage}[htp]{0.46\textwidth}\vspace*{-10px}
 		\includegraphics[width=1\textwidth]{assets/layers.png}
 	\end{minipage}\\
 	- \textbf{Content Security.} content of messages must not be readable or influenced by adversaries \textit{(Confidentiality, Integrity, Authenticity)}.
 	\hline
-	\begin{minipage}[htp]{0.6\textwidth}\vspace*{-2px}
-		\textbf{Ethernet.} Local area network (LAN), machines have "unique" 48-bit MAC addresses (Medium Access Code).\\
-		\textbf{IP Address.} 4-byte address (IPv4) where part denotes network and part denotes host.\\
-		\textbf{Subnet Mask.} Used to determine network portion of IP address via bitwise AND operation.\\
-		\textbf{Gateway.} Router IP address used to forward packets to different subnets.
-	\end{minipage}\hfill
-	\begin{minipage}[htp]{0.38\textwidth}
-		\includegraphics[width=1\textwidth]{assets/ip-header.png}
-	\end{minipage}\\
+	\textbf{Ethernet.} machines have "unique" 48-bit MAC addresses (Medium Access Code).\\
+	\textbf{IP Address.} 4-byte address (IPv4) where part denotes network and part denotes host.\\
+	\textbf{Subnet Mask.} Used to determine network portion of IP address via bitwise AND operation.\\
+	\textbf{Gateway.} Router IP address used to forward packets to different subnets.\\
 	\textbf{ARP (Address Resolution Protocol).} translates IP addresses $\to$ MAC addresses. Each host maintains cache table of IP $\leftrightarrow$ MAC mappings. If not available, broadcast ARP request.
 	\begin{itemize}[leftmargin=4px]
-		\item[] 		\textbf{ARP Packet Format.} ($\warning$ No integrity checks nor authentication in ARP packets)\\[2px]	\begin{minipage}[htp]{0.55\textwidth}
+		\item[] 		\textbf{ARP Packet Format.} ($\warning$ No integrity checks nor authentication in ARP packets)\\
+		      \begin{minipage}[htp]{0.55\textwidth}
 			      \textbf{HTYPE} (2 bytes): Hardware type (1 = Ethernet/Wi-Fi)\\
 			      \textbf{PTYPE} (2 bytes): Protocol type (0x0800 = IPv4)\\
 			      \textbf{HLEN} (1 byte): Hardware address length (6 for MAC)\\
@@ -509,32 +504,30 @@
 			      \textbf{Target HA}: MAC of target (zero in Request, filled in Reply)\\
 			      \textbf{Target PA}: IP address being queried
 		      \end{minipage}
-		\item[] \begin{minipage}[htp]{0.48\textwidth}
-			      \textbf{ARP Spoofing Attacks.}\\
+		\item[] \begin{minipage}[htp]{0.46\textwidth}
+			      \textbf{ARP Spoofing Attacks.}
 			      \textit{(Naïve threat model assuming insiders are trustworthy.)}\\
-			      \textbf{Man-in-the-Middle.} Attacker convinces both parties their MAC is the other's MAC $\rightarrow$ intercept/modify all traffic\\
-			      \textbf{Denial of Service.} Provide wrong MAC mappings $\rightarrow$ victims cannot receive packets\\
+			      \textbf{Man-in-the-Middle.} Attacker convinces both parties their MAC is the other's MAC \\$\rightarrow$ intercept/modify all traffic\\
+				      \textbf{Denial of Service.} Provide wrong MAC mappings $\rightarrow$ victims cannot receive packets\\
 			      \textbf{Resource Theft.} Impersonate others to bypass bandwidth limits or steal allocated resources
 		      \end{minipage}\hfill\vline\hfill
-		      \begin{minipage}[htp]{0.48\textwidth}
+		      \begin{minipage}[htp]{0.5\textwidth}
 			      \textbf{Defenses}:\\
 			      \textbf{Static ARP entries.} Manually configure critical mappings (e.g., gateway) in read-only cache\\
-			      \textbf{Spoofing detection.} Monitor for inconsistencies (one IP $\rightarrow$ multiple MACs, or one MAC $\rightarrow$ multiple IPs)\\
+			      \textbf{Spoofing detection.} Monitor for inconsistencies\\(one IP$\rightarrow$multiple MACs/one MAC$\rightarrow$multiple IPs)\\
 			      \textbf{Cross-checking.} Verify mappings with multiple hosts before trusting\\
 			      \textbf{Change alerts.} Email admin when IP-MAC associations change, require human confirmation
 		      \end{minipage}
 	\end{itemize}
-	\textbf{IP Routing Algorithm.}\\
-	\textbf{Input:} Source IP $IP_{source}$, Destination IP $IP_{dest}$, Subnet Mask $M$, Gateway IP $IP_{gateway}$\\
-	\textbf{Output:} Packet sent to destination\\
-	\begin{minipage}[t]{0.49\textwidth}
-		\begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt,series=mainenum]
+	\textbf{IP Routing.} \textbf{Input:}($IP_{source}$, $IP_{dest}$, Subnet Mask $M$, $IP_{gateway}$) \; \textbf{Output:} Packet sent to destination\\
+	\begin{minipage}[t]{0.48\textwidth}
+		\begin{enumerate}[leftmargin=6pt,labelsep=0pt,itemsep=0pt,series=mainenum]
 			\item Compute $(IP_{source} \land M)$ and $(IP_{dest} \land M)$
 			\item \textbf{If} $(IP_{source} \land M) = (IP_{dest} \land M)$ (same subnet):
-			      \begin{enumerate}[leftmargin=6pt,labelsep=3pt,itemsep=0pt]
+			      \begin{enumerate}[leftmargin=4pt,labelsep=0pt,itemsep=0pt]
 				      \item \textbf{If} MAC address of $IP_{dest}$ is in ARP cache: Send packet to $IP_{dest}$ using cached MAC
 				      \item \textbf{Else}:
-				            \begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt]
+				            \begin{enumerate}[leftmargin=4pt,labelsep=0pt,itemsep=0pt]
 					            \item Broadcast ARP request: ``Who has $IP_{dest}$?''
 					            \item Wait for ARP reply with MAC address
 					            \item Cache mapping $IP_{dest} \leftrightarrow MAC$
@@ -544,13 +537,13 @@
 		\end{enumerate}
 	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.5\textwidth}
-		\begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt,resume=mainenum]
+		\begin{enumerate}[leftmargin=4pt,labelsep=0pt,itemsep=0pt,resume=mainenum]
 			\item \textbf{Else} (different subnet):
-			      \begin{enumerate}[leftmargin=6pt,labelsep=3pt,itemsep=0pt]
+			      \begin{enumerate}[leftmargin=4pt,labelsep=0pt,itemsep=0pt]
 				      \item \textbf{If} MAC address of $IP_{gateway}$ is in ARP cache: Send packet to gateway using cached MAC
 				      \item \textbf{Else}:
-				            \begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt]
-					            \item Broadcast ARP request:"Who has $IP_{gateway}$?"
+				            \begin{enumerate}[leftmargin=4pt,labelsep=0pt,itemsep=0pt]
+					            \item Broadcast ARP request "Who has $IP_{gateway}$?"
 					            \item Wait for ARP reply with gateway MAC
 					            \item Cache mapping $IP_{gateway} \leftrightarrow MAC$
 					            \item Send packet to gateway using MAC address
@@ -558,9 +551,22 @@
 				      \item Gateway forwards packet through WAN
 			      \end{enumerate}
 		\end{enumerate}
-	\end{minipage}
-	\begin{minipage}[htp]{0.5\textwidth}
+	\end{minipage}\hline
+	\textbf{DNS (domain name service).} translates human-readable domain names into IP addresses.\\
+	\textit{Query initiation:} Client sends DNS query to recursive resolver (typically ISP-provided)\\
+	\textit{Cache check:} Resolver first checks its cache for existing resolution\\
+	\textit{Hierarchical resolution (if not cached):} Resolver queries in sequence:
+	\begin{enumerate}[leftmargin=8pt, labelsep=0pt, itemsep=0pt]
+		\item Root server (directs to appropriate TLD)
+		\item Top-Level Domain (TLD) server (e.g., .com, .org)
+		\item Authoritative name server (holds actual domain-to-IP mapping)
+	\end{enumerate}
+	\textit{Response propagation:} Resolver returns IP address to client\\
+	\textit{Connection:} Client uses resolved IP to connect to destination host\\
+	\textit{Distributed database:} DNS mappings stored across hierarchical servers globally
+\end{minipage}
+\begin{minipage}[htp]{0.5\textwidth}
 
-	\end{minipage}\end{minipage}
+\end{minipage}
 \end{document}
 
