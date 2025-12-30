@@ -397,16 +397,16 @@
 \end{minipage}\newpage
 \begin{minipage}[htp]{0.5\textwidth}
 	\vspace{3px}
-	\textbf{Error.} difference between observed behavior and specified behavior (aviolation of underlying spec)\\
-	\begin{minipage}[t]{0.56\textwidth}
-		\textbf{Testing.} process of executing a program to find errors.\\\textit{(to find bugs/errors and test security properties)}\\
-		\textit{Ideally}, \textbf{test} all (correct control \textbf{and} data flow required to trigger bugs):
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{Error.} difference between observed behavior and specified behavior (a violation of underlying spec)\\
+		\textbf{Testing.} executing a program to find bugs/errors and test security properties.\\
+		\textit{Ideally}, complete test of all:
 		\begin{itemize}
-			\item[-] \textbf{Control-flows.} test all path through the program. (all branches)
-			\item[-] \textbf{Data-flow.} test all values used at each location. (all possible values of variables)
+			\item[-] \textbf{Control-flows.} all path of program.
+			\item[-] \textbf{Data-flow.} all values used at each location.
 		\end{itemize}
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.42\textwidth}
+	\begin{minipage}[t]{0.5\textwidth}
 		\textbf{Manual Testing.}\\
 		designed by human heuristic(intuition).\\
 		-	\textbf{Exhaustive.} cover all input (not feasible)\\
@@ -414,43 +414,45 @@
 		- \textbf{Random.} automate test generation (incomplete)\\
 		- \textbf{Structural.} cover all code (unit testing)
 	\end{minipage}\\
-	Practice is limited by \textit{state explosion} (impossible to test everythig.).\\
-	\textbf{Automated Testing.} decided algorithmatically \textit{(designed to run program/find bugs/enforce properties).}
-	\begin{itemize}[leftmargin=4pt, labelsep=1pt]
-		\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
-		\item[-] \textbf{Symbolic analysis.(doesn't scale)} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths$\rightarrow$exponential blowup.
-		\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
-	\end{itemize}
-	\textbf{Coverage.} Testing needs a metric to measure test suite effectiveness. The intuition is that a software flaw can only be detected if the flawed statement is executed. Therefore, the effectiveness of a test suite depends on how many statements are executed.
-	\begin{itemize}
-		\item[-] \textbf{Statement Coverage.} Measures how many statements (e.g., assignments, comparisons, etc.) in the program have been executed by the test suite.
-		\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
-	\end{itemize}
-	\begin{minipage}[htp]{0.49\textwidth}
+	Practice is limited by \textit{state explosion} (impossible to test everything.).\\
+	\begin{minipage}[htp]{0.51\textwidth}
+		\textbf{Automated Testing.} decided algorithmatically\\
+		\textit{(run program/find bugs/enforce properties).}
+		\begin{itemize}[leftmargin=4pt, labelsep=1pt]
+			\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
+			\item[-] \textbf{Symbolic analysis.(doesn't scale)} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths$\rightarrow$exponential blowup.
+			\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
+		\end{itemize}
+	\end{minipage}\hfill
+	\begin{minipage}[htp]{0.47\textwidth}
+		\textbf{Coverage.} testing metric. software flaw can only be detected if flawed statement is executed $\Rightarrow$ effectiveness of a test suite depends on how many statements are executed.
+		\begin{itemize}
+			\item[-] \textbf{Statement Coverage.} Measures how many statements (e.g., assignments, comparisons, etc.) in the program have been executed by the test suite.
+			\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
+		\end{itemize}
+	\end{minipage}\\
+	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{Fuzzing.} random testing that mutates input to improve test coverage ($\oplus$scales very well). \\
-		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.}\\
-		\textbf{Types of Fuzzing:}\\
+		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.} \textbf{Types of Fuzzing:}\\
 		1.\textbf{Dumb Fuzzing:} not aware of input structure; randomly mutates input without guidance.\\
 		2.\textbf{Generation-based Fuzzing:} uses model describing valid inputs; generates new input seeds in each round based on model specifications.
 	\end{minipage}\hfill
-	\begin{minipage}[htp]{0.49\textwidth}
-		3. \textbf{Mutation-based Fuzzing:} Leverages a set of valid seed inputs; modifies inputs based on feedback from previous rounds. Mutations can be informed by program structure:\\
+	\begin{minipage}[t]{0.49\textwidth}
+		3. \textbf{Mutation-based Fuzzing:} uses set of valid seed inputs; modifies inputs based on feedback from previous rounds. Mutations can be informed by program structure:\\
 		\textbf{White-box} (full access to code/internal logic)\\
 		\textbf{Grey-box} (partial knowledge, typically coverage feedback only)\\
 		\textbf{Black-box} (no internal knowledge, input/output observation only)
-	\end{minipage}
-	4. \textbf{Symbolic Execution with Fuzzing.} Whitebox fuzzing uses \textit{Symbolic Analysis} to generate new seed inputs for unexplored paths when random mutation gets stuck, improving coverage.
+	\end{minipage}\\
+	\textbf{Symbolic Execution with Fuzzing.} Whitebox fuzzing uses \textit{Symbolic Analysis} to generate new seed inputs for unexplored paths when random mutation gets stuck, improving coverage.
 	\hline
-	\begin{minipage}[t]{0.32\textwidth}
-		\textbf{Sanitization.} \\
-		Test cases detect bugs through various mechanisms (enforced policies):\\
+	\begin{minipage}[t]{0.28\textwidth}
+		\textbf{Sanitization.} detect bugs by enforcing policies, \textbf{increasing testing effectiveness.}\\
 		- Assertions\\
 		- Segmentation faults\\
 		- Division by zero traps\\
 		- Uncaught exceptions\\
 		- Mitigations triggering termination\\
-		\textit{cannot detect logic bugs/specification, only bugs that violate specific policy}\\
-		\textbf{Goal:} Sanitizers enforce policies to detect bugs earlier and increase testing effectiveness.
+		\textit{cannot detect logic bugs/specification, only bugs that violate specific policy}
 	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.31\textwidth}
 		\textbf{Address Sanitizer (ASan).}\\
@@ -463,7 +465,7 @@
 		-Memory leaks (experimental)\\
 		\textbf{Performance.}+ 2$\times$ slowdown.
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.34\textwidth}
+	\begin{minipage}[t]{0.38\textwidth}
 		\textbf{Undefined Behavior Sanitizer (UBSan).} \textit{(only one usable in production.)}\\Detects undefined behavior by instrumenting code to trap on typical C/C++ undefined behavior:
 		- Unsigned/misaligned pointers\\
 		- Signed integer overflow\\
@@ -484,8 +486,7 @@
 	\end{minipage}\\
 	- \textbf{Content Security.} content of messages must not be readable or influenced by adversaries \textit{(Confidentiality, Integrity, Authenticity)}.
 	\hline
-	\textbf{Ethernet.} machines have "unique" 48-bit MAC addresses (Medium Access Code).\\
-	\textbf{IP Address.} 4-byte address (IPv4) where part denotes network and part denotes host.\\
+	\textbf{IP Address.} 4-byte address (IPv4), network.host.\\
 	\textbf{Subnet Mask.} Used to determine network portion of IP address via bitwise AND operation.\\
 	\textbf{Gateway.} Router IP address used to forward packets to different subnets.\\
 	\textbf{ARP (Address Resolution Protocol).} translates IP addresses $\to$ MAC addresses. Each host maintains cache table of IP $\leftrightarrow$ MAC mappings. If not available, broadcast ARP request.
@@ -512,8 +513,8 @@
 			      \textbf{Resource Theft.} Impersonate others to bypass bandwidth limits or steal allocated resources
 		      \end{minipage}\hfill\vline\hfill
 		      \begin{minipage}[htp]{0.5\textwidth}
-			      \textbf{Defenses}:\\
-			      \textbf{Static ARP entries.} Manually configure critical mappings (e.g., gateway) in read-only cache\\
+			      \textbf{ARP Defenses}:\\
+			      \textbf{Static ARP entries.} Manually configure critical mappings \textit{(gateway)} in read-only cache\\
 			      \textbf{Spoofing detection.} Monitor for inconsistencies\\(one IP$\rightarrow$multiple MACs/one MAC$\rightarrow$multiple IPs)\\
 			      \textbf{Cross-checking.} Verify mappings with multiple hosts before trusting\\
 			      \textbf{Change alerts.} Email admin when IP-MAC associations change, require human confirmation
@@ -552,18 +553,31 @@
 			      \end{enumerate}
 		\end{enumerate}
 	\end{minipage}\hline
-	\textbf{DNS (domain name service).} translates human-readable domain names into IP addresses.\\
-	\textit{Query initiation:} Client sends DNS query to recursive resolver (typically ISP-provided)\\
-	\textit{Cache check:} Resolver first checks its cache for existing resolution\\
-	\textit{Hierarchical resolution (if not cached):} Resolver queries in sequence:
-	\begin{enumerate}[leftmargin=8pt, labelsep=0pt, itemsep=0pt]
-		\item Root server (directs to appropriate TLD)
-		\item Top-Level Domain (TLD) server (e.g., .com, .org)
-		\item Authoritative name server (holds actual domain-to-IP mapping)
-	\end{enumerate}
-	\textit{Response propagation:} Resolver returns IP address to client\\
-	\textit{Connection:} Client uses resolved IP to connect to destination host\\
-	\textit{Distributed database:} DNS mappings stored across hierarchical servers globally
+	\begin{minipage}[t]{0.48\textwidth}
+		\textbf{DNS (domain name service).} translates human-readable domain names into IP addresses.\\
+		\textit{Query initiation:} Client sends DNS query to recursive resolver (typically ISP-provided)\\
+		\textit{Cache check:} Resolver first checks its cache for existing resolution\\
+		\textit{Hierarchical resolution (if not cached):} Resolver queries in sequence:
+		\begin{enumerate}[leftmargin=6pt, labelsep=0pt, itemsep=0pt]
+			\item Root server (directs to appropriate TLD)
+			\item Top-Level Domain (TLD) server \textit{(.com)}
+			\item Authoritative name server (holds actual domain-to-IP mapping)
+		\end{enumerate}
+		\textit{Response propagation:} Resolver returns IP address to client\\
+		\textit{Connection:} Client uses resolved IP to connect to destination host\\
+		\textit{Distributed database:} DNS mappings stored across hierarchical servers globally
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.50\textwidth}
+		\textbf{DNS Spoofing Attacks.} \textit{(DNS lacks authentication and integrity protection.)}\\
+		\textbf{Cache Poisoning.} inject fake (domain, IP) pairs into resolver's cache $\Rightarrow$ all clients querying resolver get malicious IP\\
+		\textbf{DNS Hijacking.} Intercept/modify DNS responses in transit (man-in-the-middle) $\rightarrow$ victim receives attacker-controlled IP\\
+		$\Rightarrow$ DoS/redirection to malicious hosts/MITM monitoring
+		\hline
+		\textbf{Defenses}:\\
+		\textbf{DNSSEC.} Authoritative servers sign DNS responses $\Rightarrow$ prevents cache poisoning by verifying origin authenticity (no confidentiality)\\
+		\textbf{DNS-over-HTTPS (DoH).} Tunnel DNS queries over HTTPS connection $\rightarrow$ (confidentiality/integrity/authenticity)\\
+		\textbf{DNS-over-TLS.} \\Encrypt DNS traffic using TLS protocol\\
+	\end{minipage}
 \end{minipage}
 \begin{minipage}[htp]{0.5\textwidth}
 
