@@ -220,7 +220,7 @@
 	\textbf{URL.} standardized address that specifies a resource’s access method, host, and path.\\
 	\textbf{HTML.} markup language using tags to structure content and tell browser how to render a webpage.\\
 	\textbf{WEP.} Wi-Fi security protocol that encrypts frames with \textbf{RC4} (stream cipher with random 24-bit IV). IV repeats frequently, causing keystream reuse and enabling message (and sometimes key) recovery.\\
-	\textbf{PHP.} server-side scripting language for dynamic web pages; uses variables and request/session data (`\$\_GET`, `\$\_POST`, `\$\_SESSION`) and outputs HTML with `echo`.\\
+	\textbf{PHP.} server-side scripting language for dynamic web pages; uses variables and request/session data (`\$\_{gateway}ET`, `\$\_POST`, `\$\_SESSION`) and outputs HTML with `echo`.\\
 	\textit{Lifetime of a GET/POST request.}\\
 	1. Browser sends HTTP GET/POST request.\\ 2. Web Server receives requests and identifies if it's a static asset(.jpg,\dots) or dynamic(.php).\\
 	3. PHP interpreter executes called .php 4. Sends response to web browser
@@ -374,13 +374,11 @@
 		4.Performance overhead.(requires the system
 		to keep track of all pointers)
 		\hline
-		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks. A mitigation must have three properties:
-		\begin{enumerate}[leftmargin=10px]
-			\item \textbf{Effectiveness:} must prevent or defend against attacks
-			\item \textbf{Efficiency:} low comp/memory overhead
-			\item \textbf{Compatibility:}  Easy deployment (no major software/hardware changes)
-		\end{enumerate}
-		\textit{Sandboxing: Isolates process from system resources and other processes. DEP, ASLR, Stack canaries.}
+		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks. Properties:
+		1. \textbf{Effectiveness.} \\must prevent or defend against attacks\\
+		2. \textbf{Efficiency:} low comp/memory overhead\\
+		3. \textbf{Compatibility:} \\easy deployment (no major software/hardware changes)\\
+		\textit{Examples: Sandboxing. isolates process from system resources and other processes. \\DEP, ASLR, Stack canaries.}
 	\end{minipage}\hfill
 	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{Stack Canaries.}\\
@@ -398,41 +396,37 @@
 \end{minipage}\newpage
 \begin{minipage}[htp]{0.5\textwidth}
 	\vspace{3px}
-	\textbf{Testing.} process of executing a program to find errors.(to find bugs/errors and test security properties)\\
 	\textbf{Error.} difference between observed behavior and specified behavior (aviolation of underlying spec)\\
-	\textit{Ideally}, we should \textbf{test} all (correct control \textbf{and} data flow required to trigger bugs):
-	\begin{itemize}
-		\item[-] \textbf{Control-flows.} test all path through the program. (all branches)
-		\item[-] \textbf{Data-flow.} test all values used at each location. (all possible values of variables)
-	\end{itemize}
-	Practice is limited by \textit{state explosion} (impossible to test everythig.).\\
-	\begin{minipage}[t]{0.4\textwidth}
-		\textbf{Manual Testing.} \\
-		designed by human heuristic(intuition).
+	\begin{minipage}[t]{0.56\textwidth}
+		\textbf{Testing.} process of executing a program to find errors.(to find bugs/errors and test security properties)\\
+		\textit{Ideally}, \textbf{test} all (correct control \textbf{and} data flow required to trigger bugs):
 		\begin{itemize}
-			\item[-] \textbf{Exhaustive.} cover all input (not feasible)
-			\item[-] \textbf{Functional.} cover all requirements (depend on specification)
-			\item[-] \textbf{Random.} automate test generation (incomplete)
-			\item[-] \textbf{Structural.} cover all code (unit testing)
+			\item[-] \textbf{Control-flows.} test all path through the program. (all branches)
+			\item[-] \textbf{Data-flow.} test all values used at each location. (all possible values of variables)
 		\end{itemize}
 	\end{minipage}\hfill
-	\begin{minipage}[t]{0.58\textwidth}
-		\textbf{Automated Testing.}\\
-		decided algorithmatically\\
-		\textit{(designed to run program/find bugs/enforce properties).}
-		\begin{itemize}
-			\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
-			\item[-] \textbf{Symbolic analysis.} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths $\Rightarrow$ exponential blowup. Does not scale.
-			\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
-		\end{itemize}
+	\begin{minipage}[t]{0.42\textwidth}
+		\textbf{Manual Testing.}\\
+		designed by human heuristic(intuition).\\
+		-	\textbf{Exhaustive.} cover all input (not feasible)\\
+		- \textbf{Functional.} cover all requirements (depend on specification)\\
+		- \textbf{Random.} automate test generation (incomplete)\\
+		- \textbf{Structural.} cover all code (unit testing)
 	\end{minipage}\\
+	Practice is limited by \textit{state explosion} (impossible to test everythig.).\\
+	\textbf{Automated Testing.} decided algorithmatically \textit{(designed to run program/find bugs/enforce properties).}
+	\begin{itemize}
+		\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
+		\item[-] \textbf{Symbolic analysis.} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths $\Rightarrow$ exponential blowup. Does not scale.
+		\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
+	\end{itemize}
 	\textbf{Coverage.} Testing needs a metric to measure test suite effectiveness. The intuition is that a software flaw can only be detected if the flawed statement is executed. Therefore, the effectiveness of a test suite depends on how many statements are executed.
 	\begin{itemize}
 		\item[-] \textbf{Statement Coverage.} Measures how many statements (e.g., assignments, comparisons, etc.) in the program have been executed by the test suite.
 		\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
 	\end{itemize}
 	\begin{minipage}[htp]{0.49\textwidth}
-		\textbf{Fuzzing.} random testing technique that mutates input to improve test coverage (scales very well). \\
+		\textbf{Fuzzing.} random testing technique that mutates input to improve test coverage ($\oplus$scales very well). \\
 		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.}\\
 		\textbf{Types of Fuzzing:}\\
 		- \textbf{Dumb Fuzzing:} unaware of the input structure; randomly mutates input without guidance.\\
@@ -448,47 +442,125 @@
 	\end{minipage}
 	\textbf{Symbolic Execution with Fuzzing.} Whitebox fuzzing uses symbolic execution to generate new seed inputs for unexplored paths when random mutation gets stuck, improving coverage.
 	\hline
-	\begin{minipage}[htp]{0.33\textwidth}
+	\begin{minipage}[t]{0.32\textwidth}
 		\textbf{Sanitization.} \\
-		Test cases detect bugs through various mechanisms (enforced policies):
-		\begin{itemize}
-			\item[-] Assertions
-			\item[-] Segmentation faults
-			\item[-] Division by zero traps
-			\item[-] Uncaught exceptions
-			\item[-] Mitigations triggering termination
-		\end{itemize}
-		\textit{cannot detect logic bugs/specification only bugs that violate specific policy}
+		Test cases detect bugs through various mechanisms (enforced policies):\\
+		- Assertions\\
+		- Segmentation faults\\
+		- Division by zero traps\\
+		- Uncaught exceptions\\
+		- Mitigations triggering termination\\
+		\textit{cannot detect logic bugs/specification, only bugs that violate specific policy}\\
 		\textbf{Goal:} Sanitizers enforce policies to detect bugs earlier and increase testing effectiveness.
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[htp]{0.3\textwidth}
+	\begin{minipage}[t]{0.31\textwidth}
 		\textbf{Address Sanitizer (ASan).}\\
-		Detects memory errors by placing red zones around objects and checking them on trigger events. It can detect:
-		\begin{itemize}
-			\item[-] Out-of-bounds accesses to heap, stack, and globals
-			\item[-] Use-after-free
-			\item[-] Use-after-return (configurable)
-			\item[-] Use-after-scope (configurable)
-			\item[-] Double-free and invalid free
-			\item[-] Memory leaks (experimental)
-		\end{itemize}
-		\textbf{Performance.}\\adds a 2$\times$ slowdown.
+		Detects memory errors by placing red zones around objects and checking them on trigger events. It can detect:\\
+		-Out-of-bounds accesses to heap, stack, and globals\\
+		-Use-after-free\\
+		-Use-after-return (config.)\\
+		-Use-after-scope (configurable)\\
+		-Double-free and invalid free\\
+		-Memory leaks (experimental)\\
+		\textbf{Performance.}+ 2$\times$ slowdown.
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[htp]{0.32\textwidth}
-		\textbf{Undefined Behavior Sanitizer (UBSan).}\\Detects undefined behavior by instrumenting code to trap on typical C/C++ undefined behavior:
-		\begin{itemize}
-			\item[-] Unsigned/misaligned pointers
-			\item[-] Signed integer overflow
-			\item[-] Conversion between floating point types leading to overflow
-			\item[-] Illegal use of NULL pointers
-			\item[-] Illegal pointer arithmetic
-		\end{itemize}
-		\textbf{Performance.}slowdown depends on amount/frequency of checks. only one usable in production.
+	\begin{minipage}[t]{0.34\textwidth}
+		\textbf{Undefined Behavior Sanitizer (UBSan).} \textit{(only one usable in production.)}\\Detects undefined behavior by instrumenting code to trap on typical C/C++ undefined behavior:
+		- Unsigned/misaligned pointers\\
+		- Signed integer overflow\\
+		- Conversion between floating point types leading to overflow\\
+		- Illegal use of NULL pointers\\
+		- Illegal pointer arithmetic\\
+		\textbf{Performance.} slowdown depends on amount/frequency of checks.
 	\end{minipage}
 	\hline
-\end{minipage}
-\begin{minipage}[htp]{0.5\textwidth}
+	\textbf{Network Security Properties.}\\
+	\begin{minipage}[htp]{0.52\textwidth}
+		- \textbf{Naming Security.}  association between lower level names \textit{(network addresses)} and higher level names \textit{(Alice)} must not be influenced by adversary. \textit{(Integrity, Authenticity, Availability[naming service])}\\
+		- \textbf{Routing Security.} route over the network and delivery of messages must not be influenced by adversary.\textit{(Integrity, Authenticity, Availability, Authorization)}\\
+		- \textbf{Session Security.} messages within the same session cannot be modified (keep ordering and no adding/removing messages) \textit{(Integrity, Authenticity)}.
+	\end{minipage}\hfill
+	\begin{minipage}[htp]{0.46\textwidth}
+		\includegraphics[width=1\textwidth]{assets/layers.png}
+	\end{minipage}\\
+	- \textbf{Content Security.} content of messages must not be readable or influenced by adversaries \textit{(Confidentiality, Integrity, Authenticity)}.
+	\hline
+	\begin{minipage}[htp]{0.6\textwidth}\vspace*{-2px}
+		\textbf{Ethernet.} Local area network (LAN), machines have "unique" 48-bit MAC addresses (Medium Access Code).\\
+		\textbf{IP Address.} 4-byte address (IPv4) where part denotes network and part denotes host.\\
+		\textbf{Subnet Mask.} Used to determine network portion of IP address via bitwise AND operation.\\
+		\textbf{Gateway.} Router IP address used to forward packets to different subnets.
+	\end{minipage}\hfill
+	\begin{minipage}[htp]{0.38\textwidth}
+		\includegraphics[width=1\textwidth]{assets/ip-header.png}
+	\end{minipage}\\
+	\textbf{ARP (Address Resolution Protocol).} translates IP addresses $\to$ MAC addresses. Each host maintains cache table of IP $\leftrightarrow$ MAC mappings. If not available, broadcast ARP request.
+	\begin{itemize}[leftmargin=4px]
+		\item[] 		\textbf{ARP Packet Format.} ($\warning$ No integrity checks nor authentication in ARP packets)\\[2px]	\begin{minipage}[htp]{0.55\textwidth}
+			      \textbf{HTYPE} (2 bytes): Hardware type (1 = Ethernet/Wi-Fi)\\
+			      \textbf{PTYPE} (2 bytes): Protocol type (0x0800 = IPv4)\\
+			      \textbf{HLEN} (1 byte): Hardware address length (6 for MAC)\\
+			      \textbf{PLEN} (1 byte): Protocol address length (4 for IPv4)\\
+			      \textbf{OPERATION} (2 bytes): 1 = Request, 2 = Reply
+		      \end{minipage}\hfill
+		      \begin{minipage}[htp]{0.45\textwidth}
+			      \textbf{Sender HA}: MAC address of sender\\
+			      \textbf{Sender PA}: IP address of sender\\
+			      \textbf{Target HA}: MAC of target (zero in Request, filled in Reply)\\
+			      \textbf{Target PA}: IP address being queried
+		      \end{minipage}
+		\item[] \begin{minipage}[htp]{0.48\textwidth}
+			      \textbf{ARP Spoofing Attacks.}\\
+			      \textit{(Naïve threat model assuming insiders are trustworthy.)}\\
+			      \textbf{Man-in-the-Middle.} Attacker convinces both parties their MAC is the other's MAC $\rightarrow$ intercept/modify all traffic\\
+			      \textbf{Denial of Service.} Provide wrong MAC mappings $\rightarrow$ victims cannot receive packets\\
+			      \textbf{Resource Theft.} Impersonate others to bypass bandwidth limits or steal allocated resources
+		      \end{minipage}\hfill\vline\hfill
+		      \begin{minipage}[htp]{0.48\textwidth}
+			      \textbf{Defenses}:\\
+			      \textbf{Static ARP entries.} Manually configure critical mappings (e.g., gateway) in read-only cache\\
+			      \textbf{Spoofing detection.} Monitor for inconsistencies (one IP $\rightarrow$ multiple MACs, or one MAC $\rightarrow$ multiple IPs)\\
+			      \textbf{Cross-checking.} Verify mappings with multiple hosts before trusting\\
+			      \textbf{Change alerts.} Email admin when IP-MAC associations change, require human confirmation
+		      \end{minipage}
+	\end{itemize}
+	\textbf{IP Routing Algorithm.}\\
+	\textbf{Input:} Source IP $IP_{source}$, Destination IP $IP_{dest}$, Subnet Mask $M$, Gateway IP $IP_{gateway}$\\
+	\textbf{Output:} Packet sent to destination\\
+	\begin{minipage}[t]{0.49\textwidth}
+		\begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt,series=mainenum]
+			\item Compute $(IP_{source} \land M)$ and $(IP_{dest} \land M)$
+			\item \textbf{If} $(IP_{source} \land M) = (IP_{dest} \land M)$ (same subnet):
+			      \begin{enumerate}[leftmargin=6pt,labelsep=3pt,itemsep=0pt]
+				      \item \textbf{If} MAC address of $IP_{dest}$ is in ARP cache: Send packet to $IP_{dest}$ using cached MAC
+				      \item \textbf{Else}:
+				            \begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt]
+					            \item Broadcast ARP request: ``Who has $IP_{dest}$?''
+					            \item Wait for ARP reply with MAC address
+					            \item Cache mapping $IP_{dest} \leftrightarrow MAC$
+					            \item Send packet to $IP_{dest}$ using MAC address
+				            \end{enumerate}
+			      \end{enumerate}
+		\end{enumerate}
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.5\textwidth}
+		\begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt,resume=mainenum]
+			\item \textbf{Else} (different subnet):
+			      \begin{enumerate}[leftmargin=6pt,labelsep=3pt,itemsep=0pt]
+				      \item \textbf{If} MAC address of $IP_{gateway}$ is in ARP cache: Send packet to gateway using cached MAC
+				      \item \textbf{Else}:
+				            \begin{enumerate}[leftmargin=8pt,labelsep=3pt,itemsep=0pt]
+					            \item Broadcast ARP request:"Who has $IP_{gateway}$?"
+					            \item Wait for ARP reply with gateway MAC
+					            \item Cache mapping $IP_{gateway} \leftrightarrow MAC$
+					            \item Send packet to gateway using MAC address
+				            \end{enumerate}
+				      \item Gateway forwards packet through WAN
+			      \end{enumerate}
+		\end{enumerate}
+	\end{minipage}
+	\begin{minipage}[htp]{0.5\textwidth}
 
-\end{minipage}
+	\end{minipage}\end{minipage}
 \end{document}
 
