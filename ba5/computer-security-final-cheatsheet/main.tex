@@ -395,8 +395,7 @@
 		4.Performance overhead from checks.
 	\end{minipage}
 \end{minipage}\newpage
-\begin{minipage}[htp]{0.5\textwidth}
-	\vspace{3px}
+\begin{minipage}[t]{0.5\textwidth}
 	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{Error.} difference between observed behavior and specified behavior (a violation of underlying spec)\\
 		\textbf{Testing.} executing a program to find bugs/errors and test security properties.\\
@@ -573,14 +572,66 @@
 		\textbf{DNS Hijacking.} Intercept/modify DNS responses in transit (man-in-the-middle) $\rightarrow$ victim receives attacker-controlled IP\\
 		$\Rightarrow$ DoS/redirection to malicious hosts/MITM monitoring
 		\hline
-		\textbf{Defenses}:\\
+		\textbf{DNS Spoofing Defenses}:\\
 		\textbf{DNSSEC.} Authoritative servers sign DNS responses $\Rightarrow$ prevents cache poisoning by verifying origin authenticity (no confidentiality)\\
 		\textbf{DNS-over-HTTPS (DoH).} Tunnel DNS queries over HTTPS connection $\rightarrow$ (confidentiality/integrity/authenticity)\\
 		\textbf{DNS-over-TLS.} \\Encrypt DNS traffic using TLS protocol\\
 	\end{minipage}
 \end{minipage}
-\begin{minipage}[htp]{0.5\textwidth}
-
+\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.455\textwidth}
+		\textbf{Border Gateway Protocol (BGP).} make routing tables between Autonomous Systems (AS) with independent routing domains\\
+		1.Routers maintain tables of \\\textbf{(IP subnet$\rightarrow$Router IP, cost)} \textit{(no integrity/no authenticity)}\\
+		2.Routes change constantly due to faults, new contracts, infrastructure updates\\
+		3.BGP selects lowest-cost routes (real money considerations)\\
+		$\warning$ Weak Authentication using short shared secrets (up to 80 ASCII bytes) and MD5-based MAC $\Rightarrow$ only prevents DoS, not route integrity
+	\end{minipage}
+	\begin{minipage}[t]{0.52\textwidth}
+		\textbf{BGP Hijacking Attacks.}
+		Adversary controls/compromises router, injects false low-cost routes\\
+		$\rightarrow$ attracts traffic to adversary path and false routes propagate until expiration\\
+		$\Rightarrow$\textit{Surveillance, injection/modification, censorship, DoS}.  \textbf{\textit{modifies route, not destination}}
+		\hline
+		\textbf{BGP Hijacking Defenses}:\\
+		\textbf{Route filtering.} Block geographically implausible routes ($\warning$limited effectiveness)\\
+		\textbf{Challenge:} No central authority for route correctness\\
+		$\Rightarrow$ \textbf{BGPsec.} AS certificates link keys to IP blocks; updates require authoritative AS signature
+	\end{minipage}\hline
+	\textbf{Internet Protocol (IP).} Enables addressing and routing of packets between hosts\\
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{No protection:} No integrity/authentication for source/destination addresses, no confidentiality for data (only non-cryptographic checksum for transmission errors)\\
+		\textbf{IP Spoofing Attacks.}\\
+		\textbf{Impersonation:} Fake identity to steal resources\\
+		\textbf{Man-in-the-Middle:} Monitor, modify, or deny communication\\
+		\textbf{DoS:} Spoof source IP to trigger servers sending packets to victim\\
+		\textit{Note:} May require TCP hijacking for full MitM
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.49\textwidth}
+		\textbf{IPSec Defenses.} Cryptographic security at IP level\\
+		\textbf{Key exchange:} Public key or pre-shared symmetric keys\\
+		\textbf{AH:} Authentication \& integrity (HMAC), replay protection (sequence numbers)\\
+		\textbf{ESP:} Adds confidentiality on top of auth\\
+		\textbf{Transport mode:} Protects payload, keeps original headers\\
+		\textbf{Tunnel mode:} Protects entire packet (headers + payload) inside new packet
+	\end{minipage}\hline
+	\begin{minipage}[t]{0.52\textwidth}
+		\textbf{Virtual Private Network (VPN).}\\
+		Uses IPSec tunnel mode to create private network over public internet\\
+		\textbf{Properties:} Appears as single network, internal routing, full packet protection (confidentiality, authentication, integrity, replay)\\
+		\textbf{Configuration 1:} Connect two LANs securely\\
+		\textbf{Configuration 2:} Exit local network from different point (VPN as a Service $\rightarrow$ change apparent IP)\\
+		\textbf{IP rewriting necessity:} VPN rewrites return address to its own; otherwise replies bypass VPN tunnel, breaking encryption
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.46\textwidth}
+		\textbf{VPN Limitations.}\\
+		\textbf{Does NOT protect against:}\\
+		- DoS attacks (IP still exists)\\
+		- Application-layer authentication issues\\
+		\textbf{VPN vs Proxy:}\\
+		\textit{VPN:} End-to-end encryption, acts as one network, no MitM\\
+		\textit{Proxy:} Encryption only end-to-proxy, separates two networks, proxy sees both sides (acts as MitM)\\
+		Both hide IP from receiver but offer different security properties
+	\end{minipage}
 \end{minipage}
 \end{document}
 
