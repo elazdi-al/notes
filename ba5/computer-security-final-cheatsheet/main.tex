@@ -419,7 +419,7 @@
 		\textit{(run program/find bugs/enforce properties).}
 		\begin{itemize}[leftmargin=4pt, labelsep=1pt]
 			\item[-] \textbf{Static analysis.} analyse program without executing it. (imprecise)
-			\item[-] \textbf{Symbolic analysis.(doesn't scale)} converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths$\rightarrow$exponential blowup.
+			\item[-] \textbf{Symbolic analysis.(doesn't scale)} \\converts program to logical equations covering many executions, provides full path coverage(complete). Path explosion: each branch doubles paths$\rightarrow$exponential blowup.
 			\item[-] \textbf{Dynamic analysis.} \textit{fuzzing} inspect program by executing it (hard to cover all paths)
 		\end{itemize}
 	\end{minipage}\hfill
@@ -500,7 +500,7 @@
 		      \begin{minipage}[htp]{0.45\textwidth}
 			      \textbf{Sender HA}: MAC address of sender\\
 			      \textbf{Sender PA}: IP address of sender\\
-			      \textbf{Target HA}: MAC of target (zero in Request, filled in Reply)\\
+			      \textbf{Target HA}: MAC of target \\(zero in Request, filled in Reply)\\
 			      \textbf{Target PA}: IP address being queried
 		      \end{minipage}
 		\item[] \begin{minipage}[htp]{0.46\textwidth}
@@ -649,6 +649,52 @@
 		3) Client: ACK + SeqS+1\\
 		\textbf{Attack:} \\
 		If adversary guesses sequence numbers $\Rightarrow$ hijack/insert packets
+	\end{minipage}\hline
+	\begin{minipage}[t]{0.36\textwidth}
+		\textbf{Transport Layer Security (TLS).}\\
+		Cryptographic protocol above TCP \\
+		\textbf{Confidentiality:} \\Symmetric encryption\\
+		\textbf{Authentication:} Public key cryptography (one or two-sided)\\
+		\textbf{Integrity:} MAC and signatures\\
+		\textbf{Forward secrecy:} Learning a key at one point does not reveal past sessions\\
+		\textbf{State-of-the-art:} TLS v1.3\\
+		\textit{Reality:} Many insecure versions (TLS 1.0-1.2, SSL) still deployed due to upgrade difficulty
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.62\textwidth}
+		\textbf{TLS Handshake.}Bootstrap secure communication, agree on algorithms, establish session keys\\
+		\textbf{1.ClientHello:} Version, CipherSuites (ordered preferences), SessionID, challenge $R_C$\\
+		\textbf{2.ServerHello:} ChosenCipher, ServerCertificate (PKI cert with signed public key), [ServerKeyExchange] (e.g., $g^a$ for DH), [ClientCertRequest], challenge $R_S$\\
+		\textbf{3.Client:} [ClientCertificate], ClientKeyExchange (e.g., $g^b$), ChangeCipherSpec flag\\
+		\textbf{3.1.ClientFinish:} Encrypted/authenticated "done" message\\
+		\textbf{4.Server:} ChangeCipherSpec flag\\
+		\textbf{4.1.ServerFinish: }Encrypted/authenticated "done" message\\
+		$\Rightarrow$ Shared session key established, all subsequent traffic encrypted \& authenticated
+	\end{minipage}\hline
+	\begin{minipage}[t]{0.31\textwidth}
+		\textbf{Denial of Service (DoS).} \\
+		\textit{Prevent legitimate users from accessing a service}\\
+		\textbf{1.}Crash victim by exploiting software flaws\\
+		\textbf{2.}Exhaust victim's resources \\(bandwidth/CPU/memory)
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.68\textwidth}
+		\textbf{TCP SYN Flood.} Send TCP SYN packets with bogus source addresses\\
+		\textbf{Mechanism:} Server allocates TCP Control Block (TCB, ~280 bytes) for each half-open connection and waits for ACK\\
+		$\rightarrow$ TCB limit \textit{exhausted} $\Rightarrow$ new legitimate requests rejected\\
+		\textbf{Defense:} SYN cookies - compress TCP state/push state to client (cryptographically protected), require client to return it; Alternative: Proof-of-Work (require computational work before processing)
+	\end{minipage}\\
+	\begin{minipage}[t]{0.34\textwidth}
+		\textbf{Teardrop Attack.} Send IP packets with overlapping fragment offsets\\
+		\textbf{Mechanism:} Exploits bug in TCP/IP fragmentation reassembly\\
+		$\rightarrow$ Packets overwrite each other $\Rightarrow$ OS crashes or waits indefinitely for missing fragments\\
+		\textbf{Defense:} Patch OS to handle malformed fragments correctly
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.64\textwidth}
+		\textbf{TCP RST Injection (Great Firewall of China).}\\
+		Inject forged TCP RST packets into established connections\\
+		\textbf{Mechanism:} No auth in TCP; endpoints trust RST flag and abandon connection\\
+		$\rightarrow$ Connection terminated without flooding server (server sees client disconnect)\\
+		\textbf{Why not drop packets?} Dropping requires acting as MitM and physically intercepting; injection is easier\\
+		\textbf{Defense:} TLS/IPSec provide authentication to prevent forged packets
 	\end{minipage}
 \end{minipage}
 \end{document}
