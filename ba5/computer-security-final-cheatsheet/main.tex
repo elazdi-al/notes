@@ -485,7 +485,6 @@
 	\end{minipage}\\
 	- \textbf{Content Security.} content of messages must not be readable or influenced by adversaries \textit{(Confidentiality, Integrity, Authenticity)}.
 	\hline
-	\textbf{IP Address.} 4-byte address (IPv4), network.host.\\
 	\textbf{Subnet Mask.} Used to determine network portion of IP address via bitwise AND operation.\\
 	\textbf{Gateway.} Router IP address used to forward packets to different subnets.\\
 	\textbf{ARP (Address Resolution Protocol).} translates IP addresses $\to$ MAC addresses. Each host maintains cache table of IP $\leftrightarrow$ MAC mappings. If not available, broadcast ARP request.
@@ -519,6 +518,7 @@
 			      \textbf{Change alerts.} Email admin when IP-MAC associations change, require human confirmation
 		      \end{minipage}
 	\end{itemize}
+	\hline
 	\textbf{IP Routing.} \textbf{Input:}($IP_{source}$, $IP_{dest}$, Subnet Mask $M$, $IP_{gateway}$) \; \textbf{Output:} Packet sent to destination\\
 	\begin{minipage}[t]{0.48\textwidth}
 		\begin{enumerate}[leftmargin=6pt,labelsep=0pt,itemsep=0pt,series=mainenum]
@@ -597,22 +597,22 @@
 		\textbf{Challenge:} No central authority for route correctness\\
 		$\Rightarrow$ \textbf{BGPsec.} AS certificates link keys to IP blocks; updates require authoritative AS signature
 	\end{minipage}\hline
-	\textbf{Internet Protocol (IP).} Enables addressing and routing of packets between hosts\\
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.46\textwidth}
+		\textbf{Internet Protocol (IP).} Enables addressing and routing of packets between hosts\\
 		\textbf{No protection:} No integrity/authentication for source/destination addresses, no confidentiality for data (only non-cryptographic checksum for transmission errors)\\
 		\textbf{IP Spoofing Attacks.}\\
-		\textbf{Impersonation:} Fake identity to steal resources\\
-		\textbf{Man-in-the-Middle:} Monitor, modify, or deny communication\\
-		\textbf{DoS:} Spoof source IP to trigger servers sending packets to victim\\
+		\textbf{Impersonation.} Fake identity to steal resources\\
+		\textbf{Man-in-the-Middle.} Monitor, modify, or deny communication\\
+		\textbf{DoS.} Spoof source IP to trigger servers sending packets to victim\\
 		\textit{Note:} May require TCP hijacking for full MitM
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.49\textwidth}
-		\textbf{IPSec Defenses.} Cryptographic security at IP level\\
-		\textbf{Key exchange:} Public key or pre-shared symmetric keys\\
-		\textbf{AH:} Authentication \& integrity (HMAC), replay protection (sequence numbers)\\
-		\textbf{ESP:} Adds confidentiality on top of auth\\
-		\textbf{Transport mode:} Protects payload, keeps original headers\\
-		\textbf{Tunnel mode:} Protects entire packet (headers + payload) inside new packet
+	\begin{minipage}[t]{0.52\textwidth}
+		\textbf{IPSec Defenses.} uses public key/pre-shared symmetric key encryption. \\
+		\textbf{Authentication Header(AH).} Authentication/Integrity(via HMAC) + anti-replay protection (using sequence numbers). Protects payload \textbf{(auth only)}.\\
+		\textbf{Encapsulating Security Payload.(ESP)} Adds confidentiality by encryption \textbf{(auth+encryption)}\\
+		\textbf{IPSec Modes.} \\
+		\textbf{Transport mode.} Encrypts only payload, keeps original IP headers (end-to-end)\\
+		\textbf{Tunnel mode.} \\Encrypts entire packet (headers + payload) wraps in new packet with new IP headers (gateway-to-gateway).
 	\end{minipage}\hline
 	\begin{minipage}[t]{0.52\textwidth}
 		\textbf{Virtual Private Network (VPN).}\\
@@ -620,17 +620,35 @@
 		\textbf{Properties:} Appears as single network, internal routing, full packet protection (confidentiality, authentication, integrity, replay)\\
 		\textbf{Configuration 1:} Connect two LANs securely\\
 		\textbf{Configuration 2:} Exit local network from different point (VPN as a Service $\rightarrow$ change apparent IP)\\
-		\textbf{IP rewriting necessity:} VPN rewrites return address to its own; otherwise replies bypass VPN tunnel, breaking encryption
+		\textbf{VPN rewrites return address to its own}; otherwise replies bypass VPN tunnel, breaking encryption
 	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.46\textwidth}
-		\textbf{VPN Limitations.}\\
-		\textbf{Does NOT protect against:}\\
+		\textbf{VPN Limitations, Does NOT protect against:}\\
 		- DoS attacks (IP still exists)\\
 		- Application-layer authentication issues\\
 		\textbf{VPN vs Proxy:}\\
 		\textit{VPN:} End-to-end encryption, acts as one network, no MitM\\
 		\textit{Proxy:} Encryption only end-to-proxy, separates two networks, proxy sees both sides (acts as MitM)\\
 		Both hide IP from receiver but offer different security properties
+	\end{minipage}\hline
+	\begin{minipage}[t]{0.52\textwidth}
+		\textbf{TCP.}
+		Runs above IP, addresses IP limitations:\\
+		\textbf{Reliability.} Ensures messages received (retransmission)\\
+		\textbf{Congestion/flow control.} Avoids network/host overload\\
+		\textbf{Sessions.} Associates messages into logical sessions\\
+		\textbf{Multiplexing.} Associates messages to specific applications via ports\\
+		\textbf{Key fields:} Ports, sequence numbers, acknowledgment numbers, window, flags (SYN, ACK, RST, FIN)
+	\end{minipage}\hfill\vline\hfill
+	\begin{minipage}[t]{0.46\textwidth}
+		\textbf{TCP Hijacking Attacks.}\\
+		\textit{(No integrity/authentication; seq numbers = weak secret.)}\\
+		\textbf{3-way handshake:}\\
+		1) Client: SYN + SeqC\\
+		2) Server: SYN-ACK + SeqC+1 + SeqS\\
+		3) Client: ACK + SeqS+1\\
+		\textbf{Attack:} \\
+		If adversary guesses sequence numbers $\Rightarrow$ hijack/insert packets
 	\end{minipage}
 \end{minipage}
 \end{document}
