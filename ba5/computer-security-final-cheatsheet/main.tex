@@ -232,14 +232,23 @@
 	\end{minipage}\hfill
 	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Code Reuse - Control Flow Hijack.} Bypass DEP by chaining existing executable code (gadgets) instead of injecting new code.\\
-		\textbf{Attack Chain:}
-		\begin{enumerate}[leftmargin=10px]
-			\item \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)
-			\item \textbf{Integrity (*C).} Attacker overwrites return address and adjacent stack data
-			\item \textbf{Location (\&C).} Return address points to \texttt{\&system()}, stack contains \texttt{\&"/bin/sh"}
-			\item \textbf{Usage (*\&C).} CPU dereferences corrupted pointer, jumps to \texttt{system()}
-			\item \textbf{Gadget Chaining.} Existing code (\texttt{system()}) executes with attacker-controlled arguments, no shellcode needed
-		\end{enumerate}
+		\hspace*{-30px}\vline
+		\begin{minipage}[htp]{1.23\textwidth}
+			\textbf{Attack Chain:}
+			\begin{enumerate}[leftmargin=6px, labelsep=0px]
+				\item \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)
+				\item \textbf{Integrity (*C).} Attacker overwrites return address and adjacent stack data
+				\item \textbf{Location (\&C).} Return address points to \texttt{\&system()}, stack contains \texttt{\&"/bin/sh"}
+				\item \textbf{Usage (*\&C).} CPU dereferences corrupted pointer, jumps to \texttt{system()}
+				\item \textbf{Gadget Chaining.} Existing code (\texttt{system()}) executes with attacker-controlled arguments, no shellcode needed
+			\end{enumerate}
+			\scriptsize
+			\hline
+			\textbf{Anonymous Comms.} Hide who talks to whom + patterns.\\
+			\textbf{1. Bitwise unlinkability:} crypto makes input/output look different.\\
+			\textbf{2. Pattern hiding:} repacketize, reschedule, reroute.\\
+			\textbf{Single-proxy problem:} limited throughput; single point of failure $\Rightarrow$ use multiple nodes \textit{(separation of privilege)}.
+		\end{minipage}
 	\end{minipage}
 \end{minipage}
 \hfill
@@ -339,11 +348,11 @@
 					printf(buffer);
 					return 0;}
 		\end{cc}
-	\end{minipage}\\
-	\begin{minipage}[t]{0.495\textwidth}
+	\end{minipage}\\[-5px]
+	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{Code Injection Attack.} \\
 		\textbf{1.} Control unchecked variable. \\
-		\textbf{2.}Overwrite return address. \textbf{3.}Hijack control flow.
+		\textbf{2.}Overwrite return address. \textbf{3.}Hijack control flow.\\
 		\textbf{4.} Arbitrary code execution.
 		\begin{cc}
 			void vuln(char* u1){
@@ -353,7 +362,7 @@
 				} vuln(&exploit);
 		\end{cc}
 	\end{minipage}
-	\begin{minipage}[t]{0.495\textwidth}
+	\begin{minipage}[t]{0.49\textwidth}
 		\textbf{Attack Chain:}\\
 		1. \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)\\
 		2. \textbf{Integrity (*C).} Attacker overwrites return address on stack\\
@@ -375,7 +384,19 @@
 		1. \textbf{Effectiveness.} must prevent/defend attacks\\
 		2. \textbf{Efficiency:} low comp/memory overhead\\
 		3. \textbf{Compatibility:} easy deployment (no major \\software/hardware changes)\\
-		\textit{Examples: Sandboxing. isolates process from system resources and other processes. \\DEP, ASLR, Stack canaries.}
+		\textit{Sandboxing. isolates process from system resources and other processes. DEP, ASLR, Stack canaries\dots}
+		\hline
+		\scriptsize
+		\textbf{Traffic Analysis.} Encryption protects content, NOT metadata \textit{(IPs, timing, volume, location, device)}.\\
+		\textbf{Browser fingerprinting:} screen, fonts, timezone, user agent $\Rightarrow$ tracking without cookies.
+		\hline
+		\textbf{E2E Encryption.} Protection depends on what is an "end".\\
+		- \textbf{User devices as ends:} protects from everyone incl. provider. Ephemeral keys $\Rightarrow$ forward secrecy.\\
+		- \textbf{Provider servers as ends} \textit{(TLS)}: only protects from network observers.
+		\hline
+		\textbf{Anonymous Credentials.} Prove attribute \textit{(``over 18'')} without identity.
+		\textit{Data minimization; users with same attribute indistinguishable; multiple uses unlinkable.}\\
+		\textbf{vs PKI:} Both use trusted issuer \& secret key. $\warning$PKI reveals identity $\Rightarrow$ tracking.
 	\end{minipage}\hfill
 	\begin{minipage}[htp]{0.49\textwidth}
 		\begin{minipage}[htp]{0.49\textwidth}
@@ -390,8 +411,19 @@
 		3.No protection against reads.\\
 		4.Performance overhead from checks.
 		\hline
-		\vspace*{45px}
-	\end{minipage}
+		\scriptsize
+		\textbf{Tor Network.} Low-latency anonymous comm; overlay at application layer.\\
+		\textbf{1. Select path:} 3 nodes from Directory Authorities.\\
+		\textbf{2. Build circuit:} Authenticated DH key agreement:\\
+		Entry: direct \textit{(sees user IP)}\\ Middle: via Entry \textit{(blind to user IP)}\\
+		Exit: via Entry+Middle \textit{(blind to user \& entry IP)}\\
+		\textbf{3. Send:} Layered encryption:\\$E_{k-exit}(E_{k-mid}(E_{k-entry}(msg)))$ \\Each node decrypts one layer $\Rightarrow$ bitwise unlinkability.\\
+			\textbf{4. Response:} Exit encrypts reverse order \textit{(inner layer for entry)}.\\
+			\textbf{Stream-based:} Circuit built once (expensive PK), reused with symmetric keys.\\
+			\textbf{Decentralized trust:} No single node breaks anonymity.\\
+		$\warning$ \textbf{Assumes adversary can't see both edges} (not global adversary resistant).
+		\vspace*{20px}
+	\end{minipage}\\
 \end{minipage}\newpage
 \begin{minipage}[t]{0.5\textwidth}
 	\begin{minipage}[t]{0.495\textwidth}
@@ -578,7 +610,7 @@
 \end{minipage}
 \begin{minipage}[t]{0.495\textwidth}
 	\begin{minipage}[t]{0.455\textwidth}
-		\textbf{Border Gateway Protocol (BGP).} make routing tables between Autonomous Systems (AS) with independent routing domains\\
+		\textbf{Border Gateway Protocol (BGP).} make routing tables between Autonomous Systems (AS).\\
 		1.Routers maintain tables of \\\textbf{(IP subnet$\rightarrow$Router IP, cost)} \textit{(no integrity/no authenticity)}\\
 		2.Routes change constantly due to faults, new contracts, infrastructure updates\\
 		3.BGP selects lowest-cost routes (real money considerations)\\
@@ -597,10 +629,10 @@
 	\end{minipage}\hline
 	\begin{minipage}[t]{0.48\textwidth}
 		\textbf{Internet Protocol (IP).} Enables addressing and routing of packets between hosts\\
-		\textbf{No protection:} No integrity/authentication for source/destination addresses, no confidentiality for data (only non-cryptographic checksum for transmission errors)\\
-		\textbf{IP Spoofing Attacks.}\\
-		\textbf{Impersonation.} Fake identity to steal resources\\
-		\textbf{Man-in-the-Middle.} Monitor, modify, or deny communication May require TCP hijacking for full MitM\\
+		\textbf{No protection:} No integrity/authentication for source/destination addresses, no confidentiality for data (only non-cryptographic checksum for transmission errors)
+		\hline
+		\textbf{IP Spoofing.} \\\textbf{Impersonation.} Fake identity to steal resources\\
+		\textbf{Man-in-the-Middle.} Monitor, modify, or deny communication. (TCP hijacking for full MitM).\\
 		\textbf{DoS.} Spoof source IP to trigger servers sending packets to victim
 	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.5\textwidth}
@@ -608,7 +640,7 @@
 		\textbf{Authentication Header(AH).} Authentication/Integrity(via HMAC) + anti-replay protection (using sequence numbers). Protects payload \textbf{(auth only)}.\\
 		\textbf{Encapsulating Security Payload.(ESP)} Adds confidentiality by encryption \textbf{(auth+encryption)}\\
 		\textbf{Transport mode.} Encrypts only payload, keeps original IP headers (end-to-end)\\
-		\textbf{Tunnel mode.} \\Encrypts entire packet (headers + payload) wraps in new packet with new IP headers (gateway-to-gateway).
+		\textbf{Tunnel mode.} Encrypts entire packet (headers + payload) wraps in new packet with new IP headers (gateway-to-gateway).
 	\end{minipage}\hline
 	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Virtual Private Network (VPN).}\\
@@ -737,79 +769,20 @@
 		Router maintains mapping: (Internal IP, port) $\leftrightarrow$ (External IP, port)\\
 		\textbf{Security benefit:} External entities can't route into NAT unless mapped port exists $\Rightarrow$ reduces attack surface / \textit{Save IPv4 address space}
 	\end{minipage}\hline
-\end{minipage}\\
-\begin{minipage}[t]{0.32\textwidth}
-	\textbf{Privacy.}\\
-	\textbf{1. Right to be let alone:} Freedom from intrusion\\
-	\textbf{2. Informational self-determination:} Control over when/how/what shared\\
-	\textbf{3. Freedom to construct identity:} Autonomy in persona projection\\
-	\textbf{Privacy IS security:} Protects against profiling, manipulation, identity theft (individuals); trade secrets (companies); national secrets (governments)
-	\textbf{Three Types of PETs.}\\
-	\begin{minipage}[htp]{0.32\textwidth}
-		\textbf{1. Social Privacy:}\\
-		Adversary: Social circle\\
-		Goal: Don't surprise users\\
-		$\warning$Trusts provider\\
+	\begin{minipage}[htp]{0.4\textwidth}
+		\scriptsize
+		\textbf{Privacy.} Abstract, subjective; culture/context dependent. \textbf{1. Right to be let alone:} Freedom from intrusion.\\
+		\textbf{2. Informational self-determination:} Control over when/how/what shared.\\
+		\textbf{3. Freedom to construct identity:} Autonomy in persona projection.\\
+		\textbf{Privacy IS security:} Protects against profiling, manipulation, identity theft \textit{(individuals)}; trade secrets \textit{(companies)}; national secrets \textit{(governments)}. Infrastructure shared by all.
+	\end{minipage}\hfill
+	\begin{minipage}[htp]{0.59\textwidth}
+		\scriptsize
+		\textbf{Three Types of PETs.} \textbf{1. Social Privacy:} Adversary = social circle. Goal: don't surprise users. Tech: privacy defaults, nudges, contextual feedback. $\warning$ Trusts provider; null expectation $\Rightarrow$ no protection.\\
+		\textbf{2. Institutional Privacy:} Adversary = provider. Goal: GDPR compliance \textit{(consent, purpose limitation, data minimization, access rights, security, auditability)}. Tech: access control, logging, anonymization. $\warning$ Never questions collection; trusted provider.\\
+		\textbf{3. Anti-Surveillance Privacy:} Adversary = everyone/infrastructure. Goal: minimize disclosure \& trust. Tech: E2E encryption, anonymous comms, anonymous credentials. $\warning$ Narrow designs; usability issues; no industry incentives.
 	\end{minipage}
-	\begin{minipage}[htp]{0.32\textwidth}
-		\textbf{2. Institutional Privacy:}\\
-		Adversary: Provider\\
-		Goal: GDPR compliance (consent, purpose limitation, data minimization, security, auditability)\\
-		Tech: Access control, logging, anonymization\\
-		$\warning$ Never questions collection\\
-	\end{minipage}
-	\begin{minipage}[htp]{0.32\textwidth}
-		\textbf{3. Anti-Surveillance Privacy:}\\
-		Adversary: Everyone (infrastructure)\\
-		Goal: Minimize disclosure, minimize trust\\
-		Tech: E2E encryption, anonymous comms\\
-		$\warning$ Narrow designs, usability issues
-	\end{minipage}
-
-\end{minipage}\hfill\vline\hfill
-\begin{minipage}[t]{0.32\textwidth}
-\end{minipage}\hfill\vline\hfill
-\begin{minipage}[t]{0.32\textwidth}
-	\textbf{Traffic Analysis \& Metadata.}\\
-	Encryption protects content, NOT metadata (IPs, timing, volume, location, device)\\
-	\textbf{Traffic analysis:} Extract info from communication patterns\\
-	\textbf{E2E Encryption:}\\
-	User devices as ends $\Rightarrow$ protects from all\\
-	Provider servers as ends (TLS) $\Rightarrow$ only from network observers\\
-	\textbf{Anonymous Comms Properties:}\\
-	1. Bitwise unlinkability (crypto)\\
-	2. Hide patterns (repacketize, reschedule, reroute)\\
-	\textbf{Low-latency (Tor):} Stream-based, vulnerable to global adversary\\
-	\textbf{High-latency (Mixes):} Message-based, delays, resists global adversary
-\end{minipage}
-\begin{minipage}[t]{0.58\textwidth}
-	\textbf{Tor Network (Onion Routing).} Overlay network at application layer/low-latency anonymous communication\\
-	\textbf{1. Select path:} Choose 3 nodes (entry, middle, exit) from directory authorities\\
-	\textbf{2. Build circuit:} Authenticated DH key agreement:
-	\begin{itemize}[leftmargin=10px]
-		\item[-] Entry: Direct key agreement
-		\item[-] Middle: Via entry (middle blind to user IP)
-		\item[-] Exit: Via entry+middle (exit blind to user IP and entry IP)
-	\end{itemize}
-	\textbf{3. Send:} Encrypt message in layers: $E_{k_{exit}}(E_{k_{middle}}(E_{k_{entry}}(msg)))$\\
-	Each node decrypts one layer $\Rightarrow$ bitwise unlinkability\\
-	\textbf{4. Response:} Exit encrypts in reverse order (inner layer for entry)\\
-	\textbf{Stream-based:} Circuit built once (expensive PK ops), reused with symmetric keys\\
-	\textbf{Decentralized trust:} Separation of privilege, no single node breaks anonymity\\
-	\textbf{Assumption:} Adversary cannot observe both entry and exit edges
-\end{minipage}\hfill\vline\hfill
-\begin{minipage}[t]{0.38\textwidth}
-	\textbf{Tor vs VPN.}\\
-	\textit{Tor:} Decentralized trust, anonymity if adversary can't see both edges\\
-	\textit{VPN:} Centralized trust, no anonymity vs provider\\
-	\textbf{Anonymous Credentials.}\\
-	Anonymous authentication via attribute proof (not identity)\\
-	\textbf{Properties:}\\
-	- Prove attribute without identity (e.g., "over 18")\\
-	- Data minimization\\
-	- Users with same attribute indistinguishable\\
-	- Multiple uses unlinkable\\
-	\textbf{vs PKI:} Both use trusted issuer \& secret; PKI reveals identity, enables tracking
 \end{minipage}
 \end{document}
+
 
