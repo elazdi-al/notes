@@ -122,7 +122,7 @@
 \\
 \subfile{midterm}\\
 \footnotesize
-\begin{minipage}[t]{0.49\textwidth}
+\begin{minipage}[t]{0.495\textwidth}
 	\textbf{Authentication.} the process of verifying a claimed identity. (Prove who you are.)\\
 	\textbf{Passwords.} secret shared between user and system.\\
 	\textit{Problems}:
@@ -225,12 +225,12 @@
 	1. Browser sends HTTP GET/POST request.\\ 2. Web Server receives requests and identifies if it's a static asset(.jpg,\dots) or dynamic(.php).\\
 	3. PHP interpreter executes called .php 4. Sends response to web browser
 	\hline
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Data Execution Prevention (DEP).} Mark memory pages as writable OR executable, never both. (prevents code injection by making stack/heap non-executable)\\
 		\includegraphics[width=0.75\textwidth]{assets/dep.png}\\
 		$\oplus$ low-overhead/hardware enforced \\$\ominus$ no self-modifying code.
 	\end{minipage}\hfill
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Code Reuse - Control Flow Hijack.} Bypass DEP by chaining existing executable code (gadgets) instead of injecting new code.\\
 		\textbf{Attack Chain:}
 		\begin{enumerate}[leftmargin=10px]
@@ -243,7 +243,7 @@
 	\end{minipage}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.49\textwidth}
+\begin{minipage}[t]{0.495\textwidth}
 	\textbf{Common Weaknesses Enumeration (CWE).} database of software errors leading to vulnerabilities.
 	\begin{enumerate}[leftmargin=10px]
 		\item \textbf{CWE 1 - Insecure Interaction Between Components.} unchecked information sent between different components.
@@ -251,28 +251,25 @@
 			      \item \textbf{CWE 78 - OS Command Injection.} application embeds unvalidated user input into an OS command, allowing attackers to execute arbitrary commands \textit{ls /home/$user}.
 
 			      \item \textbf{CWE 79 - Cross Site Scripting.} application embeds unvalidated user input into dynamically generated web content, causes browser to execute injected scripts.\\
-			            \textbf{Common Script Injections.}\\
-			            \texttt{<img src=x onerror=alert(1)>;}
-			            \texttt{<svg onload=alert(1)>;}\\
-			            \texttt{<body onload=alert(1)>;}
-			            \texttt{<a href=javascript:alert(1)>text</a>;}\\
-			            \textbf{Useful Functions.}\\
 			            \begin{minipage}[t]{0.45\textwidth}
+				            \textbf{Useful Functions.}\\
 				            \texttt{navigator.userAgent}\\
 				            Returns the browser identification string; increases fingerprinting surface.\\
 				            \textit{Chrome/143.0.0.0 Mobile Safari/537.36}\\
 				            \texttt{window.location.replace(url)}\\
 				            Forces navigation to \texttt{url} without adding a history entry.\\
 				            \texttt{document.cookie}\\
-				            Returns all non-\texttt{HttpOnly} cookies for the current origin; exposed session/state cookies immediate account compromise on XSS.
+				            Returns all non-\texttt{HttpOnly} cookies for the current origin; exposed session/state cookies
 			            \end{minipage}\hfill
 			            \begin{minipage}[t]{0.45\textwidth}
-				            \texttt{document.domain}\\
-				            Gets/sets legacy origin relaxation; can broaden trust across subdomains and weaken same-origin isolation.\\
+				            \textbf{Common Script Injections.}\\
+				            \texttt{<img src=x onerror=alert(1)>;}\\
+				            \texttt{<svg onload=alert(1)>;}\\
+				            \texttt{<body onload=alert(1)>;}\\
+				            \texttt{<a href=javascript:alert(1)>text</a>;}\hline
 				            \texttt{document.referrer}\\
 				            Returns the referrer URL when sent; can leak sensitive paths/parameters without strict Referrer-Policy.\\
-				            \texttt{document.URL}\\
-				            Returns the full current document URL
+				            \texttt{document.URL} Returns current URL
 			            \end{minipage}
 			      \item \textbf{CWE 362 - Cross Site Request Forgery.} malicious website makes a state-changing action using user’s session cookie for another website.\\
 			            \fbox{
@@ -291,19 +288,19 @@
 		\item \textbf{CWE 3 - Porous Defenses.} defensive techniques misused, abused, or just ignored
 	\end{enumerate}
 	\hline
-	\textbf{Software Security.}\\[-7px]
+	\textbf{Software Security.}\\[-5px]
 	\begin{minipage}[htp]{0.47\textwidth}
-		\textbf{Stack.} Call frames: locals, args, return addresses; grows down.\\
-		\textbf{Heap.} Dynamic allocations via \texttt{malloc/new}; grows up.\\
+		\textbf{Stack.}Call frames: locals, args, return addresses\\
+		\textbf{Heap.}Dynamic allocations via \texttt{malloc/new}\\
 		\textbf{Uninitialized data (BSS).} Global/static zero-initialized storage; zeroed at program start.\\
 		\textbf{Initialized data.} Global/static with explicit initial values; loaded from the executable.\\
 		\textbf{Text.} Executable code (often read-only); mapped from the executable.\\
 		\textbf{Args \& env.} \texttt{argv}/environment strings placed at startup near the initial stack.
 	\end{minipage}
 	\hfill
-	\begin{minipage}[htp]{0.49\textwidth}
-		\includegraphics[width=0.95\textwidth]{assets/stack.png}
-	\end{minipage}\\
+	\begin{minipage}[htp]{0.495\textwidth}\vspace*{-5px}
+		\includegraphics[width=0.8\textwidth]{assets/stack.png}
+	\end{minipage}\\[-4px]
 	\begin{minipage}[t]{0.44\textwidth}
 		\textbf{Memory Corruption.} \\Unintended modification of memory location due to missing / faulty safety checks.
 		\begin{cc}
@@ -343,7 +340,7 @@
 					return 0;}
 		\end{cc}
 	\end{minipage}\\
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Code Injection Attack.} \\
 		\textbf{1.} Control unchecked variable. \\
 		\textbf{2.}Overwrite return address. \textbf{3.}Hijack control flow.
@@ -356,7 +353,7 @@
 				} vuln(&exploit);
 		\end{cc}
 	\end{minipage}
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Attack Chain:}\\
 		1. \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)\\
 		2. \textbf{Integrity (*C).} Attacker overwrites return address on stack\\
@@ -365,7 +362,7 @@
 		5. \textbf{Code Injection.} Shellcode executes with program privileges
 	\end{minipage}
 	\hline
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[htp]{0.49\textwidth}
 		\textbf{Address Space Layout Randomization (ASLR).}\\
 		Loader/OS randomizes memory regions(code/stack/heap/libraries) at load time. Same code, different addresses on each run. (prevents target addresses prediction/breaks gadgets)\\
 		\textit{Limitations:}
@@ -375,28 +372,29 @@
 		to keep track of all pointers)
 		\hline
 		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks.\\
-		Properties:\\
 		1. \textbf{Effectiveness.} must prevent/defend attacks\\
 		2. \textbf{Efficiency:} low comp/memory overhead\\
-		3. \textbf{Compatibility:} easy deployment (no major software/hardware changes)\\
+		3. \textbf{Compatibility:} easy deployment (no major \\software/hardware changes)\\
 		\textit{Examples: Sandboxing. isolates process from system resources and other processes. \\DEP, ASLR, Stack canaries.}
 	\end{minipage}\hfill
-	\begin{minipage}[t]{0.49\textwidth}
-		\textbf{Stack Canaries.}\\
-		Compiler places random secret value between local buffers and return address. Checked before function returns and abort if corrupted. \\
-		\textit{(detects buffer overflows before control hijack)}\\[-12px]
-		\begin{center}
-			\includegraphics[width=0.7\textwidth]{assets/stack-canaries.png}
-		\end{center}
-		\textit{Limitations:} \\
-		1.Probabilistic, vulnerable to canary leaks.\\
-		2.No protection against targeted writes (jumps over canary).\\
+	\begin{minipage}[htp]{0.49\textwidth}
+		\begin{minipage}[htp]{0.49\textwidth}
+			\textbf{Stack Canaries.} \\
+			Compiler places random secret value between local buffers and return address. Checked before function returns and abort if corrupted.
+		\end{minipage}
+		\begin{minipage}[htp]{0.49\textwidth}
+			\includegraphics[width=0.99\textwidth]{assets/stack-canaries.png}
+		\end{minipage}\\
+		\textit{(detects buffer overflows before control hijack)}\\
+		\textit{Limitations:} 1.Probabilistic, vulnerable to canary leaks. 2.No protection against targeted writes (jumps over canary).\\
 		3.No protection against reads.\\
 		4.Performance overhead from checks.
+		\hline
+		\vspace*{45px}
 	\end{minipage}
 \end{minipage}\newpage
 \begin{minipage}[t]{0.5\textwidth}
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Error.} difference between observed behavior and specified behavior (a violation of underlying spec)\\
 		\textbf{Testing.} executing a program to find bugs/errors and test security properties.\\
 		\textit{Ideally}, complete test of all:
@@ -430,13 +428,13 @@
 			\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
 		\end{itemize}
 	\end{minipage}\\
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Fuzzing.} random testing that mutates input to improve test coverage ($\oplus$scales very well). \\
 		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.} \textbf{Types of Fuzzing:}\\
 		1.\textbf{Dumb Fuzzing:} not aware of input structure; randomly mutates input without guidance.\\
 		2.\textbf{Generation-based Fuzzing:} uses model describing valid inputs; generates new input seeds in each round based on model specifications.
 	\end{minipage}\hfill
-	\begin{minipage}[t]{0.49\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		3. \textbf{Mutation-based Fuzzing:} uses set of valid seed inputs; modifies inputs based on feedback from previous rounds. Mutations can be informed by program structure:\\
 		\textbf{White-box} (full access to code/internal logic)\\
 		\textbf{Grey-box} (partial knowledge, typically coverage feedback only)\\
@@ -578,7 +576,7 @@
 		\textbf{DNS-over-TLS.} \\Encrypt DNS traffic using TLS protocol\\
 	\end{minipage}
 \end{minipage}
-\begin{minipage}[t]{0.49\textwidth}
+\begin{minipage}[t]{0.495\textwidth}
 	\begin{minipage}[t]{0.455\textwidth}
 		\textbf{Border Gateway Protocol (BGP).} make routing tables between Autonomous Systems (AS) with independent routing domains\\
 		1.Routers maintain tables of \\\textbf{(IP subnet$\rightarrow$Router IP, cost)} \textit{(no integrity/no authenticity)}\\
@@ -594,61 +592,56 @@
 		\hline
 		\textbf{BGP Hijacking Defenses}:\\
 		\textbf{Route filtering.} Block geographically implausible routes ($\warning$limited effectiveness)\\
-		\textbf{Challenge:} No central authority for route correctness\\
+		\textbf{Challenge} No central authority for route correctness\\
 		$\Rightarrow$ \textbf{BGPsec.} AS certificates link keys to IP blocks; updates require authoritative AS signature
 	\end{minipage}\hline
-	\begin{minipage}[t]{0.46\textwidth}
+	\begin{minipage}[t]{0.48\textwidth}
 		\textbf{Internet Protocol (IP).} Enables addressing and routing of packets between hosts\\
 		\textbf{No protection:} No integrity/authentication for source/destination addresses, no confidentiality for data (only non-cryptographic checksum for transmission errors)\\
 		\textbf{IP Spoofing Attacks.}\\
 		\textbf{Impersonation.} Fake identity to steal resources\\
-		\textbf{Man-in-the-Middle.} Monitor, modify, or deny communication\\
-		\textbf{DoS.} Spoof source IP to trigger servers sending packets to victim\\
-		\textit{Note:} May require TCP hijacking for full MitM
+		\textbf{Man-in-the-Middle.} Monitor, modify, or deny communication May require TCP hijacking for full MitM\\
+		\textbf{DoS.} Spoof source IP to trigger servers sending packets to victim
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.52\textwidth}
+	\begin{minipage}[t]{0.5\textwidth}
 		\textbf{IPSec Defenses.} uses public key/pre-shared symmetric key encryption. \\
 		\textbf{Authentication Header(AH).} Authentication/Integrity(via HMAC) + anti-replay protection (using sequence numbers). Protects payload \textbf{(auth only)}.\\
 		\textbf{Encapsulating Security Payload.(ESP)} Adds confidentiality by encryption \textbf{(auth+encryption)}\\
-		\textbf{IPSec Modes.} \\
 		\textbf{Transport mode.} Encrypts only payload, keeps original IP headers (end-to-end)\\
 		\textbf{Tunnel mode.} \\Encrypts entire packet (headers + payload) wraps in new packet with new IP headers (gateway-to-gateway).
 	\end{minipage}\hline
-	\begin{minipage}[t]{0.52\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Virtual Private Network (VPN).}\\
 		Uses IPSec tunnel mode to create private network over public internet\\
 		\textbf{Properties:} Appears as single network, internal routing, full packet protection (confidentiality, authentication, integrity, replay)\\
 		\textbf{Configuration 1:} Connect two LANs securely\\
-		\textbf{Configuration 2:} Exit local network from different point (VPN as a Service $\rightarrow$ change apparent IP)\\
-		\textbf{VPN rewrites return address to its own}; otherwise replies bypass VPN tunnel, breaking encryption
+		\textbf{Configuration 2:} Exit local network from different point (VPN as a Service$\rightarrow$change apparent IP)\\
+		\textbf{VPN rewrites return address to its own}
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.46\textwidth}
+	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{VPN Limitations, Does NOT protect against:}\\
-		- DoS attacks (IP still exists)\\
-		- Application-layer authentication issues\\
+		DoS attacks/ Application-layer auth issues\\
 		\textbf{VPN vs Proxy:}\\
 		\textit{VPN:} End-to-end encryption, acts as one network, no MitM\\
 		\textit{Proxy:} Encryption only end-to-proxy, separates two networks, proxy sees both sides (acts as MitM)\\
 		Both hide IP from receiver but offer different security properties
 	\end{minipage}\hline
-	\begin{minipage}[t]{0.52\textwidth}
+	\begin{minipage}[t]{0.56\textwidth}
 		\textbf{TCP.}
 		Runs above IP, addresses IP limitations:\\
 		\textbf{Reliability.} Ensures messages received (retransmission)\\
-		\textbf{Congestion/flow control.} Avoids network/host overload\\
+		\textbf{Congestion control.} Avoids network/host overload\\
 		\textbf{Sessions.} Associates messages into logical sessions\\
 		\textbf{Multiplexing.} Associates messages to specific applications via ports\\
 		\textbf{Key fields:} Ports, sequence numbers, acknowledgment numbers, window, flags (SYN, ACK, RST, FIN)
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.46\textwidth}
-		\textbf{TCP Hijacking Attacks.}\\
-		\textit{(No integrity/authentication; seq numbers = weak secret.)}\\
+	\begin{minipage}[t]{0.43\textwidth}
+		\textbf{TCP Hijacking Attacks.} \textit{(No integrity/authentication; seq numbers = weak secret.)}\\
 		\textbf{3-way handshake:}\\
 		1) Client: SYN + SeqC\\
 		2) Server: SYN-ACK + SeqC+1 + SeqS\\
 		3) Client: ACK + SeqS+1\\
-		\textbf{Attack:} \\
-		If adversary guesses sequence numbers $\Rightarrow$ hijack/insert packets
+		\textbf{Attack.} adversary guesses sequence numbers $\Rightarrow$ hijack/insert packets
 	\end{minipage}\hline
 	\begin{minipage}[t]{0.36\textwidth}
 		\textbf{Transport Layer Security (TLS).}\\
@@ -696,6 +689,127 @@
 		\textbf{Why not drop packets?} Dropping requires acting as MitM and physically intercepting; injection is easier\\
 		\textbf{Defense:} TLS/IPSec provide authentication to prevent forged packets
 	\end{minipage}
+	\hline
+	\textbf{Firewalls.}
+	Network router connecting internal to external network; access control based on policy\\
+	\begin{minipage}[t]{0.34\textwidth}
+		\textbf{Simple Packet Filter:}\\Inspect each packet;rules based on $IP_{Src/Dest}$/ports/protocol\\
+		$\oplus$Simple/fast/hardware level\\
+		$\ominus$Limited policies/static/header-only (no content inspection)
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.32\textwidth}
+		\textbf{Stateful Firewall:} Understands TCP/UDP semantics; decisions depend on connection state\\
+		\textit{e.g. allows dynamic high port connections only during active FTP session}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.33\textwidth}
+		\textbf{Application Firewall:} Deep Packet Inspection \textit{evaluates content}; blocks P2P, scans for viruses, monitors leaks\\
+		\textit{Encrypted traffic:} Block all or use client certificates for decryption
+	\end{minipage}\\
+	\textbf{Limitations.}Full mediation slow(read/check/write)/ can't auth principals(network level only)/ can't verify data correctness(headers lack auth)/\textbf{Filter "bad" traffic/remove noise, NOT security solution}\hline
+	\begin{minipage}[t]{0.31\textwidth}
+		\textbf{De-Militarized Zone (DMZ).} \\
+		Defense in depth with 3 zones:\\
+		\textbf{WAN:}Outside world\\
+		\textbf{DMZ:}Public services\\\textit{(email servers\dots)}\\
+		\textbf{LAN:}Internal users\\
+		\textbf{Traffic rules:}\\
+		DMZ/LAN to Internet:\textbf{Allowed}\\
+		Internet/LAN to DMZ:\textbf{Allowed}\\
+		DMZ/Internet to LAN:\textbf{Blocked}\\
+		$\Rightarrow$ \textbf{If DMZ compromised, \\LAN remains safe}
+	\end{minipage}\vline
+	\begin{minipage}[t]{0.69\textwidth}
+		\textbf{Intrusion Detection System (IDS).}\\
+		monitors/alerts suspicious activity (alarm, not lock)\\
+		\begin{minipage}[htp]{0.495\textwidth}
+			\textbf{Detection methods:}\\
+			Signature-based: Matches \\known attack fingerprints\\
+			Anomaly-based: Flags deviations from normal behavior
+		\end{minipage}\hfill\vline\hfill
+		\begin{minipage}[htp]{0.495\textwidth}
+			\textbf{Deployment types:}\\
+			NIDS:Network-based(monitors traffic)\\
+			HIDS:Host-based(monitors system)
+		\end{minipage}\\
+		\textbf{Limitation:} Blind to encrypted traffic without TLS inspection
+		\hline
+		\textbf{Network Address Translation (NAT).}\\
+		Router maintains mapping: (Internal IP, port) $\leftrightarrow$ (External IP, port)\\
+		\textbf{Security benefit:} External entities can't route into NAT unless mapped port exists $\Rightarrow$ reduces attack surface / \textit{Save IPv4 address space}
+	\end{minipage}\hline
+\end{minipage}\\
+\begin{minipage}[t]{0.32\textwidth}
+	\textbf{Privacy.}\\
+	\textbf{1. Right to be let alone:} Freedom from intrusion\\
+	\textbf{2. Informational self-determination:} Control over when/how/what shared\\
+	\textbf{3. Freedom to construct identity:} Autonomy in persona projection\\
+	\textbf{Privacy IS security:} Protects against profiling, manipulation, identity theft (individuals); trade secrets (companies); national secrets (governments)
+	\textbf{Three Types of PETs.}\\
+	\begin{minipage}[htp]{0.32\textwidth}
+		\textbf{1. Social Privacy:}\\
+		Adversary: Social circle\\
+		Goal: Don't surprise users\\
+		$\warning$Trusts provider\\
+	\end{minipage}
+	\begin{minipage}[htp]{0.32\textwidth}
+		\textbf{2. Institutional Privacy:}\\
+		Adversary: Provider\\
+		Goal: GDPR compliance (consent, purpose limitation, data minimization, security, auditability)\\
+		Tech: Access control, logging, anonymization\\
+		$\warning$ Never questions collection\\
+	\end{minipage}
+	\begin{minipage}[htp]{0.32\textwidth}
+		\textbf{3. Anti-Surveillance Privacy:}\\
+		Adversary: Everyone (infrastructure)\\
+		Goal: Minimize disclosure, minimize trust\\
+		Tech: E2E encryption, anonymous comms\\
+		$\warning$ Narrow designs, usability issues
+	\end{minipage}
+
+\end{minipage}\hfill\vline\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\end{minipage}\hfill\vline\hfill
+\begin{minipage}[t]{0.32\textwidth}
+	\textbf{Traffic Analysis \& Metadata.}\\
+	Encryption protects content, NOT metadata (IPs, timing, volume, location, device)\\
+	\textbf{Traffic analysis:} Extract info from communication patterns\\
+	\textbf{E2E Encryption:}\\
+	User devices as ends $\Rightarrow$ protects from all\\
+	Provider servers as ends (TLS) $\Rightarrow$ only from network observers\\
+	\textbf{Anonymous Comms Properties:}\\
+	1. Bitwise unlinkability (crypto)\\
+	2. Hide patterns (repacketize, reschedule, reroute)\\
+	\textbf{Low-latency (Tor):} Stream-based, vulnerable to global adversary\\
+	\textbf{High-latency (Mixes):} Message-based, delays, resists global adversary
+\end{minipage}
+\begin{minipage}[t]{0.58\textwidth}
+	\textbf{Tor Network (Onion Routing).} Overlay network at application layer/low-latency anonymous communication\\
+	\textbf{1. Select path:} Choose 3 nodes (entry, middle, exit) from directory authorities\\
+	\textbf{2. Build circuit:} Authenticated DH key agreement:
+	\begin{itemize}[leftmargin=10px]
+		\item[-] Entry: Direct key agreement
+		\item[-] Middle: Via entry (middle blind to user IP)
+		\item[-] Exit: Via entry+middle (exit blind to user IP and entry IP)
+	\end{itemize}
+	\textbf{3. Send:} Encrypt message in layers: $E_{k_{exit}}(E_{k_{middle}}(E_{k_{entry}}(msg)))$\\
+	Each node decrypts one layer $\Rightarrow$ bitwise unlinkability\\
+	\textbf{4. Response:} Exit encrypts in reverse order (inner layer for entry)\\
+	\textbf{Stream-based:} Circuit built once (expensive PK ops), reused with symmetric keys\\
+	\textbf{Decentralized trust:} Separation of privilege, no single node breaks anonymity\\
+	\textbf{Assumption:} Adversary cannot observe both entry and exit edges
+\end{minipage}\hfill\vline\hfill
+\begin{minipage}[t]{0.38\textwidth}
+	\textbf{Tor vs VPN.}\\
+	\textit{Tor:} Decentralized trust, anonymity if adversary can't see both edges\\
+	\textit{VPN:} Centralized trust, no anonymity vs provider\\
+	\textbf{Anonymous Credentials.}\\
+	Anonymous authentication via attribute proof (not identity)\\
+	\textbf{Properties:}\\
+	- Prove attribute without identity (e.g., "over 18")\\
+	- Data minimization\\
+	- Users with same attribute indistinguishable\\
+	- Multiple uses unlinkable\\
+	\textbf{vs PKI:} Both use trusted issuer \& secret; PKI reveals identity, enables tracking
 \end{minipage}
 \end{document}
 
