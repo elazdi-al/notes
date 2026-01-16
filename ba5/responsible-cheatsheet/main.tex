@@ -1,62 +1,186 @@
-\documentclass[11pt, a4paper]{extarticle}
-\usepackage[a4paper, top=0.05in, bottom=0.05in, left=0.05in, right=0.3in]{geometry} % Minimal margins
-\setlength\parindent{0pt} % remove all indentations
+\documentclass[9pt, a4paper]{extarticle}
+\usepackage[a4paper, top=0.02in, bottom=0.02in, left=0.02in, right=0.02in]{geometry} % Minimal margins
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{graphicx} % Required for \includegraphics
+\usepackage{ragged2e}
+
+\usepackage{fourier}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{array} % For better column definitions
+\usepackage{booktabs} % For improved table aesthetics
+\usepackage{subfiles}                % For subfiles compilation
+%%%%%%%%%%%%%%%%%%% C CODE STYLING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{soul}
+% Define custom colors for C syntax highlighting
+\definecolor{CKeyWord}{rgb}{0.8,0.1,0.1}      % For C keywords (e.g., int, return)
+\definecolor{CBackground}{rgb}{0.95,0.95,0.95} % Background color for code blocks
+\definecolor{CComment}{rgb}{0.0,0.5,0.0}        % Comment color
+\definecolor{CString}{rgb}{0.1,0.1,0.8}         % String literal color
+\definecolor{CRule}{rgb}{0.5,0.5,0.5}           % Frame rule color
+\definecolor{CNumber}{rgb}{0.6,0.6,0.6}         % Line number color
+
+% Define a custom listing style for C code
+\lstdefinestyle{CStyle}{
+	language=C,
+	basicstyle=\footnotesize\ttfamily,
+	backgroundcolor=\color{CBackground},
+	commentstyle=\color{CComment},
+	keywordstyle=\color{CKeyWord}\bfseries,
+	stringstyle=\color{CString},
+	numbers=false,
+	numberstyle=\tiny\color{CNumber},
+	stepnumber=1,
+	numbersep=10pt,
+	showspaces=false,
+	showstringspaces=false,
+	breaklines=true,
+	frame=single,
+	rulecolor=\color{CRule},
+	tabsize=1,
+	captionpos=b,
+	columns=fullflexible,
+	keepspaces=false,
+	aboveskip=3pt,           % Reduce space above
+	belowskip=3pt,           % Reduce space below
+	xleftmargin=4pt,        % Increase left margin
+	xrightmargin=4pt,       % Increase right margin
+}
+
+% Define a new environment for C code blocks using the custom style.
+% Optional arguments can be passed to adjust settings further.
+\lstnewenvironment{cc}[1][]{
+	\lstset{style=CStyle, autogobble=true, #1}
+}{}
+%
+\usepackage{minted}
+\raggedbottom
+\setlist[itemize]{leftmargin=1em}
+\newcommand{\dist}[2]{\left\langle #1,\, #2 \right\rangle}
+\setlength{\TPHorizModule}{0.1mm} % Set horizontal units to millimeters
+\setlength{\TPVertModule}{0.1mm}  % Set vertical units to millimeters
+\usepackage{multicol}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\usepackage{setspace}
+\setstretch{0.98}
+\pagestyle{empty}
+\setlength{\parskip}{0pt}      % space between paragraphs
+\setlength{\parindent}{0pt}    % optional: remove indentation
+\setlist{nosep, topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt}
+% Redefine the textblock environment
+\let\originaltextblock\textblock
+\let\endoriginaltextblock\endtextblock
+% Adjust vertical centering of the existing \warning symbol
+\let\oldwarning\warning
+\renewcommand{\warning}{\raisebox{0.3ex}{\oldwarning}}
+
 \makeatletter
-\renewcommand{\hline}{\noalign{\vskip 2px}\hrule\@height\arrayrulewidth\@width\linewidth\noalign{\vskip 3px}}
+\renewcommand{\hline}{\noalign{\vskip 2px}\hrule\@height\arrayrulewidth\@width\linewidth\noalign{\vskip 2px}}
 \makeatother
 
-\begin{document}
-\textbf{Responsible Software.} Software that is engineered in a responsible way.\\
-Making engineering design decisions responsibly:\\
-1. With a goal to do good.\\
-2. While preventing avoidable negative impacts.\\
-3. Taking people, other systems, social structures and our planet into account.\\
-\textbf{Active Responsibility.} proactively anticipating and preventing negative impacts before they occur.\\
-\textit{we look at the ethical point of view not legal one}\\
-\textbf{Ethics.} principles and standards that guide human behavior in various contexts.\\
-\textit{Metaethics.} "what does it mean for an action to be right ?"\\
-\textit{Normative.} "how should people act in general (moral principles)?"\\
-\textit{Applied. (Our approach)} "how can i act ethically in a real-world situation?"
-\hline
-\textbf{Technical decisions} can have \textbf{ethical} implications.\\
-\textbf{Ethical Issue.} any situation that may compromise, in whole or in part, the respect of at least one ethical value or principle.\\
-\textbf{Ethical Agency.} capacity to make decisions and take actions that align with ethical values and principles.\\
-\textbf{Ethical Sensitivty.} ability to\\
-- recognize ethical issues (awareness)\\
-- identify their impact: who, what\\
-\textbf{Ethical Decision Making.}\\
-Recognize(knowledge+experience+habits) $\to$ Evaluate(cognitive+reason+affective) $\to$ Act.\\
-\textbf{Ethical Lenses.}\\
-1. \textbf{Desirability.} The product corresponds to what people want.\\
-2. \textbf{Viability.} The product generates profits for a business.\\
-3. \textbf{Feasibility.} The product can be created with existing or new technology.\\
-\textbf{Fourth criterion (Isaac et al.).} Add \textbf{Ethicality}: the product should also be ethical.
-\hline
-\textbf{Ethical Dilemmas.} decision between two or more alternatives, which all have conflicts with ethical values or principles.\\
-Genuine ethical dilemmas are dilemmas in which none of the options override the other, wrong-wrong choice.\\
-\textit{Trolley problem.}\\
-thought experiment where you must choose between doing nothing and letting a runaway trolley kill several people,
-or intervening to divert it so fewer people die, testing which moral principles justify action versus inaction.\\
-\textbf{Moral side.}\\
-Emotions should be used explicitely/intentionally for \underline{responsible} design. (Roeser)\\
-Moral emotions = experienced in response to moral issues or motivating immoral behavior.\\
-\textbf{Cognitive side.}\\
-- \textbf{Utilitarianism} Consequences: choose the greatest good for greatest number\\
-- \textbf{Deontology} Action: do the right thing according to universal principles\\
-- \textbf{Virtue} Person: act as a virtuous person\\
-- \textbf{Care} Relationships: mutual responsibility and care for each other
-\hline
-\textbf{Stakeholder} Individuals, groups, organizations, institutions, and societies that might reasonably be affected by the technology.\\
-\textbf{Stakeholder analysis.} Identifying every entity that can be affected by the software positively/negatively.\\
-1. Brainstorm to find all stakeholders possible using questions.\\
-2. Use Direct vs Indirect Chart to find new stakeholders.\\
-\textbf{Direct Stakeholder.} \underline{in contact} with the product.\\
-\textbf{Indirect Stakeholder.} affected through \underline{consequences of the usage} of the software.\\
-Additional Methodologies: \textit{Ethix. add unintended stakeholders}, \textit{Mitchell. add attributes to stakeholders}, \textit{SAS. use different chart with scale for impact from product and influence on the product}.
-\textbf{Ethical Canvas.} Structure stakeholder, impact, and mitigation info systematically.
-\textbf{Ethical Speculation.} How to think and not what to think - anticipate potential impacts on stakeholders.
-Create a fictional story in two parts.
-1. Check pessimistic outcomes \textit{Black Mirror}.
-2. Positive resolutions and future scenarios.
+\renewenvironment{textblock}[2][]{%
+	\originaltextblock[#1]{#2}%
+	\fcolorbox{red}{white}{%
+		\begin{minipage}{#2}%
+			}{%
+		\end{minipage}%
+	}%
+	\endoriginaltextblock
+}
 
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	% Moderately larger size hierarchy
+	\makeatletter
+	\renewcommand{\Huge}{\@setfontsize\Huge{26pt}{30pt}}
+	\renewcommand{\LARGE}{\@setfontsize\LARGE{20pt}{24pt}}
+	\renewcommand{\Large}{\@setfontsize\Large{16pt}{20pt}}
+	\renewcommand{\large}{\@setfontsize\large{13pt}{16pt}}
+	\makeatother
+
+	\vspace*{1cm}
+	{\Huge \textbf{Responsible Software - CheatSheet}} \\
+	\vspace{20pt}
+	{\LARGE IN~BA5 - Cécile Hardebolle
+	} \\
+	\vspace*{1cm}
+	{\Large Notes by Ali EL AZDI} \\
+	\vfill
+
+	{\large January 16th, 2026}
+	\vspace*{60px}
+\end{titlepage}
+
+\small
+\noindent
+\\
+\newpage
+\\
+\fbox{
+	\begin{minipage}[htp]{0.5\textwidth}
+		\underline{\textbf{INTRO.}}
+		\textbf{Responsible Software.} Software engineered in a responsible\textit{(ethical)} way.\\
+		1. With a goal to do good. 2. While preventing avoidable negative impacts.\\
+		3. Taking people, other systems, social structures and our planet into account.\\
+		\textbf{Active Responsibility.} anticipating/preventing negative impacts before occurring.\\
+		\textbf{Ethics.} Principles/standards that guide human behavior in various contexts.\\
+		\textit{Metaethics.} "what does it mean for an action to be right ?"\\
+		\textit{Normative.} "how should people act in general (moral principles)?"\\
+		\textit{Applied. (Our approach)} "how can i act ethically in a real-world situation?"
+		\hline
+		\textbf{Technical decisions} can have \textit{ethical} implications.\\
+		\textbf{Ethical Issue.} any situation that may compromise respect of ethical value/principle.\\
+		\textbf{Ethical Agency.} capacity to take actions that align with ethical values and principles.\\
+		\textbf{Ethical Sensitivty.} ability to\\
+		- recognize ethical issues (awareness)\\
+		- identify their impact: who, what\\
+		\textbf{Ethical Decision Making.}\\ \textbf{Recognize}(knowledge+experience+habits)$\to$\textbf{Evaluate}(cognitive+reason+affective)$\to$\textbf{Act}.\\
+		\textbf{Ethical Lenses.}\\
+		1. \textbf{Desirability.} The product corresponds to what people want.\\
+		2. \textbf{Viability.} The product generates profits for a business.\\
+		3. \textbf{Feasibility.} The product can be created with existing or new technology.\\
+		\textbf{Fourth criterion (Isaac et al.).} Add \textbf{Ethicality}: the product should also be ethical.
+		\hline
+		\textbf{Ethical Dilemmas.} decision between multiple alternatives, all conflict with ethical values/principles.
+		\textit{None of the options override the other, wrong-wrong choice.}\\
+		\begin{minipage}[htp]{0.35\textwidth}
+			\textbf{Moral side.}\\
+			Emotions should be used explicitely/intentionally for \ul{responsible} design (Roeser). In response to moral issues or motivating immoral behavior.\\
+		\end{minipage}\hfill
+		\begin{minipage}[htp]{0.64\textwidth}
+			\textbf{Cognitive side (Normative Ethics).}\\
+			- \textbf{Utilitarianism} Consequences: choose the greatest good for greatest number\\
+			- \textbf{Deontology} Action: do the right thing according to universal principles\\
+			- \textbf{Virtue} Person: act as a virtuous person\\
+			- \textbf{Care} Relationships: mutual responsibility and care for each other
+		\end{minipage}\\
+		\textit{Trolley problem.} thought experiment, \textbf{choice}: do nothing $\to$ runaway trolley kill people,
+		\ul{or} intervening $\to$ fewer people die. tests which moral principles justify action vs. inaction.\\
+		\textbf{Ethical Decision Making Frameworks.}\\
+		1. Identify the ethical issues\\
+		2. Get the facts\\
+		3. Evaluate alternative actions with \textit{several ethical theories}\\
+		4. Choose an option and "test" it\\
+		5. Implement your decision and reflect on the outcome.
+		\hline
+		\textbf{Stakeholder} Individuals, groups, organizations, institutions, and societies that might reasonably be affected by technology.\\
+		\textbf{Direct Stakeholder.} \textit{in contact} with the product \textit{(End-users, Admins, Contractors, Developers)}.\\
+		\textbf{Indirect Stakeholder.} affected through \textit{consequences of the usage} of the software \textit{(Environment, Government, Public(s), NGOs, Friends, Neighborhood)}.\\
+		\ul{\textbf{Stakeholder analysis.}} Identifying every entity that can be affected by software positively/negatively.\\
+		1. Brainstorm to find all stakeholders possible using questions.\\
+		2. Use Direct vs Indirect Chart to find new stakeholders.\\
+		Additional Methodologies: \textit{Ethix. add unintended stakeholders}, \textit{Mitchell. add attributes to stakeholders}, \textit{SAS. use different chart with scale for impact from product and influence on the product}.\\
+		\textbf{Ethical Speculation.} How to think, not what to think - anticipate potential impacts on stakeholders.\\
+		Create a fictional story in two parts.\\
+		1. Check pessimistic outcomes \textit{Black Mirror}.\\
+		2. Positive resolutions and future scenarios.
+	\end{minipage}}
+\begin{minipage}[htp]{0.5\textwidth}
+
+\end{minipage}
 \end{document}
