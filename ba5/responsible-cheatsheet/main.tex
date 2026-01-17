@@ -1,4 +1,6 @@
-\documentclass[9pt, a4paper]{extarticle}
+\documentclass[8pt, a4paper]{extarticle}
+\usepackage{scrextend}
+\changefontsizes{7pt}
 \usepackage[a4paper, top=0.02in, bottom=0.02in, left=0.02in, right=0.02in]{geometry} % Minimal margins
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumitem}
@@ -14,6 +16,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{soul}
+\setlength{\parindent}{0pt}
 % Define custom colors for C syntax highlighting
 \definecolor{CKeyWord}{rgb}{0.8,0.1,0.1}      % For C keywords (e.g., int, return)
 \definecolor{CBackground}{rgb}{0.95,0.95,0.95} % Background color for code blocks
@@ -116,7 +119,6 @@
 	\vspace*{60px}
 \end{titlepage}
 
-\small
 \noindent
 \\
 \newpage
@@ -133,52 +135,88 @@
 		\textit{Normative.} "how should people act in general (moral principles)?"\\
 		\textit{Applied. (Our approach)} "how can i act ethically in a real-world situation?"
 		\hline
-		\textbf{Technical decisions} can have \textit{ethical} implications.\\
-		\textbf{Ethical Issue.} any situation that may compromise respect of ethical value/principle.\\
-		\textbf{Ethical Agency.} capacity to take actions that align with ethical values and principles.\\
-		\textbf{Ethical Sensitivty.} ability to\\
-		- recognize ethical issues (awareness)\\
-		- identify their impact: who, what\\
-		\textbf{Ethical Decision Making.}\\ \textbf{Recognize}(knowledge+experience+habits)$\to$\textbf{Evaluate}(cognitive+reason+affective)$\to$\textbf{Act}.\\
-		\textbf{Ethical Lenses.}\\
-		1. \textbf{Desirability.} The product corresponds to what people want.\\
-		2. \textbf{Viability.} The product generates profits for a business.\\
-		3. \textbf{Feasibility.} The product can be created with existing or new technology.\\
-		\textbf{Fourth criterion (Isaac et al.).} Add \textbf{Ethicality}: the product should also be ethical.
+		\begin{minipage}[t]{0.42\textwidth}
+			\textbf{Technical decisions} can have \textit{ethical} implications.\\
+			\textbf{Ethical Issue.} any situation that may compromise respect of ethical value/principle.\\
+			\textbf{Ethical Agency.} capacity to take actions that align with ethical values and principles.\\
+			\textbf{Ethical Sensitivty.} ability to\\
+			- recognize ethical issues (awareness)\\
+			- identify their impact: who, what
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.57\textwidth}
+			\textbf{Ethical Decision Making.}\\
+			1. \textbf{Recognize}(knowledge+experience+habits)\\
+			2. \textbf{Evaluate}(cognitive+reason+affective) \;
+			3. \textbf{Act}.\\
+			\textbf{Ethical Lenses.}\\
+			1. \textbf{Desirability.} product corresponds to what people want.\\
+			2. \textbf{Viability.} product generates profits for a business.\\
+			3. \textbf{Feasibility.} product can be created with existing or new technology.\\
+			\textbf{Fourth criterion (Isaac et al.).}\\ Add \textbf{Ethicality.} product should be ethical.
+		\end{minipage}
 		\hline
 		\textbf{Ethical Dilemmas.} decision between multiple alternatives, all conflict with ethical values/principles.
 		\textit{None of the options override the other, wrong-wrong choice.}\\
-		\begin{minipage}[htp]{0.35\textwidth}
+		\begin{minipage}[t]{0.33\textwidth}
 			\textbf{Moral side.}\\
-			Emotions should be used explicitely/intentionally for \ul{responsible} design (Roeser). In response to moral issues or motivating immoral behavior.\\
-		\end{minipage}\hfill
-		\begin{minipage}[htp]{0.64\textwidth}
+			Emotions should be used explicitely/intentionally for \ul{responsible} design (Roeser). In response to moral issues or motivating immoral behavior.
+		\end{minipage}\hfill\vline\hfill
+		\begin{minipage}[t]{0.66\textwidth}
 			\textbf{Cognitive side (Normative Ethics).}\\
-			- \textbf{Utilitarianism} Consequences: choose the greatest good for greatest number\\
-			- \textbf{Deontology} Action: do the right thing according to universal principles\\
-			- \textbf{Virtue} Person: act as a virtuous person\\
-			- \textbf{Care} Relationships: mutual responsibility and care for each other
+			- \textbf{Utilitarianism(Consequences).} choose the greatest good for greatest number\\
+			- \textbf{Deontology(Action).} do right according to universal principles\\
+			- \textbf{Virtue(Person).} act as a virtuous person\\
+			- \textbf{Care(Relationships).} mutual responsibility/care for each other
 		\end{minipage}\\
 		\textit{Trolley problem.} thought experiment, \textbf{choice}: do nothing $\to$ runaway trolley kill people,
 		\ul{or} intervening $\to$ fewer people die. tests which moral principles justify action vs. inaction.\\
-		\textbf{Ethical Decision Making Frameworks.}\\
-		1. Identify the ethical issues\\
-		2. Get the facts\\
-		3. Evaluate alternative actions with \textit{several ethical theories}\\
-		4. Choose an option and "test" it\\
-		5. Implement your decision and reflect on the outcome.
+		\begin{minipage}[t]{0.36\textwidth}
+			\textbf{Ethical Decision Frameworks.}\\
+			1. Identify the ethical issues\\
+			2. Get the facts\\
+			3. Evaluate alternative actions with \textit{several ethical theories}\\
+			4. Choose an option and "test" it\\
+			5. Implement your decision and \\reflect on the outcome.
+		\end{minipage}\hfill\vline\hfill
+		\begin{minipage}[t]{0.63\textwidth}
+			\textbf{Example questions for brainstorming}\\
+			- Who will use your product on a daily basis?\\
+			- Who is in geographical proximity with the users of your product?\\
+			- Who is in social proximity with the users of your product?\\
+			- Who is involved in the maintenance of your product?\\
+			- Who provides services that are needed to run your product?\\
+			- Who provides funding?\\
+			- Which communities are active in the application domain?
+		\end{minipage}
 		\hline
-		\textbf{Stakeholder} Individuals, groups, organizations, institutions, and societies that might reasonably be affected by technology.\\
-		\textbf{Direct Stakeholder.} \textit{in contact} with the product \textit{(End-users, Admins, Contractors, Developers)}.\\
-		\textbf{Indirect Stakeholder.} affected through \textit{consequences of the usage} of the software \textit{(Environment, Government, Public(s), NGOs, Friends, Neighborhood)}.\\
-		\ul{\textbf{Stakeholder analysis.}} Identifying every entity that can be affected by software positively/negatively.\\
-		1. Brainstorm to find all stakeholders possible using questions.\\
-		2. Use Direct vs Indirect Chart to find new stakeholders.\\
-		Additional Methodologies: \textit{Ethix. add unintended stakeholders}, \textit{Mitchell. add attributes to stakeholders}, \textit{SAS. use different chart with scale for impact from product and influence on the product}.\\
+		\textbf{Stakeholder} Individuals/groups/organizations/institutions/societies that might reasonably be affected by technology.\\
+		\textbf{Direct Stakeholder.} \textit{in contact} with the product\\
+		\textbf{Indirect Stakeholder.} affected through \textit{consequences of the usage} of the software\\
+		\begin{minipage}[htp]{0.74\textwidth}
+			\ul{\textbf{Stakeholder analysis.}} Identifying every entity that can be affected by software positively/negatively.\\
+			1. Brainstorm to find all stakeholders possible using questions.\\
+			2. Use Direct vs Indirect Chart to find new stakeholders.\\
+			Additional Methodologies: \textit{Ethix. add unintended stakeholders}, \textit{Mitchell. add attributes to stakeholders}, \textit{SAS. use different chart with scale for impact from product and influence on the product}.
+		\end{minipage}\hfill
+		\begin{minipage}[htp]{0.25\textwidth}
+			\centering
+			\includegraphics[width=0.8\textwidth]{direct-indirect.png}
+		\end{minipage}\\
 		\textbf{Ethical Speculation.} How to think, not what to think - anticipate potential impacts on stakeholders.\\
-		Create a fictional story in two parts.\\
-		1. Check pessimistic outcomes \textit{Black Mirror}.\\
-		2. Positive resolutions and future scenarios.
+		Create a fictional story in two parts. (\textit{done at the early design phase})\\
+		\begin{minipage}[t]{0.44\textwidth}
+			\textbf{I. Dark and Pessimistic}\\
+			1. Imagine a character that would be negatively impacted by the software\\
+			2. Write a pitch that summarizes their story.\\
+			3. Find a title.
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.54\textwidth}
+			\textbf{II. Positive outcome}\\
+			1. Identify 1 or 2 main ethical issues represented in your story.\\
+			2. Describe the immediate and future consequences.\\
+			3. Imagine a happy ending for character.
+		\end{minipage}
+
 	\end{minipage}}
 \begin{minipage}[htp]{0.5\textwidth}
 
