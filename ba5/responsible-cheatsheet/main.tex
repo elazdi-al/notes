@@ -124,7 +124,7 @@
 \newpage
 \\
 \fbox{
-	\begin{minipage}[htp]{0.5\textwidth}
+	\begin{minipage}[t]{0.485\textwidth}
 		\underline{\textbf{INTRO.}}
 		\textbf{Responsible Software.} Software engineered in a responsible\textit{(ethical)} way.\\
 		1. With a goal to do good. 2. While preventing avoidable negative impacts.\\
@@ -170,7 +170,7 @@
 		\end{minipage}\\
 		\textit{Trolley problem.} thought experiment, \textbf{choice}: do nothing $\to$ runaway trolley kill people,
 		\ul{or} intervening $\to$ fewer people die. tests which moral principles justify action vs. inaction.\\
-		\begin{minipage}[t]{0.36\textwidth}
+		\begin{minipage}[t]{0.33\textwidth}
 			\textbf{Ethical Decision Frameworks.}\\
 			1. Identify the ethical issues\\
 			2. Get the facts\\
@@ -178,7 +178,7 @@
 			4. Choose an option and "test" it\\
 			5. Implement your decision and \\reflect on the outcome.
 		\end{minipage}\hfill\vline\hfill
-		\begin{minipage}[t]{0.63\textwidth}
+		\begin{minipage}[t]{0.66\textwidth}
 			\textbf{Example questions for brainstorming}\\
 			- Who will use your product on a daily basis?\\
 			- Who is in geographical proximity with the users of your product?\\
@@ -202,7 +202,7 @@
 			\centering
 			\includegraphics[width=0.8\textwidth]{direct-indirect.png}
 		\end{minipage}\\
-		\textbf{Ethical Speculation.} How to think, not what to think - anticipate potential impacts on stakeholders.\\
+		\ul{\textbf{Ethical Speculation.}} How to think, not what to think - anticipate potential impacts on stakeholders.\\
 		Create a fictional story in two parts. (\textit{done at the early design phase})\\
 		\begin{minipage}[t]{0.44\textwidth}
 			\textbf{I. Dark and Pessimistic}\\
@@ -216,9 +216,121 @@
 			2. Describe the immediate and future consequences.\\
 			3. Imagine a happy ending for character.
 		\end{minipage}
-
+	\end{minipage}}\hfill
+\fbox{
+	\begin{minipage}[t]{0.485\textwidth}
+		\underline{\textbf{SAFETY I.}}\\
+		\textbf{Security.} Prevent the environment from affecting negatively the system. \textit{\warning threat} | \textit{Vulnerability scanning, ethical hacking, security audit, code review}\\
+		\textbf{Safety.} Prevent the system from affecting negatively the environment. \textit{\warning hazard} | \textit{Verification and testing, failure modes analysis, Redundancy}\\
+		\textbf{Common challenge - human factor} $\to$ consider software as \textbf{socio-technical system}\\
+		\textit{Internet, Autonomous vehicles, social media}, human behavior and technical systems constanly influence each other.
+		\hline
+		\textbf{Malfunction.} software doesn't function/perform normally/as specified.\\
+		- Due to unintentional defect/fault/bug$\to$critical consequences(\warning Life/Mission-critical systems)\\
+		\textbf{Misuse/Abuse.} attack, diversion, use of software for \textit{nefarious purposes}. \\
+		\textbf{Bad/threat actors.} \textit{malicious intent, authorized/unauthorized users}$\to$direct/indirect impact.\\
+		\textbf{Unintended use.} use of software in a way not originally intended/not (officially) supported.\\
+		$\oplus$ creates opportunities for innovation \textit{use camera to scan documents}\\
+		$\ominus$ \textit{use llm to obtain factual information}\\
+		\textbf{Intended use} software used as intended. difficult to anticipate impact due to social \warning scale/time
+		\hline
+		\textbf{User-Generated Content (UGC).} any content posted by users online \textit{images/videos/texts}\\
+		- Published publicly and (usually) not produced by professional/institution \textit{wikipedia}\\
+		\warning \textbf{Toxic content.} material harmful/offensive can have negative impact on individuals/communities\\
+		\textbf{Types of impacts?} Physical/Financial/Emotional/Relational.\\
+		\begin{minipage}[t]{0.47\textwidth}
+			\textit{Hate and Harassment.}\\
+			Violence threats, Identity misrepresentation\\
+			\textit{Self-inflicted harm.} Eating disorder promotion\\
+			\textit{Ideological harm.}\\
+			Extremism/terrorism, Misinformation\\
+			\textit{Exploitation.} Sexual abuse, Scams
+		\end{minipage}
+		\begin{minipage}[t]{0.53\textwidth}
+			\textbf{Central dilemma.} protecting users from toxic content while preserving free speech rights\\
+			\textbf{To decide?} \\
+			- State (responsible for fulfilling rights), \\
+			- Platforms (private actors with business interests), \\
+			- People (responsible for the content they publish.
+		\end{minipage}\\
+		\textbf{Hate speech}\\
+		- Discriminatory/pejorative of individual/group\\
+		- calls out real/perceived "identity factors" of individual/group\\
+		- conveyed through any form of \expression (images/memes/symbols)\\
+		\textit{UGC platforms provide channels for hate speech. Easily produced, shared, anonymous, global/diverse audience, realtime, amplified by content recommendation algorithms}\\
+		\textbf{Free speech.} right to express opinions and to seek, receive, share information/ideas, in any format offline/online, subject to limitations that respect the rights of others and prohibit incitement to discrimination or violence, pillar of democracy.\\[-7px]
+		\begin{minipage}[htp]{0.001\textwidth}
+			\multirow{}{\rotatebox{90}{\textbf{Predicted}}}
+		\end{minipage}\hspace*{-8px}
+		\begin{minipage}[htp]{0.999\textwidth}
+			\begin{minipage}[htp]{0.65\textwidth}
+				\begin{tabular}{cc|c|c|}
+					\multicolumn{2}{c}{}  & \multicolumn{2}{c}{\textbf{Actual}}                                             \\
+					\cline{3-4}
+					\multicolumn{2}{c|}{} & Positive                            & Negative                                  \\
+					\cline{2-4}
+					                      & Positive                            & True Positive (TP)  & False Positive (FP) \\
+					\cline{2-4}
+					                      & Negative                            & False Negative (FN) & True Negative (TN)  \\
+					\cline{2-4}
+				\end{tabular}
+			\end{minipage}\hfill
+			\begin{minipage}[htp]{0.33\textwidth}
+				\textbf{Content moderation}:\\
+				\textit{False negative}: toxic content that escapes moderation.\\
+				\textit{False positive}: wrongful censorship, restricting free speech.
+			\end{minipage}
+		\end{minipage}\\
+		\begin{minipage}[htp]{0.5\textwidth}
+			\textbf{TP.}Model predicts positive and is correct\\
+			\textbf{Accuracy}                        $= \frac{TP + TN}{TP + TN + FP + FN}  $\\
+			\textbf{Positive Predictive Value (PPV)} $= \frac{TP}{TP + FP}                 $\\
+			\textbf{Negative Predictive Value (NPV)} $= \frac{TN}{TN + FN}                 $
+		\end{minipage}
+		\begin{minipage}[htp]{0.5\textwidth}
+			\textbf{False Discovery Rate (FDR)}      $= 1 - \text{PPV} = \frac{FP}{TP + FP}$\\
+			\textbf{False Omission Rate (FOR)}       $= 1 - \text{NPV} = \frac{FN}{TN + FN}$\\
+			\textbf{False Positive Rate (FPR)}       $= \frac{FP}{FP + TN}                 $\\
+			\textbf{False Negative Rate (FNR)}       $= \frac{FN}{FN + TP}$
+		\end{minipage}
+		\hline
+		\ul{\textbf{Bad Actors Modelling}} Minimize vulnerabilities via risk assessment and mitigation.\\
+		\textit{When to Use: Design phase, prior to updates, audits, incident responses, and improvements.}\\
+		\textit{What is a Bad Actor? A person/group exploiting a system for personal goals.}\\
+		\textbf{Motivations (might overlap)}:\\
+		- Money: Data theft, ransomware, sabotage by competitors.\\
+		- Politics: Misinformation spreading, strategic sabotage, infrastructure attacks.\\
+		- Entertainment: Attacks on random systems, misinformation spreading.\\
+		- Self-interest: Harassing messages, communication monitoring, location tracking.\\
+		- Ideas: Discrediting groups, data leaks, website defacement.\\
+		\textbf{Steps:}
+		1. Identify possible malicious users and their motivations.
+		2. Assess potential consequences for the system and users.
+		3. Develop measures to prevent these negative outcomes.
+		\hline
+		\ul{\textbf{Harm Modelling}} anticipate/address potential harms users/stakeholders may encounter.\\
+		\textbf{When to Use:} At every stage of project, for every feature, until harm potentials are satisfactory.\\
+		\textbf{Evaluate:} 1. The category of use. 2. the types of harms. 3. the magnitude of harm\\
+		\begin{minipage}[t]{0.3\textwidth}
+			\textbf{Categories of Use:}\\
+			\textit{Intended Use:} \\Harm from correct usage.\\
+			\textit{Unintended Use:} Harm from unexpected usage.\\
+			\textit{Misuse/Abuse:} Harm from malicious usage.\\
+			\textit{Malfunction:} Harm from system failures.
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.39\textwidth}
+			\textbf{Types of Harm:}\\
+			\textit{Humans:} Physical, emotional (or psychological) injury.\\
+			\textit{Allocation of Resources:} Opportunity, economic losses.\\
+			\textit{Human Rights:} Dignity, liberty, privacy losses; environmental impact.\\
+			\textit{Social Systems:} Manipulation, social detriment.
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.3\textwidth}
+			\textbf{Magnitude of Harm:}\\
+			\textit{Severity:} Impact on individual/group well-being.\\
+			\textit{Scale:} How broadly the harm affects populations.\\
+			\textit{Probability:} Likelihood of harm occurring.\\
+			\textit{Frequency:} How often the harm might occur.
+		\end{minipage}
 	\end{minipage}}
-\begin{minipage}[htp]{0.5\textwidth}
-
-\end{minipage}
 \end{document}
