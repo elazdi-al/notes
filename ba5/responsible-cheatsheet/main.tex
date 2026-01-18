@@ -473,5 +473,63 @@
 			\end{minipage}\\
 		\end{minipage}}
 \end{minipage}\newpage
-hello
+\begin{minipage}[t]{0.49\textwidth}
+	\fbox{\begin{minipage}[htp]{1\textwidth}
+			\ul{\textbf{FAIRNESS II.}}
+			\textbf{ML.} techniques inferring patterns from data, generalizable to unseen data.\\
+			\textbf{Process.} Iterate to find parameters of function that best represent pattern in data.\\
+			\textbf{Result.} Function + function parameters.
+			\hline
+			\textbf{Training.} Run learning algorithm to find parameters \(\rightarrow\) \textbf{Inference.} compute results on previously unseen data.\\
+			\textbf{Regression.} Output continuous values \textit{(house price from size)}.\\
+			\textbf{Classification.} Output discrete values \textit{(wine vs beer from alcohol level, color)}.\\
+			\textit{Supervised.} Output labels given. \textit{(labels created by humans; picture descriptors)}\\
+			\textit{Unsupervised.} No output labels \textit{(clustering, dimensionality reduction)}.\\
+			\textbf{Data dependence.} ML depends on data \(\rightarrow\) sensitive to biases; in supervised, labels human-made \(\rightarrow\) not all issues attributable to ML alone.\\
+			\textbf{Pipeline.} Problem definition \(\rightarrow\) data collect + preparation \(\rightarrow\) model dev + model eval + model deploy.\\
+			\textbf{Model dev.} Choose model type, objective function, hyper-parameter tuning for performance \(\rightarrow\) unfairness risk when optimizing accuracy only.\\
+			\textbf{Aggregation bias.} Combine groups with different patterns \(\rightarrow\) model performs poorly for some groups, or mainly for majority.\\
+			\textbf{Evaluation bias.} Benchmark not representative of served population \(\rightarrow\) \textit{(Gender Shades: intersectional bias across gender and race)}.\\
+			\textbf{Deployment bias.} Mismatch between intended problem and actual use \(\rightarrow\) socio-technical bias.\\
+			\textbf{Fairness metrics.} Mathematical measures of fairness notions \textit{(criticised for oversimplification; focus outcome)}.\\
+			\textbf{Error parity.} Error rates independent of group. Contains: \\
+			1. \textbf{Error rate balance.} Equality of error rates compared to actual values$\to$FPR, FNR across groups.\\
+			2. \textbf{Conditional use accuracy equality.} Equality of predictive values compared to predicted values$\to$PPV,NPV across groups.
+			3. \textbf{Equal accuracy.} Equality of accuracy across groups.\\
+			\begin{minipage}[t]{0.5\textwidth}
+				\textbf{Demographic parity(Equal acceptance rate).} Positive prediction rate independent of group \textit{(focus outcome)}:\\\centering
+				\(\dfrac{\mathrm{TP}+\mathrm{FP}}{\mathrm{Total}}\)
+			\end{minipage}\hfill
+			\begin{minipage}[t]{0.48\textwidth}
+				\textbf{Disparate impact ratio.} \\
+				$\dfrac{\text{positive prediction rate (group A)}}{\text{positive prediction rate (group B)}}$ should be \(1\).
+			\end{minipage}\\
+			\textbf{Impossibility result.} Cannot satisfy all fairness metrics simultaneously.\\
+			\begin{minipage}[htp]{0.6\textwidth}
+				\textbf{Group fairness criteria (GFC).} \\
+				Quantify equality between groups; bundle people treated differently \(\rightarrow\) aim for group-level equality.\\
+				\(\rightarrow\) Mathematical impossibilities among parity measures, incl.\ with demographic parity.\\
+				\(\rightarrow\) Unfair world + imperfect classifiers \(\rightarrow\) not all group fairness criteria hold simultaneously \(\rightarrow\) choose priority notion of fairness.
+			\end{minipage}
+			\begin{minipage}[htp]{0.38\textwidth}
+				\textbf{Issue of GFC.} \\
+				May miss unfairness at intersection of multiple groups.\\
+				\(\rightarrow\) Need intersectional group fairness \(\rightarrow\) many small groups.\\
+				\(\rightarrow\) No individual differences within groups \(\rightarrow\) need individual fairness.
+			\end{minipage}
+			\textbf{Individual fairness.} Similar individuals should receive similar decisions; requires similarity metric, tricky.\\
+			\textbf{Causal analysis of fairness.} Focus causes of unfairness and causal pathways from sensitive attributes to outcomes \(\rightarrow\) find proxies via causal graphs.\\
+			\textbf{Improve fairness.} Either modify data or modify model.\\
+			\textbf{Modifying the data.} \textit{(pre-processing)} If data biased, learned patterns biased. \textbf{To reduce bias}, \textit{Fairness through unawareness} removes sensitive attributes from dataset, but reduces accuracy. If proxies exist, bias may persist. Other ways: weighting, resampling (ensure better representation of concerned groups), or transformation (transform data with function preserving data while hiding bias).\\
+			\textbf{Acting on the model.} At training time: \textit{(in-processing)} optimise accuracy and fairness together, add fairness metrics; or \textit{(post-processing)} directly apply transformations to output, independent from model.\\
+			To improve fairness of model, almost always face dilemmas:\\
+			$\rightarrow$ \textbf{Leveling down.} More fairness for some might compromise fairness to others.\\
+			$\rightarrow$ \textbf{Fairness--accuracy.} More fairness may often compromise accuracy.\\
+			$\rightarrow$ \textbf{Fairness--privacy.} Access to sensitive attributes, increasing privacy may compromise fairness.\hline
+			\ul{\textbf{Datasheet for dataset.}} Fill form with technical details/explanations about data, collection process, processing, intended usage$\rightarrow$for devs: avoid publishing ill data; for users: ensure data cleanliness, better understand dataset.\\
+			\textbf{Model card.} Same idea but for ML $\rightarrow$ technical info, intended use, performance, metrics, data for training/evaluation, quantitative analyses, ethical reviews, usage recommendations.\hline
+			\ul{\textbf{AI Ethics card (IDEO).}} Guide ethically responsible, culturally considerate design with data. \\\textbf{Principles: data $\neq$ truth.} don't presume AI durability; respect privacy/collective good; unintended AI consequences $\rightarrow$ design opportunities. Goal: humanize data \textit{(people behind data)}. Method: find/read documentation, raw data, materials; select variables/columns; pick few; inspect their data; focus on one variable (select people random or by specific characteristics); write conclusion in terms of ethical impact and risks.
+
+		\end{minipage}}
+\end{minipage}
 \end{document}
