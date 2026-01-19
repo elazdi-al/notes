@@ -296,11 +296,11 @@
 \begin{minipage}[t]{0.49\textwidth}
 	\fbox{
 		\begin{minipage}[t]{1\textwidth}
-			\underline{\textbf{SAFETY I.}}\\
+			\underline{\textbf{SAFETY I.}}
 			\textbf{Security.} Prevent the environment from affecting negatively the system. \textit{\warning threat} | \textit{Vulnerability scanning, ethical hacking, security audit, code review}\\
 			\textbf{Safety.} Prevent the system from affecting negatively the environment. \textit{\warning hazard} | \textit{Verification and testing, failure modes analysis, Redundancy}\\
 			\textbf{Common challenge - human factor} $\to$ consider software as \textbf{socio-technical system}\\
-			\textit{Internet, Autonomous vehicles, social media}, human behavior and technical systems constanly influence each other.
+			\textit{Internet/social media}; \textbf{human behavior/technical systems constanly influence each other.}
 			\hline
 			\textbf{Malfunction.} software doesn't function/perform normally/as specified.\\
 			- Due to unintentional defect/fault/bug$\to$critical consequences(\warning Life/Mission-critical systems)\\
@@ -373,30 +373,44 @@
 				\textbf{False Omission Rate (FOR)}       $= 1 - \text{NPV} = \frac{FN}{TN + FN}$\\
 				\textbf{False Positive Rate (FPR)}       $= \frac{FP}{FP + TN}                 $\\
 				\textbf{False Negative Rate (FNR)}       $= \frac{FN}{FN + TP}$
+			\end{minipage}\hline
+			\begin{minipage}[t]{0.5\textwidth}
+				\textbf{STRIDE Threat Modelling.} Identify computer security threats across six categories.\\
+				\textit{When to Use: At any project stage, complementing bad actors modelling.}\\
+				– S: Spoofing – Impersonation attacks.
+			\end{minipage}
+			\begin{minipage}[t]{0.5\textwidth}
+				– T: Tampering – Unauthorized modifications.\\
+				– R: Repudiation – Denial of actions without proof.
+				– I: Information Disclosure – Data leaks.\\
+				– D: Denial of Service – Service unavailability.\\
+				– E: Elevation of Privilege – Gaining unauthorized access
 			\end{minipage}
 			\hline
 			\ul{\textbf{Bad Actors Modelling}} Minimize vulnerabilities via risk assessment and mitigation.\\
 			\textit{When to Use: Design phase, prior to updates, audits, incident responses, and improvements.}\\
 			\textit{What is a Bad Actor? A person/group exploiting a system for personal goals.}\\
-			\begin{minipage}[htp]{0.65\textwidth}
+			\begin{minipage}[htp]{0.67\textwidth}
+				\small
 				\textbf{Motivations (might overlap)}:\\
 				- Money: Data theft, ransomware, sabotage by competitors.\\
 				- Politics: Misinformation/strategic sabotage/infrastructure attacks.\\
 				- Entertainment: Attacks on random systems, misinfo. spreading.\\
-				- Self-interest: Harassing messages, communication monitoring, location tracking.\\
+				- Self-interest: harassing messages/commun. monitoring/location tracking.\\
 				- Ideas: Discrediting groups, data leaks, website defacement.
 			\end{minipage}
-			\begin{minipage}[htp]{0.34\textwidth}
+			\begin{minipage}[htp]{0.32\textwidth}
 				\textbf{Steps:}
+				\small
 				1. Identify possible malicious users and their motivations.\\
 				2. Assess potential consequences for the system and users.\\
 				3. Develop measures to prevent these negative outcomes.
 			\end{minipage}
 			\hline
+			\small
 			\ul{\textbf{Harm Modelling}} anticipate/address potential harms users/stakeholders may encounter.\\
 			\textbf{When to Use:} At every stage of project, for every feature, until harm potentials are satisfactory.\\
 			\textbf{Evaluate:} 1. The category of use. 2. the types of harms. 3. the magnitude of harm\\
-			\small
 			\begin{minipage}[t]{0.24\textwidth}
 				\textbf{Categories of Use:}\\Harm from\dots\\
 				\textit{Intended Use:} correct usage.\\
@@ -451,7 +465,7 @@
 			\textbf{Sunk-cost fallacy.} continuing course of action just due to past investment $\to$ prevents alternatives$\to$product with design flaws
 			$\to$ \textbf{Technical debt.} future costs to fix, \textbf{Ethical debt.} ethical consequences/harms\hline
 			\ul{\textbf{Inclusive Design.}} design software that benefits the widest range of users by addressing diverse abilities, languages, cultures, and differences.\\
-			\begin{minipage}[t]{0.45\textwidth}
+			\begin{minipage}[t]{0.49\textwidth}
 				\textit{When to Use: Early in soft. development phases.}\\
 				\textbf{1.} Identify needed capabilities for use.\\
 				\textbf{2.} Identify and label ”Non-Average Users” (NAUs).\\
@@ -460,21 +474,20 @@
 				Aim: Ensure artifacts match the needs of diverse individuals beyond average users.\\
 				\textbf{Capabilities.} perception(vision,hearing,\ldots),\\ thinking, action(dexterity\dots)
 			\end{minipage}\hfill\vline\hfill
-			\begin{minipage}[t]{0.53\textwidth}
-				\vspace*{-12px}\hline
+			\begin{minipage}[t]{0.5\textwidth}
+				\vspace*{-15px}\hline
 				\ul{\textbf{Analyzing Values.}} Identify/analyze/evaluate values embedded in technology and resolve value-based tensions.
 				\textit{What are Values?} principles/desirable goals for design, based on Schwartz’s value theory.\\
 				1. Identify values/stakeholder values/artifacts values.\\
 				2. Analyze value-based benefits (supporting stakeholder values)/harms (opposing stakeholder values).\\
 				3. Map value tensions:\\
 				* Within the same value (e.g., benefit vs. harm).\\
-				* Between different values (interpret context to resolve).\\
-				• Tools: Use value-based tension maps and questionnaires to assess impacts.
+				* Between different values (interpret context to resolve).
 			\end{minipage}\\
 		\end{minipage}}
 \end{minipage}\newpage
 \begin{minipage}[t]{0.49\textwidth}
-	\fbox{\begin{minipage}[htp]{1\textwidth}
+	\fbox{\begin{minipage}[t]{1\textwidth}
 			\ul{\textbf{FAIRNESS II.}}
 			\textbf{ML.} techniques inferring patterns from data, generalizable to unseen data.\\
 			\textbf{Process.} Iterate to find parameters of function that best represent pattern in data.\\
@@ -512,7 +525,7 @@
 				\(\rightarrow\) Unfair world + imperfect classifiers \(\rightarrow\) not all group fairness criteria hold simultaneously \(\rightarrow\) choose priority notion of fairness.
 			\end{minipage}
 			\begin{minipage}[htp]{0.38\textwidth}
-				\textbf{Issue of GFC.} \\
+				\textbf{Issues of GFC.} \\
 				May miss unfairness at intersection of multiple groups.\\
 				\(\rightarrow\) Need intersectional group fairness \(\rightarrow\) many small groups.\\
 				\(\rightarrow\) No individual differences within groups \(\rightarrow\) need individual fairness.
@@ -528,7 +541,188 @@
 			$\rightarrow$ \textbf{Fairness--privacy.} Access to sensitive attributes, increasing privacy may compromise fairness.\hline
 			\ul{\textbf{Datasheet for dataset.}} Fill form with technical details/explanations about data, collection process, processing, intended usage$\rightarrow$for devs: avoid publishing ill data; for users: ensure data cleanliness, better understand dataset.\\
 			\textbf{Model card.} Same idea but for ML $\rightarrow$ technical info, intended use, performance, metrics, data for training/evaluation, quantitative analyses, ethical reviews, usage recommendations.\hline
-			\ul{\textbf{AI Ethics card (IDEO).}} Guide ethically responsible, culturally considerate design with data. \\\textbf{Principles: data $\neq$ truth.} don't presume AI durability; respect privacy/collective good; unintended AI consequences $\rightarrow$ design opportunities. Goal: humanize data \textit{(people behind data)}. Method: find/read documentation, raw data, materials; select variables/columns; pick few; inspect their data; focus on one variable (select people random or by specific characteristics); write conclusion in terms of ethical impact and risks.
+			\ul{\textbf{AI Ethics card (IDEO).}} Guide ethically responsible, culturally considerate design with data. \\\textbf{Principles: data $\neq$ truth.} don't presume AI durability, respect privacy/collective good, unintended AI consequences $\rightarrow$ design opportunities. \textbf{Goal: humanize data \textit{(people behind data)}}. Method: find/read documentation, raw data, materials; select variables/columns; pick few; inspect their data; focus on one variable (select people random or by specific characteristics); write conclusion in terms of ethical impact and risks.
+		\end{minipage}}
+	\fbox{\begin{minipage}[htp]{1\textwidth}
+			\ul{\textbf{Sustainability I.}} Capacity to endure across full lifespan (launch to end-of-life); linked to maintenance/evolution. \textbf{Three pillars view.} Economy, environment, society (treated as substitutable).\\
+			\textbf{Strong Sustainability.} Recognizes the interdependence of economic, social, and environmental systems, emphasizing the irreplaceability of natural resources.
+			\textbf{Technical Sustainability.} Focuses on software durability/its maintenance and evolution over time.\\
+			\textbf{Nested view.} Economy part of society; society part of environment $\rightarrow$ not substitutable.\\
+			\textbf{Green by software.} Software supporting sustainability goals of other systems.\\
+			\textbf{Green in software.} Software itself designed to be sustainable (focus).\\
+			\begin{minipage}[t]{0.4\textwidth}
+				\textbf{When?}
+				- \textbf{Development.} Requirements, design, implementation, testing, distribution, deployment.\\
+				- \textbf{Usage.} Operation, maintenance, evolution.\\
+				- \textbf{End of life.} Decommissioning, disposal.
+			\end{minipage}\hfill\vline\hfill
+			\begin{minipage}[t]{0.58\textwidth}
+				\textbf{What.} Software cannot run alone $\rightarrow$ requires hardware and network together.\\
+				\textbf{Beyond carbon.} Carbon footprint matters \textit{(ICT sector: $1\times 10^{12}$ kg CO$_2$, more than France or Australia)}, but assessment should cover broader planetary boundaries \textit{(9 critical processes)}.
+			\end{minipage}\hline
+			\textbf{Global warming.} Increase in multi-decade global mean surface temperature above industrial level (1900): +1.1$^\circ$C (2011--2020), +1.45$^\circ$C (2023). due to human activity/greenhouse gases.\\
+			\textbf{Greenhouse gases (GHG).} Atmospheric gases trapping heat in Earth's atmosphere (natural phenomenon); increased GHG concentrations raise temperature. Main contributors: CO$_2$, CH$_4$, N$_2$O.\\
+			\textbf{Software and electricity.} Software needs electricity; electricity generation emits GHG $\rightarrow$ software has CO$_2$ emissions depending on energy consumption and carbon intensity of electricity production.\\
+			\textbf{Carbon intensity examples.} \textit{(coal: 820 g CO$_2$e/kWh)}, \textit{(gas: 490 g CO$_2$e/kWh)}, \textit{(solar: 41 g CO$_2$e/kWh)}.\\
+			\textbf{Location.} Electricity origin depends on location; carbon intensity computed from average energy mix (fossil fuels, nuclear, renewables). \textbf{Time.} Electricity mix varies over time; renewables not produced continuously.\\
+			\textbf{Optimizing software energy.} Shift execution in time and location to exploit cleaner electricity mixes.\\
+			\begin{minipage}[t]{0.43\textwidth}
+				\textbf{GHG Protocol for companies.}\\
+				- \textbf{Scope 1.} Direct emissions from sources owned/controlled by company.\\
+				- \textbf{Scope 2.} Indirect emissions from purchased/consumed energy.\\
+				- \textbf{Scope 3.} Other indirect emissions across value chain (suppliers, customers/consumers).
+			\end{minipage}\hfill\begin{minipage}[t]{0.56\textwidth}
+				\textbf{Programming languages and efficiency.} Languages differ in efficiency; faster $\neq$ more energy-efficient.\\
+				\textbf{Main energy drivers.} Majority from CPU: algorithmic complexity, loops, threads, data structures; also RAM, disk transfers, and I/O transfers matter.\\
+				\textbf{Hardware and OS role.} Idle power draw exists; OS/hardware power-saving systems (low power modes) affect consumption.
+			\end{minipage}\hline
+			\begin{minipage}[t]{0.58\textwidth}
+				\textbf{Data centers.} Virtualization lets one physical server run multiple workloads; consolidation can reduce energy if optimized. Cooling critical; data centers powered continuously. Typical split: servers 50\%, cooling 40\%, remainder losses/other.
+			\end{minipage}\hfill\vline\hfill
+			\begin{minipage}[t]{0.4\textwidth}
+				\textbf{Power Usage Effectiveness.} \\$\mathrm{PUE} = \dfrac{\text{total data center energy}}{\text{IT equipment energy}}$. \\Ideal 1, typical $\approx$ 1.9.
+			\end{minipage}\\
+			\textbf{Distributed software.} Multiple components deployed across infrastructure $\rightarrow$ distributed energy consumption (including user devices) + network.
+			\textbf{Usage-stage split.} 50\% user devices, 25\% data centers, 30\% network.\\
+			\textbf{Network accounting.} Estimation hard (constantly changing; boundary definitions vary). \textit{(60 Wh/GB; phone charging: 22 Wh)}
+			\warning Energy efficiency vs time, cost, performance, maintenance.\\
+			\textbf{Rebound effect (Jevons' paradox).} Efficiency gains reduce service cost $\rightarrow$ increased consumption; existence widely accepted, magnitude debated. \textbf{Direct rebound.} Consumers use more of the same service.\\
+			\textbf{Indirect rebound.} Savings spent on other energy-consuming goods/services.\hline
+			\ul{\textbf{Decision Matrix.}} Make decisions by evaluating and prioritizing options based on multiple criteria.\\
+			\textit{When to Use:} To narrow down a list of options to one choice. When decisions must consider several criteria.\\
+			\begin{minipage}[htp]{0.49\textwidth}
+				1. Brainstorm and identify evaluation criteria.\\
+				2. Refine criteria and assign relative weights \textit{(distribute 10 points)}.\\
+				3. Create an L-shaped matrix with criteria and weights along one axis, and options along the other.\\
+			\end{minipage}\hfill
+			\begin{minipage}[htp]{0.49\textwidth}
+				4. Rate each option consistently \textit{(1–5 scale)}.\\
+				5. Multiply weights by ratings, sum results, and select the option with the highest total score.\\
+			\end{minipage}
+		\end{minipage}
+	}
+\end{minipage}\hspace*{8px}
+\begin{minipage}[t]{0.48\textwidth}
+	\fbox{\begin{minipage}[t]{1\textwidth}
+			\ul{\textbf{SUSTAINABILITY II.}}
+			\quad \textbf{FLOPS.} Floating point operations $\rightarrow$ growing $4\times$/year since 2010.\\
+			\textbf{Examples of ML training footprint.}
+			GPT-3 (175B param) $\rightarrow 1300\,\mathrm{t}\ \mathrm{CO_2e}$;
+			BLOOM (176B param) $\rightarrow 433\,\mathrm{t}\ \mathrm{CO_2e}$.\\
+			\textbf{Carbon budget.} $\approx 2\,\mathrm{t}\ \mathrm{CO_2e/person/year}$ if we want to keep global warming under control.\hline
+			\textbf{PUE (Where).} Data-center efficiency overhead (cooling + power delivery losses).\\
+			\textbf{CI (When).} Grid carbon per kWh at that time (electricity mix).\\
+			\begin{minipage}[t]{0.49\textwidth}
+				\textbf{$C_{\text{training}}$.} training time in hours and power consumption in W and power usage.\\
+				$
+					C_{\text{training}}
+					= t \times \bigl(P_{\text{CPUs}} + P_{\text{GPUs}} + P_{\text{ME}}\bigr)\times \mathrm{PUE}\times \mathrm{CI}.
+				$
+			\end{minipage}\hfill\vline\hfill
+			\begin{minipage}[t]{0.49\textwidth}
+				\textbf{Quantity training.} Need train model multiple times
+				\textit{(LISA: 200$\times$ footprint of 1 train; BLOOM only 2.6)}.\\
+				$
+					C_{\text{inference}}
+					= N_{\text{queries}} \times E_{\text{inference}} \times \mathrm{PUE} \times \mathrm{CI}.
+				$
+			\end{minipage}
+			\textit{Energy per query.} BLOOM $0.004\,\mathrm{kWh/query}$ and $0.28\,\mathrm{kWh}$ in idle.\\
+			Generative tasks most energy-intensive; image tasks $>$ text
+			\textit{(can be as much as charging one phone)}.
+			Multi-purpose model $>$ task specific model.\\
+			\textbf{$C_{\text{ML}} = C_{\text{dev}} + C_{\text{inference}}$}
+			$C_{\text{inference}} \approx 60\%$ of total.
+			$C_{\text{dev}}$ can be large (one-time), $C_{\text{inference}}$ scales with usage.\\
+			\textbf{Embodied emissions.} Greenhouse gas emission associated with production, transport, end of life
+			$\rightarrow$ carbon already embedded into product \textit{(36\% embodied, 64\% usage)}.
+			One-shot cost $\rightarrow$ attribute share based on exec time and used resources.\hline
+			\begin{minipage}[t]{0.495\textwidth}
+				\textbf{Life Cycle Assessment.} Methodology to evaluate range of environmental impact across all life cycle phases
+				$\rightarrow$ impact on all, not just carbon footprint \textit{(water, metals, \dots)} $\rightarrow$ long process.\\
+				\textbf{Product Carbon Footprint (PCF).} LCA reduced to Global Warming Potential and carbon.\\
+				$\rightarrow$ Estimate with databases + math modeling.\\
+				$\rightarrow$ Highest embodied emissions: integrated circuits (CPU, RAM, \dots) + displays;
+				mainly manufacturing; depends on component type, perf, dimensions.\\
+				$\rightarrow$ Take embodied emissions, timeshare \textit{(exec time / hardware lifespan)},
+				resource share \textit{(exec resources / hardware resources)}.
+			\end{minipage}\hfill
+			\begin{minipage}[t]{0.495\textwidth}
+				\textbf{PCFs.} Embodied emissions + usage emissions.
+				Fix usage: better hardware, but better hardware has more embodied emissions
+				$\rightarrow$ check soft/hard-ware dependencies.
+				Lighter software reduces both; reducing embodied extends lifespan and utilization.
+				\textbf{Water withdrawal.} Total amount of water taken from a source.\\
+				\textbf{Water footprint (= water consumption).} Difference between water taken and water returned
+				\textit{(evaporated, incorporated, consumed, or returned at different location/time)}.\\
+				\textbf{Blue water footprint.} Freshwater consumption \textit{(surface + groundwater)}, incl.\ potable water
+				\textit{(most competition between technology and humans)}.
+			\end{minipage}\hline
+			\textbf{Green water footprint.} Rainwater consumption \textit{(plants/soil)}.\\
+			\textbf{Gray water footprint.} Water consumed to dilute pollutants so water meets quality standards.\\
+			\textbf{Energy tech footprints.} Large footprint: biomass, hydropower. Low footprint: solar photovoltaics, wind.\\
+			\textbf{EU electricity (2015).} Total water consumption for electricity production:
+			$1.54 \times 10^{12}\,\mathrm{L}$.\\
+			\begin{minipage}[htp]{0.55\textwidth}
+				\textbf{Thermal power plant.} Heat-to-electricity; needs water $\Rightarrow$ high consumption; depends on cooling type;
+				similar issue in data centers; potable water can be used.
+			\end{minipage}\hfill
+			\begin{minipage}[htp]{0.44\textwidth}
+				\textbf{Water usage effectiveness (WUE).}\\
+				$\mathrm{WUE}=\dfrac{\text{Annual water usage}}{\text{Energy of IT equipment}}$\\
+				\textit{(electricity treated as direct consumption)}.
+			\end{minipage}\\
+			\textbf{Cooling.} Sensitive to temperature/humidity; varies with climate, location, season, weather conditions
+			$\Rightarrow$ water footprint varies; considered indirect consumption.\\
+			\textit{In energy production, often a water vs. energy(carbon) tradeoff.}\\
+			\textbf{WUE Source.} \textit{(cooling direct, electricity indirect)}.\\
+			$\mathrm{WUE_{source}}=\dfrac{\text{Annual site (cooling) water usage}+\text{Annual source-energy (electricity) water usage}}{\text{Energy of IT equipment}}$\\
+			\textbf{Water cycle.} Water changes state and location; never lost, but availability in time and place crucial.
+			\hline
+			\ul{\textbf{Ethical Decision Making.}} explore ethical aspects of decisions/evaluate options using multiple ethical lenses.\\
+			\textit{What is a Lens?} A normative ethical theory used to evaluate decision options.\\
+			\begin{minipage}[htp]{0.48\textwidth}
+				\textbf{The 6 Lenses:}\\
+				– Rights: Respect stakeholders’ rights.\\
+				Which option best respects everyone’s rights?\\
+				– Justice: Treat people fairly and equitably.\\
+				Which option ensures fairness?\\
+				– Utilitarian: Maximize good, minimize harm.\\
+				Which option benefits the most stakeholders?
+			\end{minipage}
+			\begin{minipage}[htp]{0.48\textwidth}
+				– Common Good: Serve the community, especially the vulnerable.\\
+				Which option serves the community best?\\
+				– Virtue: Strive to be an ideal person.\\
+				What kind of person am I if I choose this?\\
+				– Care Ethics: Prioritize relationships and feelings.\\
+				Which option considers all stakeholders’ concerns
+			\end{minipage}
+		\end{minipage}}\\
+	\fbox{\begin{minipage}[htp]{1\textwidth}
+			\ul{\textbf{EMPOWERMENT I.}}
+			\textbf{Choice architecture.} Context/environment where decision is made.\\
+			\textbf{Nudge.} Aspect of choice architecture altering people's behavior predictably without forbidding options or changing economic incentives $\rightarrow$ intentionally bias decisions.\\
+			$\rightarrow$ Applied in gov, health care, promote greener behavior, info security, privacy.\\
+			\textbf{Social nudges.} Reference to users of how other users behave $\rightarrow$ create social norm.\\
+			\begin{minipage}[t]{0.51\textwidth}
+				\textbf{Default.} Choice assigned in absence of active decision, without removing choice\\
+				$\rightarrow$ auto subscription renewal, newsletters $\rightarrow$ significant effect on chosen option.\\
+				- \textbf{Opt-in.} Checkbox unticked $\rightarrow$ user actively ticks.\\
+				- \textbf{Opt-out.} Checkbox ticked $\rightarrow$ user actively unticks $\rightarrow$ doubled organ donors \textit{(40\% $\rightarrow$ 80\%)}.\\
+				$\rightarrow$ Threats to 3 aspects of people's autonomy.\\
+				\textbf{Factuality errors.} Factually incorrect or fabricated content.\\
+				\textbf{Faithfulness errors.} Content inconsistent with instructions/input, or without internal logic.\\
+				\textbf{Automation bias.} More confidence in automated systems than other sources (including self)\\
+				$\rightarrow$ over-rely on automated systems and recommendation systems even if output incorrect, even if own judgment would be correct.\\
+			\end{minipage}\hfill
+			\begin{minipage}[t]{0.47\textwidth}
+				\textbf{Autonomy.} Freedom of choice from external pressure hard to resist; agency capacity to reason/reflect to make choices; self-constitution; identity, values, authorship on life.\\
+				$\rightarrow$ Nudges can touch autonomy, often low transparency; consider whether design increases individual/societal welfare; can cause infantilization, distrust.\\
+				\textbf{Automated systems can act on.} Information acquisition, information analysis, decision selection, decision implementation\\
+				$\rightarrow$ ChatGPT produces plausible text, no warranty it is correct.\\
+				$\rightarrow$ Called ``hallucinations''/errors; in artificial neural networks; can cause harm but also be valuable; error rate hard to know.
+			\end{minipage}\\
 
 		\end{minipage}}
 \end{minipage}
