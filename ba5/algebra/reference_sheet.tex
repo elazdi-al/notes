@@ -1,0 +1,176 @@
+\documentclass[8pt,a4paper]{extarticle}
+\usepackage[margin=0.35in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{multicol}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+\setlength{\columnsep}{14pt}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\lcm}{\operatorname{lcm}}
+
+% Reduce space around section headings
+\makeatletter
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-1.5ex plus -0.5ex minus -0.2ex}%
+  {0.4ex plus 0.1ex}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+
+\begin{document}
+\begin{multicols}{2}
+\raggedcolumns
+
+%=== PART I: GROUP THEORY ===%
+
+\subsection*{1. Groups}
+\textbf{Cyclic.} $C_n = \langle g \mid g^n = 1\rangle$. $G$ is cyclic iff $G = \langle g \rangle$ for some $g \in G$.
+
+\textbf{Dihedral.} $D_n = \langle r,s \mid r^n = s^2 = 1, srs = r^{-1}\rangle$, $|D_n| = 2n$.
+
+\textbf{Direct Product.} For $(g,h) \in G \times H$: $o((g,h)) = \lcm(o(g), o(h))$.
+
+\textbf{Lagrange.} If $G$ is finite and $H \le G$, then $|H|$ divides $|G|$. Also, $o(g)$ divides $|G|$ for all $g \in G$.
+
+\textbf{Cauchy.} If $G$ is finite and prime $p \mid |G|$, then $\exists g \in G$ with $o(g) = p$.
+
+\textbf{Prime Order.} If $|G| = p$ prime, then $G$ is cyclic (hence abelian).
+
+\textbf{Normal Subgroup.} $H \triangleleft G$ iff $gHg^{-1} = H$ for all $g \in G$.
+
+\textbf{Index 2.} If $[G:H] = 2$, then $H \triangleleft G$ (index 2 subgroups are always normal).
+
+\textit{Ex: $|G|=10$. By Cauchy, $\exists$ elements of order 2 and 5. Each generates a cyclic subgroup. The subgroup of order 5 has index $10/5=2$, so it is normal.}
+
+\subsection*{2. Group Actions}
+\textbf{Orbit.} $\text{Orb}(x) = \{g \cdot x : g \in G\}$ (all elements reachable from $x$).
+
+\textbf{Stabilizer.} $\text{Stab}(x) = \{g \in G : g \cdot x = x\}$ (elements fixing $x$).
+
+\textbf{Orbit-Stabilizer.} If $G$ finite, then $|G| = |\text{Orb}(x)| \cdot |\text{Stab}(x)|$.
+
+\textbf{Centralizer.} $C_G(g) = \{h \in G : hg = gh\}$ (elements commuting with $g$).
+
+\subsection*{3. Finite Abelian Groups}
+\textbf{Structure Theorem.} Every finite abelian group is isomorphic to a direct product of cyclic groups of prime power order:
+\[G \cong \Z_{p_1^{e_1}} \times \Z_{p_2^{e_2}} \times \cdots \times \Z_{p_k^{e_k}}\]
+
+\textbf{Cyclic Test.} $\Z_m \times \Z_n \cong \Z_{mn}$ iff $\gcd(m,n) = 1$.
+
+\textbf{Counting.} $|G| = p_1^{a_1} \cdots p_r^{a_r}$ implies number of abelian groups $= \prod p(a_i)$ where $p(a_i)$ = partitions of $a_i$.
+
+\textbf{Elementary Divisors.} The prime power factors $\{p_i^{e_{ij}}\}$.
+
+\textbf{Invariant Factors.} $d_1 \mid d_2 \mid \cdots \mid d_r$ with $G \cong \Z_{d_1} \times \cdots \times \Z_{d_r}$.
+
+\textbf{Order Check.} $G$ contains element of order $n$ iff $n \mid d_r$ (largest invariant factor).
+
+\subsection*{4. Symmetric Groups}
+\textbf{Definition.} $S_n$ = all bijections $\{1,\ldots,n\} \to \{1,\ldots,n\}$, with $|S_n| = n!$.
+
+\textbf{Cycle Notation.} $(a_1 \, a_2 \, \cdots \, a_k)$: $a_i \mapsto a_{i+1}$, $a_k \mapsto a_1$.
+
+\textbf{Order.} $o(\sigma) = \lcm(\text{cycle lengths})$ when written in disjoint cycle form.
+
+\textbf{Cyclic Subgroup.} $C_k \le S_n$ exists iff $k$ can be written as lcm of positive integers summing to $\le n$.
+
+%=== PART II: RINGS & FIELDS ===%
+
+\subsection*{5. Rings and Domains}
+\textbf{FEPIC Chain.} Field $\subset$ Euclidean Domain $\subset$ PID $\subset$ Integral Domain $\subset$ Comm.\ Ring.
+
+\textbf{Integral Domain.} Commutative ring with $1 \ne 0$, no zero divisors: $ab = 0$ implies $a = 0$ or $b = 0$.
+
+\textbf{Zero Divisor.} $a \ne 0$ with $\exists b \ne 0$: $ab = 0$.
+
+\textbf{PID.} Every ideal is principal: $I = (a)$.
+
+\textbf{Euclidean Domain.} Has division algorithm (e.g., $\Z$, $F[X]$).
+
+\textbf{Examples:}\\
+- $\Z$, $F[X]$: ED, PID\\
+- $\Z/n\Z$: field iff $n$ prime\\
+- $\Z[X]$: domain, not PID\\
+- $\Z \times \Z$: zero divisors
+
+\subsection*{6. Fields}
+\textbf{Definition.} Commutative ring where every nonzero element has inverse.
+
+\textbf{Finite Field.} $|\F| = p^n$ for prime $p$; unique up to isomorphism.
+
+\textbf{Existence.} $\F_q$ exists iff $q = p^n$. No $\F_{12}$, $\F_{18}$.
+
+\textbf{$\Z/n\Z$.} Field iff $n$ prime.
+
+\textbf{Characteristic.} Smallest $n>0$ such that $n \cdot 1 = 0$. For $\F_p$: char $= p$. For any ring $A$: $\text{char}(A[X]) = \text{char}(A)$.
+
+\subsection*{7. Polynomials and Ideals}
+\textbf{$\F_p[X]$.} Polynomials over field $\F_p$. Reduce coefficients mod $p$; remember $-1 \equiv p-1$.
+
+\textbf{GCD.} In a Euclidean domain, use Euclidean algorithm; last nonzero remainder (make monic).
+
+\textbf{Extended Euclidean.} Find $r, s$ such that $\gcd(f,g) = f \cdot r + g \cdot s$.
+
+\textbf{Ideal Operations.} In a PID:\\
+- $(a)(b) = (ab)$\\
+- $(a) \cap (b) = (\lcm(a,b))$\\
+- $(a) + (b) = (\gcd(a,b))$
+
+\textbf{Containment.} $(p) \subseteq (a)$ iff $a \mid p$.
+
+\subsection*{8. Quotient Rings}
+\textbf{Definition.} For ring $R$ and ideal $I \subseteq R$: $R/I$ with $[a]+[b]=[a+b]$, $[a][b]=[ab]$.
+
+\textbf{Computing.} In $F[X]/(p(X))$ where $F$ is a field: set $p(X) = 0$, reduce all polynomials mod $p(X)$.
+
+\textbf{Field Criterion.} For field $F$: $F[X]/(p(X))$ is a field iff $p(X)$ is irreducible over $F$.
+
+\subsection*{9. Irreducibility}
+\textbf{Degree $\le 3$.} For $f \in F[X]$ with $\deg f \le 3$: $f$ irreducible over $F$ iff $f$ has no roots in $F$.
+
+\textbf{Rational Root.} For $f = a_nX^n + \cdots + a_0 \in \Z[X]$: if $\frac{r}{s}$ (reduced) is a root, then $r \mid a_0$ and $s \mid a_n$.
+
+\textbf{Eisenstein.} For $f = a_nX^n + \cdots + a_0 \in \Z[X]$: if $\exists$ prime $p$ with $p \nmid a_n$, $p \mid a_i$ for all $i < n$, $p^2 \nmid a_0$, then $f$ is irreducible over $\Q$.
+
+\textbf{Reduction mod $p$.} For $f \in \Z[X]$: if $\bar{f} \in \F_p[X]$ is irreducible with $\deg \bar{f} = \deg f$, then $f$ is irreducible over $\Q$.
+
+%=== PART III: NUMBER THEORY ===%
+
+\subsection*{10. Euler's Totient}
+\textbf{Definition.} $\varphi(n) = $ count of integers $1 \le a \le n$ with $\gcd(a,n)=1$.
+
+\textbf{Formulas:}\\
+- Prime power: $\varphi(p^k) = p^{k-1}(p-1) = p^k - p^{k-1}$\\
+- Multiplicative: $\varphi(mn) = \varphi(m)\varphi(n)$ when $\gcd(m,n)=1$\\
+- General: $\varphi(n) = n \cdot \prod_{p \mid n}\left(1 - \tfrac{1}{p}\right)$ (product over distinct primes)
+
+\textbf{Units.} $(\Z/n\Z)^\times = \{[a] : \gcd(a,n)=1\}$, has order $\varphi(n)$.
+
+\textbf{Euler's Theorem.} If $\gcd(a,n)=1$, then $a^{\varphi(n)} \equiv 1 \pmod{n}$.
+
+\textbf{Fermat's Little.} If $p$ prime and $\gcd(a,p)=1$, then $a^{p-1} \equiv 1 \pmod{p}$. Also $a^p \equiv a \pmod{p}$ for any $a$.
+
+\textbf{Inverse.} If $\gcd(a,n)=1$, use Extended Euclidean: $ax + ny = 1$ implies $a^{-1} \equiv x \pmod{n}$.
+
+\subsection*{11. Chinese Remainder Theorem}
+\textbf{Isomorphism.} $\gcd(m,n)=1$ implies $\Z/mn\Z \cong \Z/m\Z \times \Z/n\Z$.
+
+\textbf{System.} For pairwise coprime $n_1,\ldots,n_k$: system $x \equiv a_i \pmod{n_i}$ has unique solution mod $N = \prod n_i$.
+
+\textbf{Formula.} $x = \sum a_i M_i y_i$ where $M_i = N/n_i$, $y_i = M_i^{-1} \pmod{n_i}$.
+
+\textbf{Non-Coprime.} Solvable iff $a_i \equiv a_j \pmod{\gcd(n_i,n_j)}$ for all $i,j$.
+
+\subsection*{12. Tips and Common Mistakes}
+\textbf{Normality Check.} To verify $H \triangleleft G$, only check $gHg^{-1} = H$ for generators of $G$.
+
+$\Z[X]$ is NOT a PID: $(2,X)$ is not principal.
+
+$\Z/8\Z$ is NOT a field: 8 is not prime.
+
+\end{multicols}
+\end{document}
