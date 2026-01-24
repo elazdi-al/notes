@@ -178,7 +178,7 @@
 			      \item[(e)] Server computes same value and checks against the one received.
 		      \end{enumerate}
 	\end{enumerate}
-	Can't be a hashing function (hash functions aren't keyed!, eavesdropper could compute $h_k(seed)$ for any k after the one observed.).
+	Can't be a hashing function (hash functions aren't keyed!, eavesdropper could compute $h^k(seed)$ for any k after the one observed.).
 	\hline
 	\begin{minipage}[t]{0.59\textwidth}
 		\textbf{Security Engineering process.}\\
@@ -280,7 +280,7 @@
 				            Returns the referrer URL when sent; can leak sensitive paths/parameters without strict Referrer-Policy.\\
 				            \texttt{document.URL} Returns current URL
 			            \end{minipage}
-			      \item \textbf{CWE 362 - Cross Site Request Forgery.} malicious website makes a state-changing action using user’s session cookie for another website.\\
+			      \item \textbf{CWE 352 - Cross Site Request Forgery.} malicious website makes a state-changing action using user’s session cookie for another website.\\
 			            \fbox{
 				            \begin{minipage}[htp]{0.9\textwidth}
 					            \textbf{Same Origin Policy (SOP).} web browser security mechanism that restricts scripts from one origin from reading data from another origin. An origin is a (protocol, host, port) \textit{http:\/\/example.com}. \\
@@ -457,9 +457,11 @@
 		\textbf{Coverage.} testing metric. software flaw can only be detected if flawed statement is executed $\Rightarrow$ effectiveness of a test suite depends on how many statements are executed.
 		\begin{itemize}
 			\item[-] \textbf{Statement Coverage.} Measures how many statements (e.g., assignments, comparisons, etc.) in the program have been executed by the test suite.
-			\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite.
+			\item[-] \textbf{Branch Coverage.} Measures how many branches among all possible execution paths have been executed by the test suite. \\(0,1), (1,0) $\checkmark$
 		\end{itemize}
 	\end{minipage}\\
+	\textbf{Method Coverage.} Measures how many methods/functions are invoked (executed at least once) by the test suite.\\
+	\textbf{Path Coverage.} Measures how many distinct control-flow paths from entry to exit are executed by the test suite ((0,1),(1,0),(0,0),(1,1))$\checkmark$; typically infeasible to achieve fully due to path explosion/loops.\\
 	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Fuzzing.} random testing that mutates input to improve test coverage ($\oplus$scales very well). \\
 		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.} \textbf{Types of Fuzzing:}\\
@@ -480,7 +482,7 @@
 		- Segmentation faults\\
 		- Division by zero traps\\
 		- Uncaught exceptions\\
-		- Mitigations triggering termination\\
+		- Mitigations triggering termination
 		\textit{cannot detect logic bugs/specification, only bugs that violate specific policy}
 	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.31\textwidth}
@@ -505,16 +507,19 @@
 	\end{minipage}
 	\hline
 	\begin{minipage}[htp]{0.52\textwidth}
+		\scriptsize
 		\textbf{Network Security Properties.}\\
 		-\textbf{Naming Security.} association between lower level names \textit{(network addresses)} and higher level names \textit{(Alice)} must not be influenced by adversary. \textit{(Integrity, Authenticity, Availability[naming service])}\\
 		-\textbf{Routing Security.} route over network and delivery of messages must not be influenced by adversary.\textit{(Integrity, Authenticity, Availability, Authorization)}\\
 		-\textbf{Session Security.} messages within the same session cannot be modified (keep ordering and no adding/removing messages) \textit{(Integrity, Authenticity)}.
 	\end{minipage}\hfill
-	\begin{minipage}[htp]{0.46\textwidth}\vspace*{-10px}
-		\includegraphics[width=1\textwidth]{assets/layers.png}
+	\begin{minipage}[htp]{0.46\textwidth}\vspace*{-5px}
+		\includegraphics[width=0.9\textwidth]{assets/layers.png}
 	\end{minipage}\\
-	- \textbf{Content Security.} content of messages must not be readable or influenced by adversaries \textit{(Confidentiality, Integrity, Authenticity)}.
+	\scriptsize
+	- \textbf{Content Security.} content of messages must not be readable or influenced by adversaries \textit{(Confidentiality, Integrity, Authenticity)}.\footnotesize
 	\hline
+	\scriptsize
 	\textbf{Subnet Mask.} Used to determine network portion of IP address via bitwise AND operation.\\
 	\textbf{Gateway.} Router IP address used to forward packets to different subnets.\\
 	\textbf{ARP (Address Resolution Protocol).} translates IP addresses $\to$ MAC addresses. Each host maintains cache table of IP $\leftrightarrow$ MAC mappings. If not available, broadcast ARP request.
@@ -549,6 +554,7 @@
 		      \end{minipage}
 	\end{itemize}
 	\hline
+	\footnotesize
 	\textbf{IP Routing.} \textbf{Input:}($IP_{source}$, $IP_{dest}$, Subnet Mask $M$, $IP_{gateway}$) \; \textbf{Output:} Packet sent to destination\\
 	\begin{minipage}[t]{0.48\textwidth}
 		\begin{enumerate}[leftmargin=6pt,labelsep=0pt,itemsep=0pt,series=mainenum]
