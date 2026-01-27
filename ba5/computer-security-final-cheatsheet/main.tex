@@ -25,7 +25,7 @@
 % Define a custom listing style for C code
 \lstdefinestyle{CStyle}{
   language=C,
-  basicstyle=\footnotesize\ttfamily,
+  basicstyle=\scriptsize\ttfamily,
   backgroundcolor=\color{CBackground},
   commentstyle=\color{CComment},
   keywordstyle=\color{CKeyWord}\bfseries,
@@ -297,8 +297,8 @@
 		\item \textbf{CWE 3 - Porous Defenses.} defensive techniques misused, abused, or just ignored
 	\end{enumerate}
 	\hline
-	\textbf{Software Security.}\\[-5px]
-	\begin{minipage}[htp]{0.47\textwidth}
+	\begin{minipage}[htp]{0.47\textwidth}\footnotesize
+		\textbf{Software Security.}\\
 		\textbf{Stack.}Call frames: locals, args, return addresses\\
 		\textbf{Heap.}Dynamic allocations via \texttt{malloc/new}\\
 		\textbf{Uninitialized data (BSS).} Global/static zero-initialized storage; zeroed at program start.\\
@@ -309,7 +309,7 @@
 	\hfill
 	\begin{minipage}[htp]{0.495\textwidth}\vspace*{-5px}
 		\includegraphics[width=0.8\textwidth]{assets/stack.png}
-	\end{minipage}\\[-4px]
+	\end{minipage}\\[-2px]
 	\begin{minipage}[t]{0.44\textwidth}
 		\textbf{Memory Corruption.} \\Unintended modification of memory location due to missing / faulty safety checks.
 		\begin{cc}
@@ -350,6 +350,7 @@
 		\end{cc}
 	\end{minipage}\\[-5px]
 	\begin{minipage}[t]{0.49\textwidth}
+		\scriptsize
 		\textbf{Code Injection Attack.} \\
 		\textbf{1.} Control unchecked variable. \\
 		\textbf{2.}Overwrite return address. \textbf{3.}Hijack control flow.\\
@@ -363,6 +364,7 @@
 		\end{cc}
 	\end{minipage}
 	\begin{minipage}[t]{0.49\textwidth}
+		\scriptsize
 		\textbf{Attack Chain:}\\
 		1. \textbf{Memory Safety Violation.} \texttt{strcpy} writes past \texttt{tmp[MAX]} (spatial error)\\
 		2. \textbf{Integrity (*C).} Attacker overwrites return address on stack\\
@@ -372,18 +374,15 @@
 	\end{minipage}
 	\hline
 	\begin{minipage}[htp]{0.49\textwidth}
+		\scriptsize
 		\textbf{Address Space Layout Randomization (ASLR).}\\
 		Loader/OS randomizes memory regions(code/stack/heap/libraries) at load time. Same code, different addresses on each run. (prevents target addresses prediction/breaks gadgets)\\
 		\textit{Limitations:}
 		1.Probabilistic defense, not deterministic.
-		2.Vulnerable to addresses leaks. \\3.Some regions remain static \textit{x86}.\\
-		4.Performance overhead.(requires the system
+		2.Vulnerable to addresses leaks. 3.Some regions remain static \textit{x86}. 4.Performance overhead.(requires the system
 		to keep track of all pointers)
 		\hline
-		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks.\\
-		1. \textbf{Effectiveness.} must prevent/defend attacks\\
-		2. \textbf{Efficiency:} low comp/memory overhead\\
-		3. \textbf{Compatibility:} easy deployment (no major \\software/hardware changes)\\
+		\textbf{Mitigation.} A defense mechanism that prevents or reduces the impact of attacks. 1. \textbf{Effectiveness.} must prevent/defend attacks 2. \textbf{Efficiency:} low comp/memory overhead. 3. \textbf{Compatibility:} easy deployment (no major \\software/hardware changes)\\
 		\textit{Sandboxing. isolates process from system resources and other processes. DEP, ASLR, Stack canaries\dots}
 		\hline
 		\scriptsize
@@ -396,33 +395,37 @@
 		\hline
 		\textbf{Anonymous Credentials.} Prove attribute \textit{(``over 18'')} without identity.
 		\textit{Data minimization; users with same attribute indistinguishable; multiple uses unlinkable.}\\
-		\textbf{vs PKI:} Both use trusted issuer \& secret key. $\warning$PKI reveals identity $\Rightarrow$ tracking.
+		\textbf{vs PKI:} Both use trusted issuer \& secret key. $\warning$PKI reveals identity $\Rightarrow$ tracking.\hline
+		\textbf{MixNet.} High-latency anonymous comm; relay nodes=\emph{mixes}.\\
+		\textbf{1. Select path:} Sequence of mixes (often per-message).\\
+		\textbf{2. Wrap message:} Layered encryption under mixes' public keys.\\
+		\textbf{3. Process:} Each mix removes layer, \emph{re-randomizes} ciphertext \textit{(unlinkable in/out)}, forwards.
 	\end{minipage}\hfill
 	\begin{minipage}[htp]{0.49\textwidth}
+		\vspace*{-12px}
 		\begin{minipage}[htp]{0.49\textwidth}
+			\scriptsize
 			\textbf{Stack Canaries.} \\
 			Compiler places random secret value between local buffers and return address. Checked before function returns and abort if corrupted.
 		\end{minipage}
 		\begin{minipage}[htp]{0.49\textwidth}
-			\includegraphics[width=0.99\textwidth]{assets/stack-canaries.png}
+			\includegraphics[width=0.9\textwidth]{assets/stack-canaries.png}
 		\end{minipage}\\
+		\scriptsize
 		\textit{(detects buffer overflows before control hijack)}\\
-		\textit{Limitations:} 1.Probabilistic, vulnerable to canary leaks. 2.No protection against targeted writes (jumps over canary).\\
-		3.No protection against reads.\\
+		\textit{Limitations:} 1.Probabilistic, vulnerable to canary leaks. 2.No protection against targeted writes (jumps over canary). 3.No protection against reads.\\
 		4.Performance overhead from checks.
 		\hline
 		\scriptsize
 		\textbf{Tor Network.} Low-latency anonymous comm; overlay at application layer.\\
 		\textbf{1. Select path:} 3 nodes from Directory Authorities.\\
-		\textbf{2. Build circuit:} Authenticated DH key agreement:\\
-		Entry: direct \textit{(sees user IP)}\\ Middle: via Entry \textit{(blind to user IP)}\\
-		Exit: via Entry+Middle \textit{(blind to user \& entry IP)}\\
-		\textbf{3. Send:} Layered encryption:\\$E_{k-exit}(E_{k-mid}(E_{k-entry}(msg)))$ \\Each node decrypts one layer $\Rightarrow$ bitwise unlinkability.\\
-			\textbf{4. Response:} Exit encrypts reverse order \textit{(inner layer for entry)}.\\
-			\textbf{Stream-based:} Circuit built once (expensive PK), reused with symmetric keys.\\
-			\textbf{Decentralized trust:} No single node breaks anonymity.\\
-		$\warning$ \textbf{Assumes adversary can't see both edges} (not global adversary resistant).
-		\vspace*{20px}
+		\textbf{2. Build circuit:} Authenticated DH key agreement: Entry: direct \textit{(sees user IP)} Middle: via Entry \textit{(blind to user IP)} Exit: via Entry+Middle \textit{(blind to user \& entry IP)}\\
+		\textbf{3. Send:} Layered encryption:\\ $E_{k\text{-}exit}(E_{k\text{-}mid}(E_{k\text{-}entry}(msg)))$ \\Each node decrypts one layer $\Rightarrow$ bitwise unlinkability.\\
+		\textbf{4. Response:} Exit encrypts reverse order \textit{(inner layer for entry)}. \textbf{Stream-based:} Circuit built once (expensive PK), reused with symmetric keys. \textbf{Decentralized trust:} No single node breaks anonymity.\\
+		$\warning$ \textbf{Assumes adversary can't see both edges} (not global adversary resistant).\vspace*{25px}\hline
+		\textbf{4. Mixing:} Batch until threshold/timer, shuffle output \textit{(+ cover traffic)}.\\
+		\textbf{Message-based:} Per-message routes; breaks timing/ordering $\Rightarrow$ strong unlinkability.\\
+		$\warning$ stronger anonymity at cost of high latency.
 	\end{minipage}\\
 \end{minipage}\newpage
 \begin{minipage}[t]{0.5\textwidth}
@@ -461,7 +464,7 @@
 		\end{itemize}
 	\end{minipage}\\
 	\textbf{Method Coverage.} Measures how many methods/functions are invoked (executed at least once) by the test suite.\\
-	\textbf{Path Coverage.} Measures how many distinct control-flow paths from entry to exit are executed by the test suite ((0,1),(1,0),(0,0),(1,1))$\checkmark$; typically infeasible to achieve fully due to path explosion/loops.\\
+	\textbf{Path Coverage.} Measures how many distinct control-flow paths from entry to exit are executed by the test suite ((0,1),(1,0),(0,0),(1,1))$\checkmark$; typically infeasible to achieve fully due to path explosion/loops.\hline
 	\begin{minipage}[t]{0.495\textwidth}
 		\textbf{Fuzzing.} random testing that mutates input to improve test coverage ($\oplus$scales very well). \\
 		\textit{State-of-the-art fuzzers use coverage as feedback to guide input mutations.} \textbf{Types of Fuzzing:}\\
@@ -476,7 +479,8 @@
 	\end{minipage}\\
 	\textbf{Symbolic Execution with Fuzzing.} Whitebox fuzzing uses \textit{Symbolic Analysis} to generate new seed inputs for unexplored paths when random mutation gets stuck, improving coverage.
 	\hline
-	\begin{minipage}[t]{0.28\textwidth}
+	\begin{minipage}[t]{0.27\textwidth}
+		\scriptsize
 		\textbf{Sanitization.} detect bugs by enforcing policies, \textbf{increasing testing effectiveness.}\\
 		- Assertions\\
 		- Segmentation faults\\
@@ -485,7 +489,8 @@
 		- Mitigations triggering termination
 		\textit{cannot detect logic bugs/specification, only bugs that violate specific policy}
 	\end{minipage}\hfill\vline\hfill
-	\begin{minipage}[t]{0.31\textwidth}
+	\begin{minipage}[t]{0.32\textwidth}
+		\scriptsize
 		\textbf{Address Sanitizer (ASan).}\\
 		Detects memory errors by placing red zones around objects and checking them on trigger events. It can detect:\\
 		-Out-of-bounds accesses to heap, stack, and globals\\
@@ -497,6 +502,7 @@
 		\textbf{Performance.}+ 2$\times$ slowdown.
 	\end{minipage}\hfill\vline\hfill
 	\begin{minipage}[t]{0.38\textwidth}
+		\scriptsize
 		\textbf{Undefined Behavior Sanitizer (UBSan).} \textit{(only one usable in production.)}\\Detects undefined behavior by instrumenting code to trap on typical C/C++ undefined behavior:
 		- Unsigned/misaligned pointers\\
 		- Signed integer overflow\\
