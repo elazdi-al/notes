@@ -1,0 +1,359 @@
+\documentclass[../../compsys.tex]{subfiles}
+\begin{document}
+\chapter{L1 - Introduction}
+
+\section{Why data management?}
+Modern software is data-driven: systems are useful only when data can be stored, shared, and queried correctly over time. This chapter builds that idea step by step, from raw data to DBMS architecture.
+
+\subsection{What is data?}
+We first separate \emph{raw facts} from \emph{usable meaning}.
+
+\begin{concept}{Data}
+Raw facts used as input for reasoning, discussion, and computation. Data can be useful, irrelevant, or redundant. It must be processed to become meaningful.
+\end{concept}
+
+\begin{concept}{Information}
+Processed data with meaning in context. Information is relevant to a specific problem and actionable for decision-making.
+\end{concept}
+
+Practical flow:
+\[
+\text{Data} \xrightarrow{\text{organize + process}} \text{Information}
+\]
+Information then supports higher-level outcomes such as \textbf{knowledge} and \textbf{wisdom}.
+
+\subsection{What is a database?}
+Once data has meaning, we need structure.
+
+\begin{concept}{Database}
+A large, integrated, structured collection of data, usually modeling a real-world enterprise.
+\end{concept}
+
+\begin{concept}{Entity}
+An object type we store data about (for example, a student or a course).
+\end{concept}
+
+\begin{concept}{Relationship}
+A meaningful association between entities (for example, a student enrolls in a course).
+\end{concept}
+
+\textit{Example: University}. Entities are courses, students, and professors; relationships include enrollment and teaching.
+
+\subsection{What is a Database Management System (DBMS)?}
+A database alone is passive. We need software that manages access and correctness.
+
+\begin{concept}{DBMS}
+A software system designed to store, manage, and facilitate access to databases.
+\end{concept}
+
+A useful decomposition is:
+\[
+\text{DBMS} = \text{interrelated data (database)} + \text{programs to access/manage it}
+\]
+
+\subsection{What does a DBMS do?}
+\begin{concept}{Core role of a DBMS}
+Provide efficient, reliable, convenient, and safe multi-user storage of and access to massive persistent data.
+\end{concept}
+
+In practice, this means:
+\begin{dashlist}
+    \item failure protection against hardware/software faults, power loss, and malicious behavior,
+    \item high throughput (thousands of queries/updates per second),
+    \item high availability (24/7 operation),
+    \item concurrency control for correct multi-user access,
+    \item support for very large-scale data,
+    \item persistence (data outlives programs),
+    \item high-level declarative access with physical data independence.
+\end{dashlist}
+
+\begin{concept}{Persistent data}
+Data that remains stored beyond the lifetime of a process or program execution.
+\end{concept}
+
+\begin{concept}{Concurrency control}
+Mechanisms that coordinate simultaneous operations so outcomes remain correct.
+\end{concept}
+
+\subsection{Is your file system a DBMS?}
+This thought experiment shows why plain files are often insufficient for data-intensive multi-user applications.
+
+\subsubsection*{Thought experiment 1: concurrent edits}
+Two collaborators edit and save the same file at nearly the same time. The natural question is: \emph{whose changes survive}? Outcomes can be yours, your partner's, both, neither, or simply \textbf{unclear}.
+
+\subsubsection*{Thought experiment 2: update during power loss}
+A file update is in progress and power fails. Which changes survive: all, none, only changes since last save, or again \textbf{unclear}?
+
+The key issue is the missing contract: guarantees are unclear, which makes application logic fragile and hard to reason about.
+
+\subsubsection*{How do you write programs over a platform that promises ``???''?}
+If correctness, durability, isolation, and recovery guarantees are not explicit, every application must re-implement them. \textbf{A DBMS exists to provide these guarantees systematically.}
+
+\subsection{Is the web a DBMS?}
+The web offers strong information retrieval, but retrieval is not equivalent to database management.
+
+\subsubsection*{The web is not a DBMS}
+\begin{dashlist}
+    \item data is mostly unstructured and untyped,
+    \item the "correct" answer for many queries is not well-defined,
+    \item completeness is not guaranteed,
+    \item data manipulation guarantees are limited,
+    \item freshness, cross-item consistency, and fault-tolerance guarantees are weaker or undefined.
+\end{dashlist}
+
+\subsubsection*{Practical architecture}
+Most serious websites place a DBMS behind the web layer (for example, \texttt{facebook.com} with MySQL).
+
+\subsubsection*{Is ChatGPT a DBMS???}
+\begin{concept}{Short answer}
+No. ChatGPT is a language model interface, not a DBMS.
+\end{concept}
+
+It can connect to database-backed systems, but by itself it does not provide the full DBMS contract (schema-centered storage, transaction guarantees, and complete declarative data management).
+
+\subsection{The scope of DBMS}
+The question is no longer only \emph{"where to store bytes"}; it is how to query, update, and trust data under real workload conditions.
+
+\subsubsection{What more could we want than a file system?}
+\begin{dashlist}
+    \item simple and efficient \emph{ad-hoc} querying,
+    \item robust concurrency control,
+    \item recovery mechanisms,
+    \item the benefits of well-designed data models.
+\end{dashlist}
+
+\begin{concept}{Ad-hoc query}
+A query formed for a specific immediate need, not predefined as part of a fixed workflow.
+\end{concept}
+
+\textit{With many queries, users, transactions, and resource constraints, complexity increases quickly. Managing that complexity is a core DBMS concern.}
+
+\subsubsection{Can the OS offer services like memory management etc? Again, not really}
+The operating system is essential, but it does not provide the complete data-management contract that applications need.
+
+\subsection{What is the intellectual contribution?}
+DBMS is not only engineering practice; it also contributes key ideas about representation, semantics, and correctness.
+
+\subsubsection{Core contributions of DBMS thinking}
+\begin{dashlist}
+    \item \textbf{Representation of information}: data modeling,
+    \item \textbf{Languages and systems for querying data}: complex queries with real semantics over massive data,
+    \item \textbf{Concurrency control for data manipulation}: controlled concurrent access with transactional meaning,
+    \item \textbf{Reliable data storage}: preserving semantics even after failures (for example, power loss).
+\end{dashlist}
+
+\begin{concept}{Transactional semantics}
+The guarantee that concurrent and failing executions still behave like correct transactions under clear correctness rules.
+\end{concept}
+
+\section{DBMS Architecture}
+The main architectural question is simple: how do we keep one coherent meaning of data while serving different users and storing bytes efficiently on disk?
+
+\subsection{Describing data}
+\begin{concept}{Data model}
+A collection of concepts for describing data.
+\end{concept}
+
+Data models are high-level abstractions: they hide low-level storage details and let us reason about structure and meaning first.
+Typical model families include \emph{relational}, \emph{hierarchical}, \emph{graph}, and \emph{object-oriented}.
+
+\begin{concept}{Relation}
+A named table with rows (tuples) and columns (attributes).
+\end{concept}
+
+\begin{concept}{Schema}
+The structural definition of a relation: attribute names, types, and organization.
+\end{concept}
+
+In the \textbf{relational model}, data is represented as a set of records organized into relations.
+In \textbf{nested models}, not all data is forced into flat tables; hierarchies and arrays are natural first-class structures.
+
+\begin{concept}{Schema vs. data}
+Schema is the type (for example, \textit{string}); data is a value instance (for example, \textit{"hello"}) that follows that type.
+\end{concept}
+
+\subsection{Example: Schema of a University database}
+We use one running example throughout the rest of the section.
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\textbf{Students} & \texttt{sid:string}, \texttt{name:string}, \texttt{login:string}, \texttt{age:integer}, \texttt{gpa:real} \\
+\textbf{Enrolled} & \texttt{sid:string}, \texttt{cid:string}, \texttt{grade:string} \\
+\textbf{Courses} & \texttt{cid:string}, \texttt{cname:string}, \texttt{credits:string} \\
+\end{tabularx}
+
+Some later examples use \texttt{credits:integer}. The important point is explicit typing in the schema.
+
+\subsection{Describing data: Levels of abstraction}
+\begin{concept}{External schema}
+User- or application-specific views, often used for access control.
+\end{concept}
+
+\begin{concept}{Logical schema (conceptual level)}
+The main global structure seen by users and application programs.
+\end{concept}
+
+\begin{concept}{Physical schema (internal level)}
+How data is stored on disk: files, indexes, and storage layout choices.
+\end{concept}
+
+The mapping is:
+\[
+\text{External schemas} \;\rightarrow\; \text{Logical schema} \;\rightarrow\; \text{Physical schema}
+\]
+Many external views map to one logical schema that is then implemented by physical structures.
+
+\subsubsection*{Running example across levels}
+\textit{External views (access control)}
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\textbf{Students\_Info} & \texttt{sid:string}, \texttt{name:string} \\
+\textbf{Course\_Enrollment} & \texttt{cid:string}, \texttt{\#enrolled:integer} \\
+\end{tabularx}
+
+\textit{Logical schema (what applications see)}
+
+The logical level uses the university relations above:
+\textbf{Students}, \textbf{Courses}, and \textbf{Enrolled}
+(with \texttt{credits} often shown as \texttt{integer} in this level).
+
+\textit{Physical schema (how storage is organized)}
+
+Relations can be stored as unordered files, with indexes such as \texttt{Students.sid} and \texttt{Courses.cid}.
+
+\subsection{DBMS cares about data independence types}
+\begin{concept}{Data independence}
+The ability to change the schema at one level of a database system without changing the schema at the next higher level.
+\end{concept}
+
+\begin{concept}{Logical data independence}
+The ability to change the conceptual schema without changing user views.
+\end{concept}
+
+\begin{concept}{Physical data independence}
+The ability to change the internal schema without changing the conceptual schema or user views.
+\end{concept}
+
+This matters because data-intensive systems evolve constantly: applications should keep working while storage layouts, indexes, and conceptual structures improve over time.
+
+\subsection{Simplified DBMS architecture}
+The architecture has two linked flows: a \emph{design flow} to define data and a \emph{query flow} to access data efficiently.
+
+\begin{minipage}[t]{0.49\textwidth}
+\subsubsection*{Design flow (from requirements to storage)}
+\begin{dashlist}
+    \item \textbf{Conceptual design}: capture the enterprise at a high level, typically with ER models.
+    \item \textbf{Logical design}: translate ER structures into a relational model.
+    \item \textbf{Physical design}: choose indexing and storage structures.
+    \item \textbf{Database storage}: persist data in disk files.
+\end{dashlist}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\subsubsection*{Query flow (from SQL to results)}
+Applications issue SQL (rooted in relational algebra). Inside the DBMS, processing is layered:
+\begin{dashlist}
+    \item query optimization and execution,
+    \item relational operators,
+    \item access methods,
+    \item buffer management,
+    \item disk space management.
+\end{dashlist}
+\end{minipage}
+
+Cross-cutting services enforce correctness and performance across these layers: query processing, transaction management, and concurrency control.
+
+\subsection{Conceptual Design: Entity-Relationship Model}
+At the conceptual stage, we use the \textbf{ER model} to describe what the enterprise means before deciding low-level implementation details.
+
+\subsubsection*{The ER model: scope of this part}
+\begin{dashlist}
+    \item basic ER modeling concepts,
+    \item constraints,
+    \item complex relationships,
+    \item conceptual design methodology.
+\end{dashlist}
+\textit{Reading pointer from class: Chapters 1.1--1.5 and 6.1--6.2.}
+
+\subsection{(recap) Describing data: data model}
+\begin{concept}{Data model (recap)}
+A collection of concepts for describing data at a level above physical storage details.
+\end{concept}
+
+Families include relational, hierarchical, graph, and object-oriented models.
+
+\begin{concept}{Relational data model (recap)}
+Data is represented as records in relations (tables). A relation has rows and columns; a schema describes its columns and types.
+\end{concept}
+
+\begin{concept}{Schema vs. data (recap)}
+Schema is the type-level description of a collection; data is one concrete collection of values following that schema.
+\end{concept}
+
+\subsection{Relational data model}
+In practice, relational design relies on rows/columns and explicit links between relations through keys.
+
+\begin{concept}{Key}
+An attribute (or set of attributes) whose value identifies a tuple uniquely inside a relation.
+\end{concept}
+
+\begin{concept}{Foreign key}
+An attribute (or set) in one relation whose values reference keys in another relation, linking the two relations.
+\end{concept}
+
+\subsubsection*{Example relation instance}
+\begin{minipage}[t]{0.43\textwidth}
+\textbf{Enrolled}
+\small
+\begin{tabular}{@{}lll@{}}
+\textbf{SID} & \textbf{CID} & \textbf{Grade} \\
+53666 & Carnatic101 & 5 \\
+53666 & Raggae203 & 5.5 \\
+53650 & Topology112 & 6 \\
+53666 & History105 & 5 \\
+\end{tabular}
+\normalsize
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.53\textwidth}
+\textbf{Students}
+\small
+\begin{tabular}{@{}lllll@{}}
+\textbf{SID} & \textbf{Name} & \textbf{Login} & \textbf{Age} & \textbf{GPA} \\
+53666 & Jones & jones@cs & 18 & 5.4 \\
+53688 & Smith & smith@eecs & 18 & 4.2 \\
+53650 & Smith & smith@math & 19 & 4.8 \\
+\end{tabular}
+\normalsize
+\end{minipage}
+
+Here, \texttt{Enrolled.SID} acts as a foreign key referencing \texttt{Students.SID}.
+This raises the next design question: \emph{how do we design such schemas systematically?}
+
+\subsection{Database design requirements}
+Design moves from needs to structure, then to efficient and secure implementation.
+
+\begin{dashlist}
+    \item \textbf{Requirements analysis}: identify user needs and what the database must support.
+    \item \textbf{Conceptual design}: produce a high-level enterprise description (often with ER).
+    \item \textbf{Logical design}: translate ER into the DBMS data model.
+    \item \textbf{Schema refinement}: improve consistency and normalization.
+    \item \textbf{Physical design}: choose indexes and disk layout.
+    \item \textbf{Security design}: define who can access what.
+\end{dashlist}
+
+\subsection{What is a conceptual design}
+Conceptual design answers a small set of foundational questions:
+
+\begin{dashlist}
+    \item what are the \emph{entities} and \emph{relationships} in the enterprise?
+    \item what information about them should the database store?
+    \item which \emph{integrity constraints} must always hold?
+\end{dashlist}
+
+\begin{concept}{ER diagram}
+A pictorial representation of the conceptual schema in the ER model.
+\end{concept}
+
+An ER diagram can be mapped into a relational schema; this mapping bridges conceptual understanding and implementable database design.
+
+\end{document}

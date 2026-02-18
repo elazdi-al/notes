@@ -1,0 +1,73 @@
+\documentclass[11pt,openany]{book}
+
+%% -------------------- Input and Microtypography --------------------
+\usepackage[utf8]{inputenc}          % Unicode input
+\usepackage{microtype}               % Improved typography
+\usepackage{subfiles}                % For subfiles compilation
+
+%% -------------------- Page Layout and Hyperlinks --------------------
+\usepackage{geometry}
+\geometry{a4paper, left=14mm, right=14mm, top=23mm, bottom=28mm}
+\usepackage{hyperref}                % For clickable links
+\usepackage{tocbibind}               % Include bibliography in TOC
+\usepackage{titlesec}
+%% -------------------- Math, Fonts, and Symbols --------------------
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{bm}
+\usepackage{tabularx}
+\usepackage{array}
+
+% Define custom column types: C for centered and L for left-justified
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+
+%% -------------------- Lists, Colors, and Graphics --------------------
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+
+%% -------------------- Tables, Code Listings, and Miscellaneous --------------------
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[normalem]{ulem}
+\usepackage[document]{ragged2e}
+
+%% -------------------- Page Headers and Footers --------------------
+\pagestyle{fancy}
+\fancyhf{} % clear all header/footer fields
+\fancyhead[RE]{\leftmark}             % Left header on even pages: chapter info
+\fancyhead[RO]{Notes by Ali EL AZDI}   % Right header on odd pages: custom text
+\fancyfoot[CE,CO]{\thepage}            % Center page number on all pages
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{14pt}
+
+%% -------------------- Global Spacing --------------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em}
+\setlength{\emergencystretch}{1.5em}
+\setlist{topsep=0.2em,itemsep=0.15em,parsep=0pt,partopsep=0pt,leftmargin=1.8em}
+\setlist[itemize]{label=--}
+\titlespacing*{\chapter}{0pt}{0.8\baselineskip}{0.6\baselineskip}
+\titlespacing*{\section}{0pt}{0.65\baselineskip}{0.35\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.55\baselineskip}{0.25\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{0.45\baselineskip}{0.2\baselineskip}
+
+%% -------------------- Custom Environments --------------------
+\newenvironment{concept}[1]
+    {\par\noindent\textbf{#1. }\ignorespaces}
+    {\par\ignorespacesafterend}
+\newenvironment{dashlist}
+    {\begin{itemize}[label=-]}
+    {\end{itemize}}
+
+%% -------------------- Document Begins --------------------
+\begin{document}
+\flushbottom
+\subfile{chapters/front/front} 
+\subfile{chapters/L1/L1} 
+\end{document}
