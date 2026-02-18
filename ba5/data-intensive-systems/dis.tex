@@ -11,6 +11,8 @@
 \usepackage{hyperref}                % For clickable links
 \usepackage{tocbibind}               % Include bibliography in TOC
 \usepackage{titlesec}
+\usepackage{needspace}
+\usepackage{etoolbox}
 %% -------------------- Math, Fonts, and Symbols --------------------
 \usepackage{amsmath, amsfonts, amssymb, amsthm}
 \usepackage{bm}
@@ -26,6 +28,8 @@
 \usepackage{enumitem}
 \usepackage[table]{xcolor}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
 
 %% -------------------- Tables, Code Listings, and Miscellaneous --------------------
 \usepackage{booktabs}
@@ -56,6 +60,8 @@
 \titlespacing*{\section}{0pt}{0.65\baselineskip}{0.35\baselineskip}
 \titlespacing*{\subsection}{0pt}{0.55\baselineskip}{0.25\baselineskip}
 \titlespacing*{\subsubsection}{0pt}{0.45\baselineskip}{0.2\baselineskip}
+\pretocmd{\subsection}{\Needspace{12\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\Needspace{8\baselineskip}}{}{}
 
 %% -------------------- Custom Environments --------------------
 \newenvironment{concept}[1]

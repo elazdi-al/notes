@@ -1,7 +1,7 @@
-\documentclass[../../compsys.tex]{subfiles}
+\documentclass[../../dis.tex]{subfiles}
 \begin{document}
 \chapter{L1 - Introduction}
-
+\vfill
 \section{Why data management?}
 Modern software is data-driven: systems are useful only when data can be stored, shared, and queried correctly over time. This chapter builds that idea step by step, from raw data to DBMS architecture.
 
@@ -21,7 +21,7 @@ Practical flow:
 \text{Data} \xrightarrow{\text{organize + process}} \text{Information}
 \]
 Information then supports higher-level outcomes such as \textbf{knowledge} and \textbf{wisdom}.
-
+\newpage
 \subsection{What is a database?}
 Once data has meaning, we need structure.
 
@@ -262,33 +262,6 @@ Applications issue SQL (rooted in relational algebra). Inside the DBMS, processi
 
 Cross-cutting services enforce correctness and performance across these layers: query processing, transaction management, and concurrency control.
 
-\subsection{Conceptual Design: Entity-Relationship Model}
-At the conceptual stage, we use the \textbf{ER model} to describe what the enterprise means before deciding low-level implementation details.
-
-\subsubsection*{The ER model: scope of this part}
-\begin{dashlist}
-    \item basic ER modeling concepts,
-    \item constraints,
-    \item complex relationships,
-    \item conceptual design methodology.
-\end{dashlist}
-\textit{Reading pointer from class: Chapters 1.1--1.5 and 6.1--6.2.}
-
-\subsection{(recap) Describing data: data model}
-\begin{concept}{Data model (recap)}
-A collection of concepts for describing data at a level above physical storage details.
-\end{concept}
-
-Families include relational, hierarchical, graph, and object-oriented models.
-
-\begin{concept}{Relational data model (recap)}
-Data is represented as records in relations (tables). A relation has rows and columns; a schema describes its columns and types.
-\end{concept}
-
-\begin{concept}{Schema vs. data (recap)}
-Schema is the type-level description of a collection; data is one concrete collection of values following that schema.
-\end{concept}
-
 \subsection{Relational data model}
 In practice, relational design relies on rows/columns and explicit links between relations through keys.
 
@@ -326,11 +299,11 @@ An attribute (or set) in one relation whose values reference keys in another rel
 \normalsize
 \end{minipage}
 
-Here, \texttt{Enrolled.SID} acts as a foreign key referencing \texttt{Students.SID}.
+Here, \texttt{Enrolled.SID} acts as a foreign key referencing \texttt{Students.SID}.\\
 This raises the next design question: \emph{how do we design such schemas systematically?}
 
 \subsection{Database design requirements}
-Design moves from needs to structure, then to efficient and secure implementation.
+Database design proceeds in stages, from problem understanding to implementation choices.
 
 \begin{dashlist}
     \item \textbf{Requirements analysis}: identify user needs and what the database must support.
@@ -342,7 +315,11 @@ Design moves from needs to structure, then to efficient and secure implementatio
 \end{dashlist}
 
 \subsection{What is a conceptual design}
-Conceptual design answers a small set of foundational questions:
+\begin{concept}{Conceptual design}
+A high-level description of the enterprise data, independent of storage and implementation details.
+\end{concept}
+
+It answers three foundational questions:
 
 \begin{dashlist}
     \item what are the \emph{entities} and \emph{relationships} in the enterprise?
@@ -354,6 +331,138 @@ Conceptual design answers a small set of foundational questions:
 A pictorial representation of the conceptual schema in the ER model.
 \end{concept}
 
-An ER diagram can be mapped into a relational schema; this mapping bridges conceptual understanding and implementable database design.
+An ER diagram can be mapped into a relational schema; this bridge connects conceptual understanding to implementable database design.
+
+\subsection{Conceptual Design: Entity-Relationship Model}
+The ER model is the standard language for conceptual design: it captures entities, attributes, relationships, and integrity constraints before logical and physical design decisions.
+
+\subsubsection*{Basics of ER model}
+\begin{concept}{Entity}
+A real-world object, distinguishable from other objects.
+\end{concept}
+
+\begin{concept}{Attribute}
+A property used to describe an entity in the database.
+\end{concept}
+
+\begin{concept}{Entity set}
+A collection of similar entities that share the same attributes.
+\end{concept}
+
+\begin{concept}{Domain}
+The set of allowed values for an attribute.
+\end{concept}
+
+\begin{concept}{Key (in ER)}
+An attribute (or minimal attribute set) that uniquely identifies entities in an entity set.
+\end{concept}
+
+\subsubsection*{Entity-set schema example}
+For the entity set \textbf{Employees}, we use attributes \texttt{ssn}, \texttt{name}, and \texttt{lot}, with \texttt{ssn} as key.
+
+\begin{center}
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    ent/.style={draw,rectangle,minimum width=2.4cm,minimum height=0.9cm},
+    attr/.style={draw,ellipse,minimum width=1.6cm,minimum height=0.8cm}
+]
+\node[ent] (emp) {Employees};
+\node[attr,above left=1.0cm and 1.6cm of emp] (ssn) {\underline{ssn}};
+\node[attr,above=1.2cm of emp] (name) {name};
+\node[attr,above right=1.0cm and 1.6cm of emp] (lot) {lot};
+\draw (emp) -- (ssn);
+\draw (emp) -- (name);
+\draw (emp) -- (lot);
+\end{tikzpicture}
+\end{center}
+
+\begin{concept}{Instance of an entity set}
+The currently stored collection of entities in that set.
+\end{concept}
+
+Example instances for \textbf{Employees}:
+\begin{dashlist}
+    \item (\texttt{123-22-3666}, \texttt{John}, \texttt{P1})
+    \item (\texttt{231-31-5368}, \texttt{Tom}, \texttt{P2})
+\end{dashlist}
+
+\subsubsection*{Relationships in ER model}
+\begin{concept}{Relationship}
+An association among two or more entities.
+\end{concept}
+
+\begin{concept}{Relationship set}
+A collection of similar relationships.
+\end{concept}
+
+Relationships may have their own attributes.  
+Example: \textbf{Works\_In} links \textbf{Employees} and \textbf{Department}, with relationship attribute \texttt{since}.
+
+\begin{center}
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    ent/.style={draw,rectangle,minimum width=2.6cm,minimum height=0.95cm},
+    rel/.style={draw,diamond,aspect=1.8,inner sep=1pt,minimum width=2.6cm,minimum height=0.9cm},
+    attr/.style={draw,ellipse,minimum width=1.7cm,minimum height=0.8cm}
+]
+\node[ent] (emp) at (0,0) {Employees};
+\node[ent] (dep) at (7.2,0) {Department};
+\node[rel] (works) at (3.6,0) {Works\_In};
+\draw (emp) -- (works) -- (dep);
+
+\node[attr] (ename) at (0,1.8) {name};
+\node[attr] (elot) at (-2.0,1.0) {lot};
+\node[attr] (essn) at (-2.1,-1.0) {\underline{ssn}};
+\draw (emp) -- (ename);
+\draw (emp) -- (elot);
+\draw (emp) -- (essn);
+
+\node[attr] (dname) at (7.2,1.8) {dname};
+\node[attr] (dbudget) at (9.3,1.0) {budget};
+\node[attr] (did) at (9.2,-1.0) {\underline{did}};
+\draw (dep) -- (dname);
+\draw (dep) -- (dbudget);
+\draw (dep) -- (did);
+
+\node[attr] (since) at (3.6,1.9) {since};
+\draw (works) -- (since);
+\end{tikzpicture}
+\end{center}
+
+\begin{concept}{Instance of a relationship set}
+The currently stored set of relationship tuples between participating entity sets.
+\end{concept}
+
+Example tuples for \textbf{Works\_In}(\texttt{ssn}, \texttt{did}, \texttt{since}):
+\begin{dashlist}
+    \item (\texttt{123-22-3666}, \texttt{51}, \texttt{1/1/91})
+    \item (\texttt{231-31-5368}, \texttt{56}, \texttt{3/3/93})
+    \item (\texttt{131-24-3650}, \texttt{56}, \texttt{2/2/92})
+    \item (\texttt{223-32-6316}, \texttt{60}, \texttt{3/1/92})
+\end{dashlist}
+
+\subsubsection*{Role names and repeated participation}
+The same entity set can participate in different relationship sets, and can also appear multiple times in one relationship set under different roles.
+
+\begin{concept}{Role name}
+A label identifying the function of an entity set when it appears more than once in the same relationship.
+\end{concept}
+
+Example: in \textbf{Reports\_To}, \textbf{Employees} appears twice with roles \textit{supervisor} and \textit{subordinate}.
+
+\begin{center}
+\begin{tikzpicture}[
+    every node/.style={font=\small},
+    ent/.style={draw,rectangle,minimum width=2.6cm,minimum height=0.95cm},
+    rel/.style={draw,diamond,aspect=1.8,inner sep=1pt,minimum width=2.7cm,minimum height=0.9cm},
+    >=Latex
+]
+\node[ent] (e1) at (0,0) {Employees};
+\node[ent] (e2) at (6.2,0) {Employees};
+\node[rel] (r) at (3.1,-2.0) {Reports\_To};
+\draw (e1.south) -- node[left,near start]{\scriptsize supervisor} (r.west);
+\draw (e2.south) -- node[right,near start]{\scriptsize subordinate} (r.east);
+\end{tikzpicture}
+\end{center}
 
 \end{document}
