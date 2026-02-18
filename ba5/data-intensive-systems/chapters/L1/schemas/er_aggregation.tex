@@ -1,0 +1,45 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    errel/.style={eredge, diamond, aspect=1.8, inner sep=1pt, minimum width=2.1cm, minimum height=0.7cm},
+    erattr/.style={eredge, ellipse, minimum width=1.5cm, minimum height=0.7cm},
+    aggbox/.style={draw=black, line width=0.7pt, dashed, rounded corners=3pt, inner sep=8pt}
+]
+% Projects entity + attributes
+\node[erent] (proj) at (0,0) {Projects};
+\node[erattr] (pid) at (-1.8,0.85) {\underline{pid}};
+\node[erattr] (pname) at (0,1.55) {name};
+\node[erattr] (plot) at (1.8,0.85) {lot};
+\draw[eredge] (proj) -- (pid);
+\draw[eredge] (proj) -- (pname);
+\draw[eredge] (proj) -- (plot);
+
+% Sponsors relationship + attribute
+\node[errel] (spon) at (4.0,0) {Sponsors};
+\node[erattr] (since) at (4.0,1.55) {since};
+\draw[eredge] (proj) -- (spon);
+\draw[eredge] (spon) -- (since);
+
+% Departments entity + attributes
+\node[erent] (dept) at (8.0,0) {Departments};
+\node[erattr] (did) at (6.5,0.85) {\underline{did}};
+\node[erattr] (dname) at (8.0,1.55) {dname};
+\node[erattr] (budget) at (9.5,0.85) {budget};
+\draw[eredge] (spon) -- (dept);
+\draw[eredge] (dept) -- (did);
+\draw[eredge] (dept) -- (dname);
+\draw[eredge] (dept) -- (budget);
+
+% Aggregation box around Projects-Sponsors-Departments
+\node[aggbox, fit=(proj)(spon)(dept)(pid)(pname)(plot)(since)(did)(dname)(budget)] (agg) {};
+
+% Monitors relationship
+\node[errel] (mon) at (4.0,-2.0) {Monitors};
+\draw[eredge] (agg.south) -- (mon);
+
+% Employee entity
+\node[erent] (emp) at (4.0,-3.5) {Employee};
+\draw[eredge] (mon) -- (emp);
+\end{tikzpicture}

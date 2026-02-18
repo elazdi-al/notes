@@ -1,0 +1,32 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    errel/.style={eredge, diamond, aspect=1.8, inner sep=1pt, minimum width=2.4cm, minimum height=0.8cm},
+    erattr/.style={eredge, ellipse, minimum width=1.5cm, minimum height=0.7cm}
+]
+\node[erent] (emp) at (0,0) {Employees};
+\node[errel] (works) at (3.8,0) {Works\_In};
+\node[erent] (dep) at (7.6,0) {Department};
+
+\draw[eredge] (emp) -- (works);
+\draw[eredge] (works) -- (dep);
+
+\node[erattr] (essn) at (-1.8,0.85) {\underline{ssn}};
+\node[erattr] (ename) at (0,1.55) {name};
+\node[erattr] (elot) at (1.8,0.85) {lot};
+\draw[eredge] (emp) -- (essn);
+\draw[eredge] (emp) -- (ename);
+\draw[eredge] (emp) -- (elot);
+
+\node[erattr] (since) at (3.8,1.55) {since};
+\draw[eredge] (works) -- (since);
+
+\node[erattr] (did) at (5.8,0.85) {\underline{did}};
+\node[erattr] (dname) at (7.6,1.55) {dname};
+\node[erattr] (budget) at (9.4,0.85) {budget};
+\draw[eredge] (dep) -- (did);
+\draw[eredge] (dep) -- (dname);
+\draw[eredge] (dep) -- (budget);
+\end{tikzpicture}

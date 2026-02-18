@@ -1,0 +1,16 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    erattr/.style={eredge, ellipse, minimum width=1.5cm, minimum height=0.7cm}
+]
+\node[erent] (emp) at (0,0) {Employees};
+\node[erattr] (ssn) at (-2.0,1.1) {\underline{ssn}};
+\node[erattr] (name) at (0,1.7) {name};
+\node[erattr] (lot) at (2.0,1.1) {lot};
+
+\draw[eredge] (emp) -- (ssn);
+\draw[eredge] (emp) -- (name);
+\draw[eredge] (emp) -- (lot);
+\end{tikzpicture}

@@ -1,0 +1,59 @@
+\begin{tikzpicture}[
+    x=0.95cm,y=0.95cm,
+    every node/.style={font=\footnotesize},
+    eredge/.style={draw=black, line width=0.6pt},
+    erent/.style={eredge, rectangle, minimum width=1.9cm, minimum height=0.65cm},
+    errel/.style={eredge, diamond, aspect=2, inner sep=1pt, minimum width=1.5cm, minimum height=0.55cm,
+                  font=\footnotesize},
+    isatri/.style={draw=black, line width=0.6pt, regular polygon, regular polygon sides=3,
+                   minimum size=0.7cm, inner sep=0pt, font=\tiny\bfseries},
+    lbl/.style={font=\tiny\itshape, text=black!70}
+]
+% ---- Row 0: Student ─ Enrolls ─ Courses ----
+\node[erent] (stu) at (6.5,0) {Student};
+\node[errel] (enr) at (9.5,0) {Enrolls};
+\node[erent] (crs) at (12.2,0) {Courses};
+\draw[eredge] (stu) -- (enr) -- (crs);
+
+% ---- Row 1: two ISA branches ----
+\node[isatri] (isa1) at (3,-1.5) {ISA};
+\node[isatri] (isa2) at (10.5,-1.5) {ISA};
+\draw[eredge] (stu) -- (isa1);
+\draw[eredge] (stu) -- (isa2);
+\node[lbl] at (6.5,-0.55) {Overlapping};
+\node[lbl, anchor=east] at (2.3,-1.5) {Non-Overl.};
+\node[lbl, anchor=west] at (11.2,-1.5) {Non-Overl.};
+
+% ---- Row 2: degree subclasses (left) ----
+\node[erent] (bach) at (1,-2.9) {Bachelor};
+\node[erent] (pg)   at (5,-2.9) {Post-Grad.};
+\draw[eredge] (isa1) -- (bach);
+\draw[eredge] (isa1) -- (pg);
+
+% ---- Row 2: status subclasses (right) ----
+\node[erent] (ft) at (9,-2.9) {Full-time};
+\node[erent] (pt) at (12,-2.9) {Part-time};
+\draw[eredge] (isa2) -- (ft);
+\draw[eredge] (isa2) -- (pt);
+
+% ---- Row 3: Bachelor side ----
+\node[errel] (reg1) at (1,-4.2) {Registers};
+\node[erent] (proj) at (1,-5.3) {Project};
+\draw[eredge] (bach) -- (reg1) -- (proj);
+
+% ---- Row 3: Post-Graduate sub-ISA ----
+\node[isatri] (isa3) at (5,-4.2) {ISA};
+\draw[eredge] (pg) -- (isa3);
+\node[lbl, anchor=east] at (4.3,-4.2) {Non-Overl.};
+
+% ---- Row 4: Master + Doctorate ----
+\node[erent] (msc) at (3.5,-5.3) {Master};
+\node[erent] (phd) at (6.5,-5.3) {Doctorate};
+\draw[eredge] (isa3) -- (msc);
+\draw[eredge] (isa3) -- (phd);
+
+% ---- Post-Grad → Registers → Thesis ----
+\node[errel] (reg2) at (8.5,-4.2) {Registers};
+\node[erent] (thes) at (8.5,-5.3) {Thesis};
+\draw[eredge] (pg) -- (reg2) -- (thes);
+\end{tikzpicture}

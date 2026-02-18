@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    thickedge/.style={draw=black, line width=2.0pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    errel/.style={eredge, diamond, aspect=1.8, inner sep=1pt, minimum width=2.1cm, minimum height=0.7cm},
+    arrowedge/.style={draw=black, line width=0.7pt, -{Stealth[length=5pt]}},
+    thickarrowedge/.style={draw=black, line width=2.0pt, -{Stealth[length=6pt]}},
+    lbl/.style={font=\footnotesize\itshape, text=black}
+]
+% ---- Total Participation ----
+\node[erent, line width=2.0pt] (e1) at (0,0) {Employees};
+\node[errel] (r1) at (3.4,0) {Works\_In};
+\node[erent, line width=2.0pt] (d1) at (6.8,0) {Department};
+\draw[thickedge] (e1) -- (r1);
+\draw[thickedge] (r1) -- (d1);
+\node[lbl, text width=3.8cm, align=left] at (10.2,0) {Total: every entity participates};
+
+% ---- Partial + Key (Manages) ----
+\node[erent] (e2) at (0,-2.2) {Employees};
+\node[errel] (r2) at (3.4,-2.2) {Manages};
+\node[erent, line width=2.0pt] (d2) at (6.8,-2.2) {Department};
+\draw[arrowedge] (e2) -- (r2);
+\draw[thickarrowedge] (d2) -- (r2);
+\node[lbl, text width=3.8cm, align=left] at (10.2,-2.2) {Partial + key constraint};
+
+% ---- Partial Participation ----
+\node[erent] (e3) at (0,-4.4) {Customer};
+\node[errel] (r3) at (3.4,-4.4) {Buys};
+\node[erent] (d3) at (6.8,-4.4) {Products};
+\draw[eredge] (e3) -- (r3);
+\draw[eredge] (r3) -- (d3);
+\node[lbl, text width=3.8cm, align=left] at (10.2,-4.4) {Partial: entities may not participate};
+\end{tikzpicture}

@@ -1,0 +1,55 @@
+\begin{tikzpicture}[
+    x=0.82cm,y=0.82cm,
+    every node/.style={font=\scriptsize},
+    link/.style={draw=black!70, line width=0.6pt},
+    dot/.style={circle, fill=black, inner sep=1.8pt},
+    tuple/.style={draw=black, line width=0.6pt, fill=white, minimum width=2cm, minimum height=0.55cm, font=\bfseries\scriptsize},
+    dept/.style={draw=black, line width=0.6pt, fill=white, minimum width=0.7cm, minimum height=0.55cm, font=\bfseries\scriptsize}
+]
+% Group boundaries
+\draw[line width=0.6pt] (0,0) ellipse (2.3 and 2.0);
+\draw[line width=0.6pt] (6.2,0) ellipse (1.1 and 2.5);
+\draw[line width=0.6pt] (10.8,0) ellipse (1.4 and 1.7);
+
+% Employees tuples + anchors
+\node[tuple] (e1t) at (-0.5,1.3) {123-22-3666};
+\node[tuple] (e2t) at (-0.5,0.55) {231-31-5368};
+\node[tuple] (e3t) at (-0.5,-0.2) {131-24-3650};
+\node[tuple] (e4t) at (-0.5,-0.95) {223-32-6316};
+\node[dot] (e1) at (1.25,1.3) {};
+\node[dot] (e2) at (1.25,0.55) {};
+\node[dot] (e3) at (1.25,-0.2) {};
+\node[dot] (e4) at (1.25,-0.95) {};
+
+% Works_In tuples (dates) + anchors
+\node[font=\bfseries\normalsize] at (6.2,1.9) {1/1/91};
+\node[font=\bfseries\normalsize] at (6.2,0.95) {3/3/93};
+\node[font=\bfseries\normalsize] at (6.2,0.0) {2/2/92};
+\node[font=\bfseries\normalsize] at (6.2,-0.95) {3/1/92};
+\node[font=\bfseries\normalsize] at (6.2,-1.9) {3/1/92};
+\node[dot] (w1) at (6.2,1.55) {};
+\node[dot] (w2) at (6.2,0.6) {};
+\node[dot] (w3) at (6.2,-0.35) {};
+\node[dot] (w4) at (6.2,-1.3) {};
+\node[dot] (w5) at (6.2,-2.25) {};
+
+% Departments tuples + anchors
+\node[dept] (d1t) at (11.1,1.0) {51};
+\node[dept] (d2t) at (11.1,0.15) {56};
+\node[dept] (d3t) at (11.1,-0.7) {60};
+\node[dot] (d1) at (10.0,1.0) {};
+\node[dot] (d2) at (10.0,0.15) {};
+\node[dot] (d3) at (10.0,-0.7) {};
+
+% Relationship-instance links
+\draw[link] (e1) -- (w1) -- (d1);
+\draw[link] (e2) -- (w2) -- (d2);
+\draw[link] (e2) -- (w3) -- (d2);
+\draw[link] (e3) -- (w4) -- (d3);
+\draw[link] (e4) -- (w5) -- (d3);
+
+% Set labels
+\node[font=\bfseries\large] at (0,-2.8) {Employees};
+\node[font=\bfseries\large] at (6.2,-2.8) {Works\_In};
+\node[font=\bfseries\large] at (10.8,-2.8) {Departments};
+\end{tikzpicture}

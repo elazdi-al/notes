@@ -1,0 +1,38 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    erattr/.style={eredge, ellipse, minimum width=1.5cm, minimum height=0.7cm},
+    isatri/.style={draw=black, line width=0.7pt, regular polygon, regular polygon sides=3,
+                   minimum size=1.1cm, inner sep=0pt, font=\footnotesize\bfseries}
+]
+% Superclass
+\node[erent] (emp) at (0,0) {Employees};
+\node[erattr] (ssn) at (-2.0,0.85) {\underline{ssn}};
+\node[erattr] (name) at (0,1.55) {name};
+\node[erattr] (lot) at (2.0,0.85) {lot};
+\draw[eredge] (emp) -- (ssn);
+\draw[eredge] (emp) -- (name);
+\draw[eredge] (emp) -- (lot);
+
+% ISA triangle
+\node[isatri] (isa) at (0,-1.6) {ISA};
+\draw[eredge] (emp) -- (isa);
+
+% Subclasses
+\node[erent] (hourly) at (-2.5,-3.2) {Hourly\_Emps};
+\node[erent] (contract) at (2.5,-3.2) {Contract\_Emps};
+\draw[eredge] (isa) -- (hourly);
+\draw[eredge] (isa) -- (contract);
+
+% Hourly_Emps attributes
+\node[erattr] (hw) at (-6,-2.0) {hourly\_wages};
+\node[erattr] (hh) at (-2.5,-2.0) {hours\_worked};
+\draw[eredge] (hourly) -- (hw);
+\draw[eredge] (hourly) -- (hh);
+
+% Contract_Emps attribute
+\node[erattr] (cid) at (4.3,-2.35) {contractid};
+\draw[eredge] (contract) -- (cid);
+\end{tikzpicture}

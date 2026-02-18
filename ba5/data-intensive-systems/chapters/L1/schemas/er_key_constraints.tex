@@ -1,0 +1,33 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    errel/.style={eredge, diamond, aspect=1.8, inner sep=1pt, minimum width=2.1cm, minimum height=0.7cm},
+    arrowedge/.style={draw=black, line width=0.7pt, -{Stealth[length=5pt]}},
+    lbl/.style={font=\footnotesize\itshape, text=black}
+]
+% ---- Many-to-Many ----
+\node[erent] (e1) at (0,0) {Employees};
+\node[errel] (r1) at (3.4,0) {Works\_In};
+\node[erent] (d1) at (6.8,0) {Department};
+\draw[eredge] (e1) -- (r1);
+\draw[eredge] (r1) -- (d1);
+\node[lbl] at (9.5,0) {Many-to-Many};
+
+% ---- One-to-Many ----
+\node[erent] (e2) at (0,-2.0) {Employees};
+\node[errel] (r2) at (3.4,-2.0) {Manages};
+\node[erent] (d2) at (6.8,-2.0) {Department};
+\draw[arrowedge] (e2) -- (r2);
+\draw[eredge] (r2) -- (d2);
+\node[lbl] at (9.5,-2.0) {One-to-Many};
+
+% ---- One-to-One ----
+\node[erent] (e3) at (0,-4.0) {Driver};
+\node[errel] (r3) at (3.4,-4.0) {Drives};
+\node[erent] (d3) at (6.8,-4.0) {Vehicle};
+\draw[arrowedge] (e3) -- (r3);
+\draw[arrowedge] (d3) -- (r3);
+\node[lbl] at (9.5,-4.0) {One-to-One};
+\end{tikzpicture}

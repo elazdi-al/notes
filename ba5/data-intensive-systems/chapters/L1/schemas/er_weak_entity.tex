@@ -1,0 +1,39 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    eredge/.style={draw=black, line width=0.7pt},
+    thickedge/.style={draw=black, line width=2.0pt},
+    erent/.style={eredge, rectangle, minimum width=2.4cm, minimum height=0.8cm},
+    errel/.style={eredge, diamond, aspect=1.8, inner sep=1pt, minimum width=2.1cm, minimum height=0.7cm},
+    erattr/.style={eredge, ellipse, minimum width=1.5cm, minimum height=0.7cm},
+    weakent/.style={rectangle, draw=black, line width=2.0pt, minimum width=2.4cm, minimum height=0.8cm},
+    weakrel/.style={diamond, draw=black, line width=2.0pt, aspect=1.8, inner sep=1pt, minimum width=2.1cm, minimum height=0.7cm},
+    arrowedge/.style={draw=black, line width=2.0pt, -{Stealth[length=6pt]}}
+]
+% Owner entity: Employees
+\node[erent] (emp) at (0,0) {Employees};
+\node[erattr] (essn) at (-1.8,0.85) {\underline{ssn}};
+\node[erattr] (ename) at (0,1.55) {name};
+\node[erattr] (elot) at (1.8,0.85) {lot};
+\draw[eredge] (emp) -- (essn);
+\draw[eredge] (emp) -- (ename);
+\draw[eredge] (emp) -- (elot);
+
+% Identifying relationship: Policy
+\node[weakrel] (pol) at (4.0,0) {Policy};
+\draw[eredge] (emp) -- (pol);
+
+% Weak entity: Dependents
+\node[weakent] (dep) at (8.0,0) {Dependents};
+\draw[arrowedge] (dep) -- (pol);
+
+% Policy attribute
+\node[erattr] (cost) at (4.0,1.55) {cost};
+\draw[eredge] (pol) -- (cost);
+
+% Dependents attributes (partial key uses dashed underline)
+\node[erattr] (pname) at (6.7,0.85) {\dashuline{pname}};
+\node[erattr] (age) at (9.3,0.85) {age};
+\draw[eredge] (dep) -- (pname);
+\draw[eredge] (dep) -- (age);
+\end{tikzpicture}
