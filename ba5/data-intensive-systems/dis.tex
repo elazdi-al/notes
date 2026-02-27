@@ -34,6 +34,7 @@
 %% -------------------- Tables, Code Listings, and Miscellaneous --------------------
 \usepackage{booktabs}
 \usepackage{listings}
+\usepackage{autogobles}
 \usepackage{adjustbox}
 \usepackage{multirow}
 \usepackage{fancyhdr}
@@ -71,9 +72,43 @@
     {\begin{itemize}[label=-]}
     {\end{itemize}}
 
+%% -------------------- SQL Code Styling --------------------
+\definecolor{SQLKeyWord}{HTML}{7C3AED}     % vivid purple
+\definecolor{SQLComment}{HTML}{6B7280}     % neutral gray
+\definecolor{SQLString}{HTML}{059669}      % emerald green
+\definecolor{SQLBar}{HTML}{A78BFA}         % soft lavender accent bar
+\definecolor{SQLBackground}{HTML}{F5F3FF}  % faint violet tint
+
+\lstdefinestyle{SQLStyle}{
+  language=SQL,
+  basicstyle=\small\ttfamily,
+  commentstyle=\color{SQLComment}\itshape,
+  keywordstyle=\color{SQLKeyWord}\bfseries,
+  stringstyle=\color{SQLString},
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  frame=l,
+  framesep=4pt,
+  rulecolor=\color{SQLBar},
+  framerule=1.5pt,
+  columns=fullflexible,
+  keepspaces=false,
+  aboveskip=4pt,
+  belowskip=4pt,
+  xleftmargin=8pt,
+  xrightmargin=0pt,
+  backgroundcolor=\color{SQLBackground},
+}
+
+\lstnewenvironment{sql}[1][]{
+  \lstset{style=SQLStyle, autogobble=true, #1}
+}{}
+
 %% -------------------- Document Begins --------------------
 \begin{document}
 \flushbottom
 \subfile{chapters/front/front} 
 \subfile{chapters/L1/L1} 
+\subfile{chapters/SQL-1/SQL-1} 
 \end{document}

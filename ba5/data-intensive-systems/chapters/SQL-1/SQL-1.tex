@@ -1,0 +1,368 @@
+\documentclass[../../dis.tex]{subfiles}
+\begin{document}
+\chapter{L2 - SQL Introduction: Part 1}
+\vfill
+\section{Relational terminology}
+Although we already defined the relational model, let's align our vocabulary with SQL:
+\begin{dashlist}
+    \item \textbf{Relation} translates to a \textbf{table}.
+    \item \textbf{Tuple} translates to a \textbf{row}.
+    \item \textbf{Attribute} translates to a \textbf{column}.
+\end{dashlist}
+
+Throughout this chapter, we use the following example \texttt{Students} table:
+\begin{center}
+\begin{tabular}{lllcc}
+    \toprule
+    \textbf{\underline{sid}} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\
+    \midrule
+    53666 & Jones & jones@cs & 18 & 3.4 \\
+    53688 & Smith & smith@ee & 18 & 3.2 \\
+    53777 & White & white@cs & 19 & 4.0 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{concept}{Primary Key (PK)}
+The column (or group of columns) that uniquely identifies a row. Two rows \textbf{cannot} share the same PK. Above, \texttt{\underline{sid}} is the primary key.
+\end{concept}
+
+\section{Basic SQL queries}
+
+\subsection{The simplest query}
+To retrieve all contents of a table, use \texttt{SELECT *}:
+\begin{sql}
+    SELECT * FROM Students S
+\end{sql}
+\texttt{S} is an optional \textit{alias} (range variable) for the \texttt{Students} table, useful when referencing columns. This returns the full table shown above.
+
+\subsection{Showing specific columns (Projection)}
+To retrieve only certain attributes, replace \texttt{*} with column names:
+\begin{sql}
+    SELECT S.name, S.login FROM Students S
+\end{sql}
+
+\begin{concept}{Projection}
+Selecting specific columns from a table. The query above projects \texttt{name} and \texttt{login} from \texttt{Students}.
+\end{concept}
+
+\begin{center}
+\begin{tabular}{ll}
+    \toprule
+    \textbf{name} & \textbf{login} \\
+    \midrule
+    Jones & jones@cs \\
+    Smith & smith@ee \\
+    White & white@cs \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Showing specific rows (Selection)}
+To filter rows, use the \texttt{WHERE} clause:
+\begin{sql}
+    SELECT * FROM Students S WHERE S.age = 18
+\end{sql}
+
+\begin{concept}{Selection}
+Filtering rows based on a condition. The query above selects students whose age equals~18.
+\end{concept}
+
+\begin{center}
+\begin{tabular}{lllcc}
+    \toprule
+    \textbf{\underline{sid}} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\
+    \midrule
+    53666 & Jones & jones@cs & 18 & 3.4 \\
+    53688 & Smith & smith@ee & 18 & 3.2 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{SQL vocabulary}
+The general form of a basic SQL query:
+\begin{sql}
+    SELECT [DISTINCT] target-list FROM relation-list WHERE qualification
+\end{sql}
+\begin{dashlist}
+    \item \textbf{relation-list}: a list of table names, each possibly followed by an alias.
+    \item \textbf{qualification}: comparisons combined with \texttt{AND}, \texttt{OR}, \texttt{NOT}. Each comparison: \texttt{Attr \textit{op} Const} or \texttt{Attr1 \textit{op} Attr2}.
+    \item \textbf{target-list}: a list of attributes from the tables in \textit{relation-list}.
+    \item \textbf{DISTINCT}: optional keyword; eliminates duplicate rows. By default, SQL keeps duplicates (the result is a \textit{multiset}).
+\end{dashlist}
+
+\subsection{Evaluation order}
+Conceptually, a SQL query is evaluated as follows:
+\begin{enumerate}
+    \item \textbf{FROM}: compute the cross-product of all tables.
+    \item \textbf{WHERE}: discard tuples that fail the condition (\textit{selection}).
+    \item \textbf{SELECT}: keep only the requested columns (\textit{projection}).
+    \item If \textbf{DISTINCT} is specified, eliminate duplicate rows.
+\end{enumerate}
+
+\section{Querying multiple relations}
+To join two tables, list them both in \texttt{FROM} and express the join condition in \texttt{WHERE}. Consider the following \texttt{Enrolled} table alongside \texttt{Students}:
+
+\begin{center}
+\begin{tabular}{llc}
+    \toprule
+    \textbf{\underline{sid}} & \textbf{cid} & \textbf{grade} \\
+    \midrule
+    53831 & Carnatic101 & C \\
+    53831 & Reggae203 & B \\
+    53650 & Topology112 & A \\
+    53666 & History105 & B \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+``Find all students with grade B'':
+\begin{sql}
+    SELECT S.name, E.cid
+    FROM Students S, Enrolled E
+    WHERE S.sid = E.sid AND E.grade = 'B'
+\end{sql}
+
+\begin{center}
+\begin{tabular}{ll}
+    \toprule
+    \textbf{S.name} & \textbf{E.cid} \\
+    \midrule
+    Jones & History105 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Na\"ive evaluation in steps}
+The evaluation of the query above proceeds conceptually as follows:
+
+\textbf{Step 1 -- Cross Product (FROM):}
+Combine every row of \texttt{Students} with every row of \texttt{Enrolled}:
+
+\begin{center}
+\scriptsize
+\begin{tabular}{llllc|llc}
+    \toprule
+    \textbf{S.sid} & \textbf{S.name} & \textbf{S.login} & \textbf{S.age} & \textbf{S.gpa} & \textbf{E.sid} & \textbf{E.cid} & \textbf{E.grade} \\
+    \midrule
+    53666 & Jones & jones@cs & 18 & 3.4 & 53831 & Carnatic101 & C \\
+    53666 & Jones & jones@cs & 18 & 3.4 & 53831 & Reggae203 & B \\
+    53666 & Jones & jones@cs & 18 & 3.4 & 53650 & Topology112 & A \\
+    53666 & Jones & jones@cs & 18 & 3.4 & 53666 & History105 & B \\
+    53688 & Smith & smith@ee & 18 & 3.2 & 53831 & Carnatic101 & C \\
+    53688 & Smith & smith@ee & 18 & 3.2 & 53831 & Reggae203 & B \\
+    53688 & Smith & smith@ee & 18 & 3.2 & 53650 & Topology112 & A \\
+    53688 & Smith & smith@ee & 18 & 3.2 & 53666 & History105 & B \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Step 2 -- Apply the predicate (WHERE):}
+Keep only rows where \texttt{S.sid = E.sid} \textbf{and} \texttt{E.grade = 'B'}. Only one row survives: Jones (sid~53666) enrolled in History105 with grade~B.
+
+\textbf{Step 3 -- Project the requested columns (SELECT):}
+Keep only \texttt{S.name} and \texttt{E.cid}, yielding the final result: \texttt{(Jones, History105)}.
+
+\section*{Running example: Sailors, Boats, Reserves}
+The following three relations are used throughout the rest of this chapter.
+
+\begin{minipage}[t]{0.32\textwidth}
+\centering
+\textbf{Sailors}\\[4pt]
+\begin{tabular}{@{}llcc@{}}
+    \toprule
+    \textbf{\underline{sid}} & \textbf{sname} & \textbf{rating} & \textbf{age} \\
+    \midrule
+    22 & Dustin & 7 & 45.0 \\
+    31 & Lubber & 8 & 55.5 \\
+    95 & Bob    & 3 & 63.5 \\
+    \bottomrule
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\centering
+\textbf{Boats}\\[4pt]
+\begin{tabular}{@{}llc@{}}
+    \toprule
+    \textbf{\underline{bid}} & \textbf{bname} & \textbf{color} \\
+    \midrule
+    101 & Interlake & blue  \\
+    102 & Interlake & red   \\
+    103 & Clipper   & green \\
+    104 & Marine    & red   \\
+    \bottomrule
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.28\textwidth}
+\centering
+\textbf{Reserves}\\[4pt]
+\begin{tabular}{@{}ccl@{}}
+    \toprule
+    \textbf{\underline{sid}} & \textbf{\underline{bid}} & \textbf{day} \\
+    \midrule
+    22 & 101 & 10/10/96 \\
+    95 & 103 & 11/12/96 \\
+    \bottomrule
+\end{tabular}
+\end{minipage}
+
+\section{Aggregate operators}
+
+\begin{concept}{Aggregate function}
+A function that operates on a set (or multiset) of values from a column and returns a \textbf{single} summary value. Aggregates are a significant extension of relational algebra.
+\end{concept}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{Function} & \textbf{Description} \\
+    \midrule
+    \texttt{COUNT(*)}              & number of rows \\
+    \texttt{COUNT([DISTINCT] A)}   & number of (distinct) non-null values in \texttt{A} \\
+    \texttt{SUM([DISTINCT] A)}     & sum of (distinct) values \\
+    \texttt{AVG([DISTINCT] A)}     & average of (distinct) values \\
+    \texttt{MAX(A)}                & maximum value \\
+    \texttt{MIN(A)}                & minimum value \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Examples}
+
+\textbf{Find the number of sailors:}
+\begin{sql}
+    SELECT COUNT(*) FROM Sailors S
+\end{sql}
+
+\textbf{Find the average age of sailors with rating 10:}
+\begin{sql}
+    SELECT AVG(S.age) FROM Sailors S WHERE S.rating = 10
+\end{sql}
+
+\textbf{Count distinct ratings of sailors named Bob:}
+\begin{sql}
+    SELECT COUNT(DISTINCT S.rating) FROM Sailors S WHERE S.sname = 'Bob'
+\end{sql}
+
+\subsection{Name and age of the oldest sailor(s)}
+This example illustrates a common pitfall with aggregates.
+
+\subsubsection*{Incorrect query}
+\begin{sql}
+    SELECT S.sname, MAX(S.age) FROM Sailors S
+\end{sql}
+This is \textbf{wrong}: \texttt{MAX} returns a single value over the entire column, so there is no meaningful way to pair it with a particular \texttt{sname}.
+
+\subsubsection*{Correct approach --- subquery}
+\begin{sql}
+    SELECT S.sname, S.age
+    FROM Sailors S
+    WHERE S.age = (SELECT MAX(S2.age) FROM Sailors S2)
+\end{sql}
+The inner query computes the maximum age; the outer query retrieves every sailor matching that value.
+
+\begin{concept}{Scalar subquery}
+A subquery that returns exactly one row and one column. It can appear wherever a single value is expected (e.g.\ in a \texttt{WHERE} comparison).
+\end{concept}
+
+An equivalent alternative places the subquery on the left:
+\begin{sql}
+    SELECT S.sname, S.age
+    FROM Sailors S
+    WHERE (SELECT MAX(S2.age) FROM Sailors S2) = S.age
+\end{sql}
+
+\section{GROUP BY}
+
+So far, aggregates have been applied to \emph{all} qualifying tuples at once. Sometimes we need to apply them to each of several \emph{groups} independently.
+
+\textit{Consider: find the age of the youngest sailor for each rating level.}
+\begin{dashlist}
+    \item We don't know in advance how many rating levels exist or what their values are.
+    \item If ratings range from 1 to 10, we \emph{could} write 10 separate queries:
+\end{dashlist}
+
+For $i = 1, 2, \ldots, 10$:
+\begin{sql}
+    SELECT MIN(S.age) FROM Sailors S WHERE S.rating = i
+\end{sql}
+This is obviously impractical.
+
+\begin{concept}{GROUP BY clause}
+Partitions tuples into groups based on equal values of the specified columns, then applies aggregate functions independently to each group.
+\end{concept}
+
+\subsection{Using GROUP BY}
+We use an extended \texttt{Sailors} table for the following examples:
+\begin{center}
+\begin{tabular}{@{}llcc@{}}
+    \toprule
+    \textbf{\underline{sid}} & \textbf{sname} & \textbf{rating} & \textbf{age} \\
+    \midrule
+    22 & Dustin & 7 & 45.0 \\
+    31 & Lubber & 8 & 55.5 \\
+    95 & Bob    & 3 & 63.5 \\
+    52 & Smith  & 3 & 74.5 \\
+    68 & John   & 7 & 56.5 \\
+    81 & Ana    & 7 & 71.5 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+``Find the youngest age for each rating level'':
+\begin{sql}
+    SELECT S.rating, MIN(S.age) FROM Sailors S GROUP BY S.rating
+\end{sql}
+
+The tuples are first partitioned by \texttt{rating} (groups: rating~3, rating~7, rating~8), then \texttt{MIN(S.age)} is evaluated within each group:
+\begin{center}
+\begin{tabular}{cc}
+    \toprule
+    \textbf{rating} & \textbf{MIN(age)} \\
+    \midrule
+    3 & 63.5 \\
+    7 & 45.0 \\
+    8 & 55.5 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{concept}{GROUP BY semantics}
+The \texttt{SELECT} clause may only contain:
+\begin{dashlist}
+    \item attributes listed in the \texttt{GROUP BY} clause, and
+    \item aggregate functions applied to other attributes.
+\end{dashlist}
+Any non-aggregated column in \texttt{SELECT} that is \emph{not} in \texttt{GROUP BY} is an error.
+\end{concept}
+
+\subsection{HAVING --- filtering groups}
+\texttt{HAVING} filters \emph{groups} (after grouping), just as \texttt{WHERE} filters \emph{individual tuples} (before grouping).
+
+``Find the youngest age for each rating level that has \textbf{at least two} sailors'':
+\begin{sql}
+    SELECT S.rating, MIN(S.age)
+    FROM Sailors S
+    GROUP BY S.rating
+    HAVING COUNT(*) > 1
+\end{sql}
+
+Groups with only one member (rating~8, containing only Lubber) are eliminated:
+\begin{center}
+\begin{tabular}{cc}
+    \toprule
+    \textbf{rating} & \textbf{MIN(age)} \\
+    \midrule
+    3 & 63.5 \\
+    7 & 45.0 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{concept}{HAVING clause}
+A filter applied \emph{after} grouping. It uses aggregate conditions to keep or discard entire groups, unlike \texttt{WHERE} which operates on individual rows before any grouping.
+\end{concept}
+
+\end{document}
