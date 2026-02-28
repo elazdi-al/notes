@@ -1,6 +1,6 @@
 \documentclass[../../dis.tex]{subfiles}
 \begin{document}
-\chapter{L1 - Introduction}
+\chapter{L1 - Introduction}\label{chap:l1}
 \vfill
 \section{Why data management?}
 Modern software is data-driven: systems are useful only when data can be stored, shared, and queried correctly over time. This chapter builds that idea step by step, from raw data to DBMS architecture.
@@ -157,11 +157,11 @@ A collection of concepts for describing data.
 Data models are high-level abstractions: they hide low-level storage details and let us reason about structure and meaning first.
 Typical model families include \emph{relational}, \emph{hierarchical}, \emph{graph}, and \emph{object-oriented}.
 
-\begin{concept}{Relation}
+\begin{concept}{Relation}\label{def:relation}
 A named table with rows (tuples) and columns (attributes).
 \end{concept}
 
-\begin{concept}{Schema}
+\begin{concept}{Schema}\label{def:schema}
 The structural definition of a relation: attribute names, types, and organization.
 \end{concept}
 
@@ -265,11 +265,11 @@ Cross-cutting services enforce correctness and performance across these layers: 
 \subsection{Relational data model}
 In practice, relational design relies on rows/columns and explicit links between relations through keys.
 
-\begin{concept}{Key}
+\begin{concept}{Key}\label{def:key}
 An attribute (or set of attributes) whose value identifies a tuple uniquely inside a relation.
 \end{concept}
 
-\begin{concept}{Foreign key}
+\begin{concept}{Foreign key}\label{def:foreignkey}
 An attribute (or set) in one relation whose values reference keys in another relation, linking the two relations.
 \end{concept}
 

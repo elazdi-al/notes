@@ -1,0 +1,599 @@
+\documentclass[../../dis.tex]{subfiles}
+\begin{document}
+\chapter{L2 - Relational Model \& SQL Basics}\label{chap:l2}
+\vfill
+\section{Relational model}
+The relational model is the foundation of modern database systems. It represents all data as tables and provides a clean, mathematically grounded framework for querying and constraining data.
+
+\subsection{Core concepts}
+A \textbf{database} is a set of named \recall{def:relation}{relations}{named tables with rows and columns}. Each attribute carries a \textbf{type} (domain): integer, real, string, file formats, enumerated, etc.
+
+\begin{concept}{Tuple}
+A single row in a relation, containing one value for each attribute. All tuples in a relation are distinct and have no inherent order.
+\end{concept}
+
+Running example:
+
+\begin{minipage}[t]{0.48\textwidth}
+\begin{dbtable}{Students}{lllcc}
+\textbf{sid} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\ \hline
+50000 & Dave & dave@cs & 19 & 3.3 \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 \\ \hline
+53688 & Smith & smit@ee & 18 & 3.2 \\ \hline
+\ldots & \ldots & \ldots & \ldots & \ldots \\
+\end{dbtable}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\begin{dbtable}{Colleges}{llc}
+\textbf{name} & \textbf{location} & \textbf{strength} \\ \hline
+MIT & USA & 10000 \\ \hline
+Oxford & UK & 22000 \\ \hline
+EPFL & CH & 9000 \\ \hline
+\ldots & \ldots & \ldots \\
+\end{dbtable}
+\end{minipage}
+
+\subsection{Schema vs.\ instance}
+A relation has two complementary aspects: its \recall{def:schema}{schema}{structural definition with attribute names and types} and its content at a given moment.
+
+Example schema: \texttt{Students(\underline{sid}: string, name: string, login: string, age: integer, gpa: real)}.
+
+\begin{concept}{Instance}
+The actual set of tuples stored in a relation at a given point in time.
+\end{concept}
+
+Two measures describe an instance:
+\begin{dashlist}
+    \item \textbf{Cardinality}: the number of tuples (rows).
+    \item \textbf{Arity} (or degree): the number of attributes (columns).
+\end{dashlist}
+
+\subsection{Null values}
+Not every attribute value is always known. A student who has not received any grades yet has no meaningful GPA.
+
+\begin{concept}{Null value}
+A special marker representing an ``unknown'' or ``undefined'' attribute value. Nulls are not the same as zero or an empty string.
+\end{concept}
+
+\section{Keys and integrity constraints}
+\recall{def:key}{Keys}{attributes that uniquely identify tuples} enforce uniqueness and link relations together. Here we refine the hierarchy of key types and formalize integrity constraints.
+
+\subsection{Key hierarchy}
+
+\begin{concept}{Superkey}
+A set of attributes such that no two distinct tuples can share the same values in all those fields. Any superset of a key is also a superkey.
+\end{concept}
+
+\begin{concept}{Candidate key}
+A \emph{minimal} superkey: it is a superkey, and no proper subset of its fields is also a superkey.
+\end{concept}
+
+\begin{concept}{Primary key}
+The candidate key chosen by the database administrator (DBA) as \emph{the} key of the relation.
+\end{concept}
+
+Example with \textbf{Students}(\underline{sid}, name, login, age, gpa): both \texttt{sid} and \texttt{login} are candidate keys. The DBA picks \texttt{sid} as the primary key.
+
+\begin{dashlist}
+    \item Every superset of \texttt{sid} (e.g., \texttt{\{sid, name\}}, \texttt{\{sid, login, gpa\}}, \ldots) is a superkey but not a candidate key.
+    \item \texttt{sid} alone and \texttt{login} alone are the only candidate keys.
+\end{dashlist}
+
+\subsection{Integrity constraints}
+A key is an \textbf{integrity constraint} (IC): a condition that must hold on every valid database instance.
+
+\recall{def:foreignkey}{Foreign keys}{attributes referencing the primary key of another relation} establish \textbf{referential integrity}: every foreign-key value must match an existing key in the referenced relation.
+
+\newpage
+\section{SQL: Structured Query Language}
+SQL is the standard language for interacting with relational databases. It splits into two sub-languages.
+
+\subsection{DDL and DML}
+\begin{concept}{Data Definition Language (DDL)}
+The subset of SQL used to create, modify, and delete relations, specify constraints, and administer users and security.
+\end{concept}
+
+\begin{concept}{Data Manipulation Language (DML)}
+The subset of SQL used to query, insert, update, and delete tuples.
+\end{concept}
+
+\subsection{Most common SQL commands}
+\begin{sql}
+    CREATE TABLE <name> (<field> <domain>, ...)
+    INSERT INTO <name> (<field names>) VALUES (<field values>)
+    DELETE FROM <name> WHERE <condition>
+    UPDATE <name> SET <field name> = <value> WHERE <condition>
+    SELECT <fields> FROM <name> WHERE <condition>
+\end{sql}
+
+\subsection{Creating relations}
+A \lstinline[style=SQLStyle]{CREATE TABLE} statement defines a new relation by listing each attribute and its domain. The type of each field is enforced by the DBMS whenever tuples are added or modified.
+
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Students} -- holds data about students:
+\begin{sql}
+    CREATE TABLE Students
+      (sid   CHAR(20),
+       name  CHAR(20),
+       login CHAR(10),
+       age   INTEGER,
+       gpa   FLOAT)
+\end{sql}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Enrolled} -- holds course enrollments:
+\begin{sql}
+    CREATE TABLE Enrolled
+      (sid   CHAR(20),
+       cid   CHAR(20),
+       grade CHAR(2))
+\end{sql}
+\end{minipage}
+
+\subsection{Adding and deleting tuples}
+Insert a single tuple:
+\begin{sql}
+    INSERT INTO Students (sid, name, login, age, gpa)
+    VALUES ('53688', 'Smith', 'smith@cs', 18, 3.2)
+\end{sql}
+
+Delete all tuples satisfying a condition:
+\begin{sql}
+    DELETE FROM Students S WHERE S.name = 'Smith'
+\end{sql}
+
+\subsection{Keys in SQL}
+The \lstinline[style=SQLStyle]{PRIMARY KEY} clause declares the primary key; \lstinline[style=SQLStyle]{UNIQUE} marks additional candidate keys.
+
+\begin{minipage}[t]{0.48\textwidth}
+\begin{sql}
+    CREATE TABLE Students
+      (sid   CHAR(20),
+       name  CHAR(20),
+       login CHAR(10),
+       age   INTEGER,
+       gpa   FLOAT,
+       PRIMARY KEY(sid))
+\end{sql}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\begin{sql}
+    CREATE TABLE Person
+      (ssn      CHAR(9),
+       name     CHAR(20),
+       licence# CHAR(10),
+       PRIMARY KEY(ssn),
+       UNIQUE(licence#))
+\end{sql}
+\end{minipage}
+
+\subsubsection*{Choosing keys carefully}
+Keys must be used carefully: they encode real-world constraints. Consider \texttt{Enrolled}: ``for a given student and course, there is a single grade.''
+
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Correct} -- composite PK on \texttt{(sid, cid)}:
+\begin{sql}
+    CREATE TABLE Enrolled
+      (sid   CHAR(20),
+       cid   CHAR(20),
+       grade CHAR(2),
+       PRIMARY KEY(sid, cid))
+\end{sql}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Wrong} -- PK on \texttt{sid} alone with \texttt{UNIQUE(cid, grade)} encodes a different constraint: ``students can take only one course, and no two students in a course receive the same grade.''
+\end{minipage}
+
+\subsection{Foreign keys and referential integrity}
+\recall{def:foreignkey}{Foreign keys}{fields referencing the primary key of another relation} act as logical pointers between relations. If all foreign-key constraints are enforced, the database achieves \textbf{referential integrity} (no dangling references).
+
+\begin{minipage}[t]{0.48\textwidth}
+\begin{dbtable}{Students}{lllcc}
+\textbf{sid} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\ \hline
+50000 & Dave & dave@cs & 19 & 3.3 \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 \\ \hline
+53688 & Smith & smit@ee & 18 & 3.2 \\ \hline
+\ldots & \ldots & \ldots & \ldots & \ldots \\
+\end{dbtable}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\begin{dbtable}{Enrolled}{llc}
+\textbf{cid} & \textbf{sid} & \textbf{grade} \\ \hline
+Carnatic101 & 53666 & C \\ \hline
+Reggae203 & 50000 & B \\ \hline
+Topology112 & 53666 & A \\ \hline
+\ldots & \ldots & \ldots \\
+\end{dbtable}
+\end{minipage}
+
+\smallskip
+Here \texttt{Enrolled.sid} is a foreign key referencing \texttt{Students.sid}: every enrolled student must actually exist in \texttt{Students}.
+
+\subsubsection*{Enforcing referential integrity}
+The DBMS must decide what to do when a foreign-key constraint is threatened:
+\begin{dashlist}
+    \item \textbf{Insert} an Enrolled tuple with a non-existent \texttt{sid} $\rightarrow$ reject the insert.
+    \item \textbf{Delete} a Students tuple that is referenced by Enrolled $\rightarrow$ several policies:
+    \begin{dashlist}
+        \item cascade-delete all Enrolled tuples that refer to it,
+        \item disallow the deletion entirely,
+        \item set the referencing \texttt{sid} to a default value,
+        \item set it to \texttt{NULL} (denoting ``unknown'' or ``inapplicable'').
+    \end{dashlist}
+    \item \textbf{Update} the primary key of a Students tuple $\rightarrow$ same policies apply.
+\end{dashlist}
+
+\subsection{Integrity constraints}
+
+\begin{concept}{Integrity constraint (IC)}
+A condition that must be true for \emph{any} instance of the database (e.g., domain constraints, key constraints, foreign-key constraints). ICs are specified when the schema is defined and checked whenever relations are modified.
+\end{concept}
+
+\begin{concept}{Legal instance}
+An instance of a relation that satisfies all specified ICs. The DBMS should not allow illegal instances.
+\end{concept}
+
+When the DBMS enforces ICs, stored data is more faithful to real-world meaning and data-entry errors are caught early.
+
+\newpage
+\section{Relational query languages}
+\begin{concept}{Query language (QL)}
+A language that allows manipulation and retrieval of data from a database. Unlike programming languages, QLs are not Turing-complete: they are designed for easy, efficient access to large data sets, not general computation.
+\end{concept}
+
+The relational model supports simple yet powerful QLs with a strong formal foundation based on logic, enabling significant optimization.
+
+\subsection{Formal relational query languages}
+Two mathematical query languages form the basis for real languages like SQL:
+
+\begin{concept}{Relational Algebra}
+An \emph{operational} language: it specifies \emph{how} to compute a result step by step. Useful for representing execution plans inside database engines.
+\end{concept}
+
+\begin{concept}{Relational Calculus}
+A \emph{declarative} language: it specifies \emph{what} the result should look like, not how to compute it. Non-procedural.
+\end{concept}
+
+\begin{concept}{Codd's Theorem}
+Relational algebra and relational calculus are equivalent in expressive power: for every query in one, there is an equivalent query in the other.
+\end{concept}
+
+Understanding both is key to understanding SQL and query processing.
+
+\subsection{Preliminaries}
+A query is applied to \emph{relation instances}, and the result of a query is also a relation instance.
+\begin{dashlist}
+    \item The \emph{schemas} of input relations are fixed (but the query runs over any legal instance).
+    \item The schema of the \emph{result} is also fixed, determined by the query language constructs.
+\end{dashlist}
+
+Two notations are used:
+\begin{dashlist}
+    \item \textbf{Positional notation}: easier for formal definitions.
+    \item \textbf{Named-field notation}: more readable; both are used in SQL.
+\end{dashlist}
+
+\subsection{Example schema and instances}
+We use a university database throughout the relational algebra examples:
+
+{\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\texttt{instructor} & \texttt{\underline{ID}, name, dept\_name, salary} \\
+\texttt{course} & \texttt{\underline{course\_id}, title, dept\_name, credits} \\
+\texttt{teaches} & \texttt{\underline{ID}, \underline{course\_id}, \underline{sec\_id}, \underline{semester}, \underline{year}} \\
+\texttt{section} & \texttt{\underline{course\_id}, \underline{sec\_id}, \underline{semester}, \underline{year}, building, room\_number, time\_slot\_id} \\
+\texttt{student} & \texttt{\underline{ID}, name, dept\_name, tot\_cred} \\
+\texttt{takes} & \texttt{\underline{ID}, \underline{course\_id}, \underline{sec\_id}, semester, year, grade} \\
+\end{tabularx}
+}
+
+Running example instance of \texttt{instructor}:
+
+{\small
+\begin{dbtable}{instructor}{clll}
+\textbf{ID} & \textbf{name} & \textbf{dept\_name} & \textbf{salary} \\ \hline
+22222 & Einstein & Physics & 95000 \\ \hline
+12121 & Wu & Finance & 90000 \\ \hline
+32343 & El Said & History & 60000 \\ \hline
+45565 & Katz & Comp.\ Sci. & 75000 \\ \hline
+98345 & Kim & Elec.\ Eng. & 80000 \\ \hline
+76766 & Crick & Biology & 72000 \\ \hline
+10101 & Srinivasan & Comp.\ Sci. & 65000 \\ \hline
+58583 & Califieri & History & 62000 \\ \hline
+83821 & Brandt & Comp.\ Sci. & 92000 \\ \hline
+15151 & Mozart & Music & 40000 \\ \hline
+33456 & Gold & Physics & 87000 \\ \hline
+76543 & Singh & Finance & 80000 \\
+\end{dbtable}
+}
+\subsection{Five basic operations}
+Relational algebra has five primitive operators, split into two groups:
+
+\textbf{Unary operators} (one input relation):
+\begin{dashlist}
+    \item \textbf{Selection} ($\sigma$): output a subset of \emph{rows} (horizontal filtering).
+    \item \textbf{Projection} ($\pi$): output a subset of \emph{columns} (vertical filtering).
+\end{dashlist}
+
+\textbf{Binary operators} (two input relations):
+\begin{dashlist}
+    \item \textbf{Cross-product} ($\times$): concatenate every row of the first relation with every row of the second.
+    \item \textbf{Set-difference} ($-$): output tuples in $R$ that are not in $S$.
+    \item \textbf{Union} ($\cup$): output tuples in $R$ or in $S$ (or both).
+\end{dashlist}
+
+Since each operation returns a relation, \textbf{operations can be composed}.
+
+\subsection{Selection ($\sigma$)}
+Selection outputs only the rows that satisfy a given condition. The output schema is the same as the input.
+
+\[ \sigma_{\text{condition}}(\textit{relation}) \]
+
+\subsubsection*{Without condition}
+The simplest expression $\sigma(\textit{instructor})$ returns all rows unchanged (equivalent to \lstinline[style=SQLStyle]{SELECT * FROM instructor}).
+
+\subsubsection*{With a single condition}
+\[ \sigma_{\textit{dept\_name} = \text{``Physics''}}(\textit{instructor}) \]
+
+\begin{sql}
+    SELECT * FROM instructor WHERE dept_name = 'Physics'
+\end{sql}
+
+\begin{dbtable}{}{clll}
+\textbf{ID} & \textbf{name} & \textbf{dept\_name} & \textbf{salary} \\ \hline
+22222 & Einstein & Physics & 95000 \\ \hline
+33456 & Gold & Physics & 87000 \\
+\end{dbtable}
+
+\subsubsection*{With a compound condition}
+Conditions can be combined with $\wedge$ (and), $\vee$ (or), and $\neg$ (not):
+
+\[ \sigma_{\textit{dept\_name} = \text{``Physics''} \,\wedge\, \textit{salary} > 90000}(\textit{instructor}) \]
+
+\begin{sql}
+    SELECT * FROM instructor WHERE dept_name = 'Physics' AND salary > 90000
+\end{sql}
+
+\begin{dbtable}{}{clll}
+\textbf{ID} & \textbf{name} & \textbf{dept\_name} & \textbf{salary} \\ \hline
+22222 & Einstein & Physics & 95000 \\
+\end{dbtable}
+
+\subsection{Projection ($\pi$)}
+Projection retains only the attributes in the projection list. The output schema contains exactly those attributes.
+
+\[ \pi_{\text{attribute list}}(\textit{relation}) \]
+
+\smallskip
+\[ \pi_{\textit{ID, name, salary}}(\textit{instructor}) \]
+corresponds to:
+\begin{sql}
+    SELECT ID, name, salary FROM instructor
+\end{sql}
+The result has three columns instead of four (\texttt{dept\_name} is dropped), but all 12 rows are kept because each row is still distinct.
+
+\subsubsection*{Duplicate elimination}
+In relational algebra, projection \textbf{eliminates duplicates} because the result must be a set of tuples.
+
+\[ \pi_{\textit{dept\_name}}(\textit{instructor}) \]
+reduces the 12 rows to 7 distinct department names. In SQL, duplicates are kept by default; to match the algebra, use \lstinline[style=SQLStyle]{SELECT DISTINCT}:
+\begin{sql}
+    SELECT DISTINCT dept_name FROM instructor
+\end{sql}
+
+\subsection{Composing operators}
+Since every operator returns a relation, the output of one can feed into another. Selection followed by projection gives specific columns from filtered rows:
+
+\[ \pi_{\textit{name}}\!\left(\sigma_{\textit{dept\_name} = \text{``Physics''}}(\textit{instructor})\right) \]
+
+\begin{sql}
+    SELECT name FROM instructor WHERE dept_name = 'Physics'
+\end{sql}
+
+\begin{dbtable}{}{l}
+\textbf{name} \\ \hline
+Einstein \\ \hline
+Gold \\
+\end{dbtable}
+
+First $\sigma$ filters to Physics instructors, then $\pi$ keeps only the \texttt{name} column. The order matters: projecting first would discard the column needed for selection.
+
+\newpage
+\subsection{Rename operator ($\rho$)}
+The rename operator ($\rho$) renames a relation or its attributes. Since algebraic expressions can yield unnamed relations natively, renaming is essential to avoid naming conflicts or to self-reference.
+
+\begin{dashlist}
+    \item Renames the list of attributes in the form $\text{oldname} \rightarrow \text{newname}$ or $\text{position} \rightarrow \text{newname}$.
+    \item Can be used to rename the output relation itself entirely.
+    \item \textbf{Output schema}: same as input except for the renamed attributes.
+    \item \textbf{Output instances}: returns the exact same tuples as the input.
+\end{dashlist}
+
+Renaming the relation itself to $i$:
+\[ \rho_{i}(\textit{instructor}) \]
+
+Renaming the \textit{ID} attribute to \textit{instructor.ID}:
+\[ \rho_{ID \rightarrow \textit{instructor.ID}}(\textit{instructor}) \]
+
+In SQL, this is achieved using the \lstinline[style=SQLStyle]{AS} keyword in the \lstinline[style=SQLStyle]{SELECT} or \lstinline[style=SQLStyle]{FROM} clauses:
+\begin{sql}
+    SELECT i.name FROM instructor AS i WHERE i.ID = ...
+\end{sql}
+
+\subsection{Union operator ($\cup$)}
+The union operator takes two input relations, which \textbf{must} be \emph{union-compatible}:
+\begin{dashlist}
+    \item They must have the same number of fields.
+    \item The ``corresponding'' fields must have exactly the same type.
+\end{dashlist}
+
+Like projection, union in strict relational algebra implies \emph{duplicate elimination}.
+\[ c1 \cup c2 \]
+
+In SQL, \lstinline[style=SQLStyle]{UNION} implicitly eliminates duplicates, while \lstinline[style=SQLStyle]{UNION ALL} is faster but keeps them.
+\begin{sql}
+    (SELECT * FROM c1)
+    UNION
+    (SELECT * FROM c2)
+\end{sql}
+
+\subsection{Set-difference operator ($-$)}
+The set-difference operator outputs the set of tuples in $c1$ which are not in $c2$.
+\begin{dashlist}
+    \item The two input relations must also be \emph{union-compatible}.
+    \item Set difference is \textbf{not} commutative ($c1 - c2 \neq c2 - c1$).
+\end{dashlist}
+
+\[ c1 - c2 \]
+
+In SQL, this corresponds to the \lstinline[style=SQLStyle]{EXCEPT} clause:
+\begin{sql}
+    (SELECT * FROM c1)
+    EXCEPT
+    (SELECT * FROM c2)
+\end{sql}
+
+\subsection{Compound operators}
+Alongside the five basic operators ($\sigma, \pi, \times, -, \cup$), there are several additional \textbf{compound operators}. These add \textbf{no computational power} to the language (they can all be expressed using the basic operators), but they serve as useful, compact shorthands.
+
+\subsubsection*{Intersection ($\cap$)}
+Intersection outputs the overlapping tuples from two \emph{union-compatible} relations.
+\[ R \cap S = R - (R - S) \]
+
+\begin{sql}
+    (SELECT * FROM c1)
+    INTERSECT
+    (SELECT * FROM c2)
+\end{sql}
+
+\subsection{Cross-product operator ($\times$)}
+The Cartesian product $S \times R$ pairs every single row of $S$ with every single row of $R$.
+\begin{dashlist}
+    \item \textbf{Result schema}: has one field per field of $S$ and $R$, inheriting the field names linearly.
+    \item \textbf{Naming conflicts}: Both $S$ and $R$ may have fields sharing the exact same name. In this case, we use the renaming operator ($\rho$) to disambiguate.
+\end{dashlist}
+
+\[ \textit{instructor} \times \textit{teaches} \]
+
+\subsection{Join operator ($\bowtie$)}
+A simple $\textit{instructor} \times \textit{teaches}$ associates \emph{every} instructor tuple with \emph{every} teaches tuple. Most of these rows hold information about an instructor paired with a course they never taught!
+
+To get only tuples of instructors and the specific courses they actually taught, we apply a selection:
+\[ \sigma_{\textit{instructor.id} = \textit{teaches.id}} (\textit{instructor} \times \textit{teaches}) \]
+
+Because this pattern ($\sigma$ after $\times$) is overwhelmingly common in databases, it gets its own dedicated operator called a \textbf{Join}.
+\[ \textit{instructor} \bowtie_{\textit{instructor.id} = \textit{teaches.id}} \textit{teaches} \]
+
+If the matched columns have the identical name in both tables, the condition can be completely omitted. This is called a \textbf{Natural Join}.
+
+In SQL, a join is explicitly specified using \lstinline[style=SQLStyle]{JOIN}:
+\begin{sql}
+    SELECT * FROM instructor
+    JOIN teaches ON instructor.ID = teaches.ID
+\end{sql}
+
+\subsection{Complex queries}
+Operators can be chained to answer sophisticated questions. Consider: ``Find the names of all instructors in the Music department together with the course title of all the courses that they teach.''
+
+This query involves three relations (\texttt{instructor}, \texttt{teaches}, \texttt{course}) and requires joining them before projecting the desired columns.
+
+Two equivalent formulations:
+
+\begin{enumerate}[label=(\alph*)]
+    \item Apply the selection \emph{after} the full join:
+    \[ \pi_{\textit{name, title}}\!\left(\sigma_{\textit{dept\_name} = \text{``Music''}}\!\left(\textit{instructor} \bowtie (\textit{teaches} \bowtie \pi_{\textit{course\_id, title}}(\textit{course}))\right)\right) \]
+    \item Push the selection \emph{before} the join:
+    \[ \pi_{\textit{name, title}}\!\left(\left(\sigma_{\textit{dept\_name} = \text{``Music''}}(\textit{instructor})\right) \bowtie \left(\textit{teaches} \bowtie \pi_{\textit{course\_id, title}}(\textit{course})\right)\right) \]
+\end{enumerate}
+
+Both return the same result, but formulation (b) is significantly more efficient: the selection filters the instructor relation \emph{before} the expensive join, drastically reducing the number of intermediate tuples.
+
+\subsubsection*{Query optimization}
+This illustrates a key principle: \textbf{query optimization determines performance}. The DBMS query optimizer automatically rewrites expressions (e.g.\ pushing selections down) to find an efficient execution plan. The two expression trees below show the difference visually:
+
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\input{\subfix{schemas/tree_initial.tex}}
+
+\smallskip
+(a) Initial: $\sigma$ applied \emph{after} joining all three relations — processes every tuple.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\input{\subfix{schemas/tree_optimized.tex}}
+
+\smallskip
+(b) Optimized: $\sigma$ pushed \emph{down} to filter \textit{instructor} before the join — far fewer tuples flow upward.
+\end{minipage}
+
+\medskip
+Both trees compute the same result, but (b) is far more efficient because the expensive join operates on a tiny filtered relation instead of the full table.
+
+\newpage
+\subsection{Division operator ($/$)}
+Division is a compound operator useful for expressing ``for all'' queries (e.g., ``find all suppliers who supply \emph{every} part'').
+
+\begin{concept}{Division ($A / B$)}
+Given relations $A(x, y)$ and $B(y)$, the division $A / B$ returns all values of $x$ such that for \textbf{every} tuple $b$ in $B$, the tuple $(x, b)$ exists in $A$.
+\end{concept}
+
+\subsubsection*{Worked example}
+Consider relation $A(\texttt{sno}, \texttt{pno})$ and three divisors $B_1 \subseteq B_2 \subseteq B_3$:
+
+{\small
+\begin{minipage}[t]{0.22\textwidth}
+\begin{dbtable}{$A$}{ll}
+\textbf{sno} & \textbf{pno} \\ \hline
+s1 & p1 \\ \hline
+s1 & p2 \\ \hline
+s1 & p3 \\ \hline
+s1 & p4 \\ \hline
+s2 & p1 \\ \hline
+s2 & p2 \\ \hline
+s3 & p2 \\ \hline
+s4 & p2 \\ \hline
+s4 & p4 \\
+\end{dbtable}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.74\textwidth}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+$B_1 = \{\text{p2}\}$ & $B_2 = \{\text{p2, p4}\}$ & $B_3 = \{\text{p1, p2, p4}\}$ \\[4pt]
+$A / B_1 = \{\text{s1, s2, s3, s4}\}$ & $A / B_2 = \{\text{s1, s4}\}$ & $A / B_3 = \{\text{s1}\}$
+\end{tabular}
+\end{center}
+
+\smallskip
+As $B$ grows (more conditions to satisfy), the result of $A/B$ shrinks: only suppliers matching \emph{every} part in $B$ survive.
+\end{minipage}
+}
+
+\subsubsection*{Expressing division with basic operators}
+Division can be expressed using only $\pi$, $\times$, and $-$.
+
+\textbf{Idea}: find all $x$ values that are \emph{not} ``disqualified''. An $x$ is disqualified if pairing it with some $y \in B$ yields a tuple \emph{not} in $A$.
+
+Disqualified $x$ values:
+\[ \pi_x\!\left((\pi_x(A) \times B) - A\right) \]
+
+Final result:
+\[ A / B \;=\; \pi_x(A) \;-\; \pi_x\!\left((\pi_x(A) \times B) - A\right) \]
+
+\subsubsection*{Step by step with $B_3 = \{\text{p1, p2, p4}\}$}
+\begin{dashlist}
+    \item $\pi_{\textit{sno}}(A) = \{\text{s1, s2, s3, s4}\}$
+    \item $\pi_{\textit{sno}}(A) \times B_3$ produces all $4 \times 3 = 12$ possible (sno, pno) pairs.
+    \item $(\pi_{\textit{sno}}(A) \times B_3) - A$ keeps only the \emph{missing} pairs: $(\text{s2, p4}),\, (\text{s3, p1}),\, (\text{s3, p4}),\, (\text{s4, p1})$.
+    \item Projecting on \texttt{sno} gives the disqualified suppliers: $\{\text{s2, s3, s4}\}$.
+    \item $\pi_{\textit{sno}}(A) - \{\text{s2, s3, s4}\} = \{\text{s1}\}$.
+\end{dashlist}
+
+\end{document}

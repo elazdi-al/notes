@@ -1,6 +1,6 @@
 \documentclass[../../dis.tex]{subfiles}
 \begin{document}
-\chapter{L2 - SQL Introduction: Part 1}
+\chapter{SQL-1 - SQL Introduction}
 \vfill
 \section{Relational terminology}
 Although we already defined the relational model, let's align our vocabulary with SQL:
@@ -11,17 +11,13 @@ Although we already defined the relational model, let's align our vocabulary wit
 \end{dashlist}
 
 Throughout this chapter, we use the following example \texttt{Students} table:
-\begin{center}
-\begin{tabular}{lllcc}
-    \toprule
-    \textbf{\underline{sid}} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\
-    \midrule
-    53666 & Jones & jones@cs & 18 & 3.4 \\
-    53688 & Smith & smith@ee & 18 & 3.2 \\
-    53777 & White & white@cs & 19 & 4.0 \\
-    \bottomrule
-\end{tabular}
-\end{center}
+
+\begin{dbtable}{Students}{lllcc}
+\textbf{\underline{sid}} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 \\ \hline
+53688 & Smith & smith@ee & 18 & 3.2 \\ \hline
+53777 & White & white@cs & 19 & 4.0 \\
+\end{dbtable}
 
 \begin{concept}{Primary Key (PK)}
 The column (or group of columns) that uniquely identifies a row. Two rows \textbf{cannot} share the same PK. Above, \texttt{\underline{sid}} is the primary key.
@@ -46,17 +42,12 @@ To retrieve only certain attributes, replace \texttt{*} with column names:
 Selecting specific columns from a table. The query above projects \texttt{name} and \texttt{login} from \texttt{Students}.
 \end{concept}
 
-\begin{center}
-\begin{tabular}{ll}
-    \toprule
-    \textbf{name} & \textbf{login} \\
-    \midrule
-    Jones & jones@cs \\
-    Smith & smith@ee \\
-    White & white@cs \\
-    \bottomrule
-\end{tabular}
-\end{center}
+\begin{dbtable}{}{ll}
+\textbf{name} & \textbf{login} \\ \hline
+Jones & jones@cs \\ \hline
+Smith & smith@ee \\ \hline
+White & white@cs \\
+\end{dbtable}
 
 \subsection{Showing specific rows (Selection)}
 To filter rows, use the \texttt{WHERE} clause:
@@ -68,16 +59,11 @@ To filter rows, use the \texttt{WHERE} clause:
 Filtering rows based on a condition. The query above selects students whose age equals~18.
 \end{concept}
 
-\begin{center}
-\begin{tabular}{lllcc}
-    \toprule
-    \textbf{\underline{sid}} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\
-    \midrule
-    53666 & Jones & jones@cs & 18 & 3.4 \\
-    53688 & Smith & smith@ee & 18 & 3.2 \\
-    \bottomrule
-\end{tabular}
-\end{center}
+\begin{dbtable}{}{lllcc}
+\textbf{\underline{sid}} & \textbf{name} & \textbf{login} & \textbf{age} & \textbf{gpa} \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 \\ \hline
+53688 & Smith & smith@ee & 18 & 3.2 \\
+\end{dbtable}
 
 \subsection{SQL vocabulary}
 The general form of a basic SQL query:
@@ -103,18 +89,13 @@ Conceptually, a SQL query is evaluated as follows:
 \section{Querying multiple relations}
 To join two tables, list them both in \texttt{FROM} and express the join condition in \texttt{WHERE}. Consider the following \texttt{Enrolled} table alongside \texttt{Students}:
 
-\begin{center}
-\begin{tabular}{llc}
-    \toprule
-    \textbf{\underline{sid}} & \textbf{cid} & \textbf{grade} \\
-    \midrule
-    53831 & Carnatic101 & C \\
-    53831 & Reggae203 & B \\
-    53650 & Topology112 & A \\
-    53666 & History105 & B \\
-    \bottomrule
-\end{tabular}
-\end{center}
+\begin{dbtable}{Enrolled}{llc}
+\textbf{\underline{sid}} & \textbf{cid} & \textbf{grade} \\ \hline
+53831 & Carnatic101 & C \\ \hline
+53831 & Reggae203 & B \\ \hline
+53650 & Topology112 & A \\ \hline
+53666 & History105 & B \\
+\end{dbtable}
 
 ``Find all students with grade B'':
 \begin{sql}
@@ -123,15 +104,10 @@ To join two tables, list them both in \texttt{FROM} and express the join conditi
     WHERE S.sid = E.sid AND E.grade = 'B'
 \end{sql}
 
-\begin{center}
-\begin{tabular}{ll}
-    \toprule
-    \textbf{S.name} & \textbf{E.cid} \\
-    \midrule
-    Jones & History105 \\
-    \bottomrule
-\end{tabular}
-\end{center}
+\begin{dbtable}{}{ll}
+\textbf{S.name} & \textbf{E.cid} \\ \hline
+Jones & History105 \\
+\end{dbtable}
 
 \subsection{Na\"ive evaluation in steps}
 The evaluation of the query above proceeds conceptually as follows:
@@ -141,20 +117,20 @@ Combine every row of \texttt{Students} with every row of \texttt{Enrolled}:
 
 \begin{center}
 \scriptsize
-\begin{tabular}{llllc|llc}
-    \toprule
-    \textbf{S.sid} & \textbf{S.name} & \textbf{S.login} & \textbf{S.age} & \textbf{S.gpa} & \textbf{E.sid} & \textbf{E.cid} & \textbf{E.grade} \\
-    \midrule
-    53666 & Jones & jones@cs & 18 & 3.4 & 53831 & Carnatic101 & C \\
-    53666 & Jones & jones@cs & 18 & 3.4 & 53831 & Reggae203 & B \\
-    53666 & Jones & jones@cs & 18 & 3.4 & 53650 & Topology112 & A \\
-    53666 & Jones & jones@cs & 18 & 3.4 & 53666 & History105 & B \\
-    53688 & Smith & smith@ee & 18 & 3.2 & 53831 & Carnatic101 & C \\
-    53688 & Smith & smith@ee & 18 & 3.2 & 53831 & Reggae203 & B \\
-    53688 & Smith & smith@ee & 18 & 3.2 & 53650 & Topology112 & A \\
-    53688 & Smith & smith@ee & 18 & 3.2 & 53666 & History105 & B \\
-    \bottomrule
+\begin{tabular}{|l|l|l|l|c|l|l|c|}
+\hline
+\rowcolor{DBHeaderBg}
+\textbf{S.sid} & \textbf{S.name} & \textbf{S.login} & \textbf{S.age} & \textbf{S.gpa} & \textbf{E.sid} & \textbf{E.cid} & \textbf{E.grade} \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 & 53831 & Carnatic101 & C \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 & 53831 & Reggae203 & B \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 & 53650 & Topology112 & A \\ \hline
+53666 & Jones & jones@cs & 18 & 3.4 & 53666 & History105 & B \\ \hline
+53688 & Smith & smith@ee & 18 & 3.2 & 53831 & Carnatic101 & C \\ \hline
+53688 & Smith & smith@ee & 18 & 3.2 & 53831 & Reggae203 & B \\ \hline
+53688 & Smith & smith@ee & 18 & 3.2 & 53650 & Topology112 & A \\ \hline
+53688 & Smith & smith@ee & 18 & 3.2 & 53666 & History105 & B \\ \hline
 \end{tabular}
+\normalsize
 \end{center}
 
 \textbf{Step 2 -- Apply the predicate (WHERE):}
@@ -167,45 +143,30 @@ Keep only \texttt{S.name} and \texttt{E.cid}, yielding the final result: \texttt
 The following three relations are used throughout the rest of this chapter.
 
 \begin{minipage}[t]{0.32\textwidth}
-\centering
-\textbf{Sailors}\\[4pt]
-\begin{tabular}{@{}llcc@{}}
-    \toprule
-    \textbf{\underline{sid}} & \textbf{sname} & \textbf{rating} & \textbf{age} \\
-    \midrule
-    22 & Dustin & 7 & 45.0 \\
-    31 & Lubber & 8 & 55.5 \\
-    95 & Bob    & 3 & 63.5 \\
-    \bottomrule
-\end{tabular}
+\begin{dbtable}{Sailors}{llcc}
+\textbf{\underline{sid}} & \textbf{sname} & \textbf{rating} & \textbf{age} \\ \hline
+22 & Dustin & 7 & 45.0 \\ \hline
+31 & Lubber & 8 & 55.5 \\ \hline
+95 & Bob    & 3 & 63.5 \\
+\end{dbtable}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.32\textwidth}
-\centering
-\textbf{Boats}\\[4pt]
-\begin{tabular}{@{}llc@{}}
-    \toprule
-    \textbf{\underline{bid}} & \textbf{bname} & \textbf{color} \\
-    \midrule
-    101 & Interlake & blue  \\
-    102 & Interlake & red   \\
-    103 & Clipper   & green \\
-    104 & Marine    & red   \\
-    \bottomrule
-\end{tabular}
+\begin{dbtable}{Boats}{llc}
+\textbf{\underline{bid}} & \textbf{bname} & \textbf{color} \\ \hline
+101 & Interlake & blue  \\ \hline
+102 & Interlake & red   \\ \hline
+103 & Clipper   & green \\ \hline
+104 & Marine    & red   \\
+\end{dbtable}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.28\textwidth}
-\centering
-\textbf{Reserves}\\[4pt]
-\begin{tabular}{@{}ccl@{}}
-    \toprule
-    \textbf{\underline{sid}} & \textbf{\underline{bid}} & \textbf{day} \\
-    \midrule
-    22 & 101 & 10/10/96 \\
-    95 & 103 & 11/12/96 \\
-    \bottomrule
-\end{tabular}
+\begin{dbtable}{Reserves}{ccl}
+\textbf{\underline{sid}} & \textbf{\underline{bid}} & \textbf{day} \\ \hline
+22 & 101 & 10/10/96 \\ \hline
+95 & 103 & 11/12/96 \\
+\end{dbtable}
 \end{minipage}
 
 \section{Aggregate operators}
@@ -296,20 +257,16 @@ Partitions tuples into groups based on equal values of the specified columns, th
 
 \subsection{Using GROUP BY}
 We use an extended \texttt{Sailors} table for the following examples:
-\begin{center}
-\begin{tabular}{@{}llcc@{}}
-    \toprule
-    \textbf{\underline{sid}} & \textbf{sname} & \textbf{rating} & \textbf{age} \\
-    \midrule
-    22 & Dustin & 7 & 45.0 \\
-    31 & Lubber & 8 & 55.5 \\
-    95 & Bob    & 3 & 63.5 \\
-    52 & Smith  & 3 & 74.5 \\
-    68 & John   & 7 & 56.5 \\
-    81 & Ana    & 7 & 71.5 \\
-    \bottomrule
-\end{tabular}
-\end{center}
+
+\begin{dbtable}{Sailors (extended)}{llcc}
+\textbf{\underline{sid}} & \textbf{sname} & \textbf{rating} & \textbf{age} \\ \hline
+22 & Dustin & 7 & 45.0 \\ \hline
+31 & Lubber & 8 & 55.5 \\ \hline
+95 & Bob    & 3 & 63.5 \\ \hline
+52 & Smith  & 3 & 74.5 \\ \hline
+68 & John   & 7 & 56.5 \\ \hline
+81 & Ana    & 7 & 71.5 \\
+\end{dbtable}
 
 ``Find the youngest age for each rating level'':
 \begin{sql}
@@ -317,17 +274,13 @@ We use an extended \texttt{Sailors} table for the following examples:
 \end{sql}
 
 The tuples are first partitioned by \texttt{rating} (groups: rating~3, rating~7, rating~8), then \texttt{MIN(S.age)} is evaluated within each group:
-\begin{center}
-\begin{tabular}{cc}
-    \toprule
-    \textbf{rating} & \textbf{MIN(age)} \\
-    \midrule
-    3 & 63.5 \\
-    7 & 45.0 \\
-    8 & 55.5 \\
-    \bottomrule
-\end{tabular}
-\end{center}
+
+\begin{dbtable}{}{cc}
+\textbf{rating} & \textbf{MIN(age)} \\ \hline
+3 & 63.5 \\ \hline
+7 & 45.0 \\ \hline
+8 & 55.5 \\
+\end{dbtable}
 
 \begin{concept}{GROUP BY semantics}
 The \texttt{SELECT} clause may only contain:
@@ -350,16 +303,12 @@ Any non-aggregated column in \texttt{SELECT} that is \emph{not} in \texttt{GROUP
 \end{sql}
 
 Groups with only one member (rating~8, containing only Lubber) are eliminated:
-\begin{center}
-\begin{tabular}{cc}
-    \toprule
-    \textbf{rating} & \textbf{MIN(age)} \\
-    \midrule
-    3 & 63.5 \\
-    7 & 45.0 \\
-    \bottomrule
-\end{tabular}
-\end{center}
+
+\begin{dbtable}{}{cc}
+\textbf{rating} & \textbf{MIN(age)} \\ \hline
+3 & 63.5 \\ \hline
+7 & 45.0 \\
+\end{dbtable}
 
 \begin{concept}{HAVING clause}
 A filter applied \emph{after} grouping. It uses aggregate conditions to keep or discard entire groups, unlike \texttt{WHERE} which operates on individual rows before any grouping.

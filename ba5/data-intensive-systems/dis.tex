@@ -72,6 +72,31 @@
     {\begin{itemize}[label=-]}
     {\end{itemize}}
 
+% recall{label}{Term}{short reminder} — clickable italicized back-reference
+\newcommand{\recall}[3]{%
+  \hyperref[#1]{\textit{#2}}%
+  \space(\textit{#3})%
+}
+
+%% -------------------- DB Table Environment --------------------
+\definecolor{DBHeaderBg}{HTML}{E5E7EB}   % light gray header background
+
+% dbtable{<title>}{<col spec>} — uniform fully-bordered SQL table
+% Usage: \begin{dbtable}{Students}{lllcc} ... \end{dbtable}
+\newenvironment{dbtable}[2]{%
+  \par\smallskip\noindent
+  \textbf{#1}\par\nopagebreak\smallskip
+  \centering
+  \renewcommand{\arraystretch}{1.15}%
+  \begin{tabular}{|#2|}
+  \hline
+  \rowcolor{DBHeaderBg}
+}{%
+  \hline
+  \end{tabular}%
+  \par\smallskip
+}
+
 %% -------------------- SQL Code Styling --------------------
 \definecolor{SQLKeyWord}{HTML}{7C3AED}     % vivid purple
 \definecolor{SQLComment}{HTML}{6B7280}     % neutral gray
@@ -110,5 +135,6 @@
 \flushbottom
 \subfile{chapters/front/front} 
 \subfile{chapters/L1/L1} 
+\subfile{chapters/L2/L2} 
 \subfile{chapters/SQL-1/SQL-1} 
 \end{document}

@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+    node distance=1.1cm and 0.8cm,
+    every node/.style={font=\small},
+    leaf/.style={font=\small\itshape},
+    >=Latex
+]
+    % Nodes top-down
+    \node (pi) {$\pi_{\textit{name, title}}$};
+    \node[below=of pi, draw, ellipse, red, thick, inner sep=2pt] (sigma) {$\sigma_{\textit{dept\_name}=\text{``Music''}}$};
+    \node[below=of sigma] (join1) {$\bowtie$};
+    \node[leaf, below left=of join1] (inst) {instructor};
+    \node[below right=of join1] (join2) {$\bowtie$};
+    \node[leaf, below left=of join2] (teach) {teaches};
+    \node[below right=of join2] (picourse) {$\pi_{\textit{course\_id, title}}$};
+    \node[leaf, below=of picourse] (course) {course};
+
+    % Edges
+    \draw (pi) -- (sigma);
+    \draw (sigma) -- (join1);
+    \draw (join1) -- (inst);
+    \draw (join1) -- (join2);
+    \draw (join2) -- (teach);
+    \draw (join2) -- (picourse);
+    \draw (picourse) -- (course);
+\end{tikzpicture}
