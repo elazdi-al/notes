@@ -1,0 +1,72 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    header/.style={frame, fill=gray!12},
+    idxentry/.style={frame, fill=orange!14, minimum width=2.40cm, minimum height=0.48cm},
+    link/.style={->, thick, draw=black!50}
+]
+    \draw[frame, fill=gray!4] (0.10,1.05) rectangle (3.20,5.85);
+    \draw[header] (0.10,5.30) rectangle (3.20,5.85);
+    \node[font=\scriptsize\bfseries] at (1.65,5.58) {Dense index on dept\_name};
+
+    \foreach \y/\v in {
+        4.90/Biology,
+        4.32/Comp.\ Sci.,
+        3.74/Elec.\ Eng.,
+        3.16/Finance,
+        2.58/History,
+        2.00/Music,
+        1.42/Physics
+    }{
+        \node[idxentry] at (1.65,\y) {\scriptsize \v};
+    }
+
+    \draw[frame, fill=blue!4] (4.10,0.26) rectangle (13.20,6.45);
+    \draw[header] (4.10,5.90) rectangle (13.20,6.45);
+    \foreach \x in {5.40,7.50,10.50} {
+        \draw[black!45] (\x,0.26) -- (\x,6.45);
+    }
+    \foreach \y in {5.43,4.96,4.49,4.02,3.55,3.08,2.61,2.14,1.67,1.20,0.73,0.26} {
+        \draw[black!40] (4.10,\y) -- (13.20,\y);
+    }
+    \foreach \y in {4.96,4.02,3.08,2.14,1.20} {
+        \draw[black!65, line width=0.95pt] (4.10,\y) -- (13.20,\y);
+    }
+
+    \node[font=\scriptsize\bfseries] at (4.75,6.18) {ID};
+    \node[font=\scriptsize\bfseries] at (6.45,6.18) {name};
+    \node[font=\scriptsize\bfseries] at (9.00,6.18) {dept\_name};
+    \node[font=\scriptsize\bfseries] at (11.85,6.18) {salary};
+
+    \foreach \y/\id/\name/\dept/\salary in {
+        5.67/76766/Crick/Biology/72000,
+        5.20/10101/Srinivasan/Comp.\ Sci./65000,
+        4.73/45565/Katz/Comp.\ Sci./75000,
+        4.26/83821/Brandt/Comp.\ Sci./92000,
+        3.79/98345/Kim/Elec.\ Eng./80000,
+        3.32/12121/Wu/Finance/90000,
+        2.85/76543/Singh/Finance/80000,
+        2.38/32343/El Said/History/60000,
+        1.91/58583/Califieri/History/62000,
+        1.44/15151/Mozart/Music/40000,
+        0.97/22222/Einstein/Physics/95000,
+        0.50/33456/Gold/Physics/87000
+    }{
+        \node[font=\scriptsize] at (4.75,\y) {\id};
+        \node[font=\scriptsize] at (6.45,\y) {\name};
+        \node[font=\scriptsize] at (9.00,\y) {\dept};
+        \node[font=\scriptsize] at (11.85,\y) {\salary};
+    }
+
+    \draw[link] (2.85,4.90) -- (4.10,5.67);
+    \draw[link] (2.85,4.32) -- (4.10,5.20);
+    \draw[link] (2.85,3.74) -- (4.10,3.79);
+    \draw[link] (2.85,3.16) -- (4.10,3.32);
+    \draw[link] (2.85,2.58) -- (4.10,2.38);
+    \draw[link] (2.85,2.00) -- (4.10,1.44);
+    \draw[link] (2.85,1.42) -- (4.10,0.97);
+
+    \node[font=\scriptsize] at (6.65,-0.08) {one entry per distinct search-key value, pointing to the first matching record};
+\end{tikzpicture}

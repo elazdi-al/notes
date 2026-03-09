@@ -1,0 +1,34 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt}
+]
+    \draw[frame, fill=blue!10] (0.20,2.10) rectangle (8.60,3.15);
+    \foreach \x in {1.35,2.50,3.65,4.80,5.95,7.10} {
+        \draw[black!50] (\x,2.10) -- (\x,3.15);
+    }
+    \node[font=\bfseries] at (4.40,3.55) {Internal node};
+    \node at (0.78,2.62) {$P_1$};
+    \node at (1.93,2.62) {$K_1$};
+    \node at (3.08,2.62) {$P_2$};
+    \node at (4.23,2.62) {$K_2$};
+    \node at (5.38,2.62) {$P_3$};
+    \node at (6.53,2.62) {$K_{q-1}$};
+    \node at (7.82,2.62) {$P_q$};
+
+    \draw[frame, fill=blue!7] (1.00,0.25) rectangle (7.80,1.30);
+    \foreach \x in {2.15,3.30,4.45,5.60,6.75} {
+        \draw[black!50] (\x,0.25) -- (\x,1.30);
+    }
+    \node[font=\bfseries] at (4.40,1.70) {Leaf node};
+    \node at (1.58,0.78) {$K_1$};
+    \node at (2.73,0.78) {ptr};
+    \node at (3.88,0.78) {$K_2$};
+    \node at (5.03,0.78) {ptr};
+    \node at (6.18,0.78) {$\cdots$};
+    \node at (7.28,0.78) {next};
+    \draw[->, thick, draw=blue!55!black] (7.80,0.78) -- (9.00,0.78);
+
+    \node[font=\scriptsize] at (4.55,-0.12) {internal nodes route the search; leaves store actual entries and are linked for range scans};
+\end{tikzpicture}

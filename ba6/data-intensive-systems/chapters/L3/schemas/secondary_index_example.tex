@@ -1,0 +1,83 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    header/.style={frame, fill=gray!12},
+    idxentry/.style={frame, fill=orange!14, minimum width=2.40cm, minimum height=0.46cm},
+    bucket/.style={frame, fill=blue!8, minimum width=1.20cm, minimum height=0.46cm},
+    link/.style={->, thick, draw=black!50}
+]
+    \draw[frame, fill=gray!4] (0.00,0.20) rectangle (3.00,6.20);
+    \draw[header] (0.00,5.64) rectangle (3.00,6.20);
+    \node[font=\footnotesize\bfseries] at (1.50,5.92) {Index on salary};
+
+    \node[idxentry] (i1) at (1.50,5.25) {\scriptsize 40000};
+    \node[idxentry] (i2) at (1.50,4.47) {\scriptsize 60000};
+    \node[idxentry] (i3) at (1.50,3.69) {\scriptsize 65000};
+    \node[idxentry] (i4) at (1.50,2.92) {\scriptsize 75000};
+    \node[idxentry] (i5) at (1.50,2.15) {\scriptsize 80000};
+    \node[idxentry] (i6) at (1.50,1.37) {\scriptsize 92000};
+    \node[idxentry] (i7) at (1.50,0.59) {\scriptsize 95000};
+
+    \draw[frame, fill=gray!4] (3.80,0.20) rectangle (5.40,6.20);
+    \draw[header] (3.80,5.64) rectangle (5.40,6.20);
+    \node[font=\footnotesize\bfseries] at (4.60,5.92) {Buckets};
+
+    \node[bucket] (b1) at (4.60,5.25) {\scriptsize 1 ptr};
+    \node[bucket] (b2) at (4.60,4.47) {\scriptsize 1 ptr};
+    \node[bucket] (b3) at (4.60,3.69) {\scriptsize 1 ptr};
+    \node[bucket] (b4) at (4.60,2.92) {\scriptsize 1 ptr};
+    \node[bucket] (b5) at (4.60,2.15) {\scriptsize 2 ptrs};
+    \node[bucket] (b6) at (4.60,1.37) {\scriptsize 1 ptr};
+    \node[bucket] (b7) at (4.60,0.59) {\scriptsize 1 ptr};
+
+    \draw[frame, fill=blue!4] (6.40,0.20) rectangle (13.80,6.20);
+    \draw[header] (6.40,5.64) rectangle (13.80,6.20);
+    \foreach \x in {7.60,9.80,11.80} {
+        \draw[black!45] (\x,0.20) -- (\x,6.20);
+    }
+    \foreach \y in {4.96,4.28,3.60,2.92,2.24,1.56,0.88,0.20} {
+        \draw[black!40] (6.40,\y) -- (13.80,\y);
+    }
+
+    \node[font=\footnotesize\bfseries] at (7.00,5.92) {ID};
+    \node[font=\footnotesize\bfseries] at (8.70,5.92) {name};
+    \node[font=\footnotesize\bfseries] at (10.80,5.92) {dept};
+    \node[font=\footnotesize\bfseries] at (12.80,5.92) {salary};
+
+    \foreach \y/\id/\name/\dept/\salary in {
+        5.30/10101/Srinivasan/Comp.\ Sci./65000,
+        4.62/15151/Mozart/Music/40000,
+        3.94/22222/Einstein/Physics/95000,
+        3.26/32343/El Said/History/60000,
+        2.58/45565/Katz/Comp.\ Sci./75000,
+        1.90/76543/Singh/Finance/80000,
+        1.22/83821/Brandt/Comp.\ Sci./92000,
+        0.54/98345/Kim/Elec.\ Eng./80000
+    }{
+        \node[font=\scriptsize] at (7.00,\y) {\id};
+        \node[font=\scriptsize] at (8.70,\y) {\name};
+        \node[font=\scriptsize] at (10.80,\y) {\dept};
+        \node[font=\scriptsize] at (12.80,\y) {\salary};
+    }
+
+    \draw[link] (i1.east) -- (b1.west);
+    \draw[link] (i2.east) -- (b2.west);
+    \draw[link] (i3.east) -- (b3.west);
+    \draw[link] (i4.east) -- (b4.west);
+    \draw[link] (i5.east) -- (b5.west);
+    \draw[link] (i6.east) -- (b6.west);
+    \draw[link] (i7.east) -- (b7.west);
+
+    \draw[link] (b1.east) to[out=0,in=180] (6.40,4.62);
+    \draw[link] (b2.east) to[out=0,in=180] (6.40,3.26);
+    \draw[link] (b3.east) to[out=0,in=180] (6.40,5.30);
+    \draw[link] (b4.east) to[out=0,in=180] (6.40,2.58);
+    \draw[link] (b5.east) to[out=0,in=180] (6.40,1.90);
+    \draw[link] (b5.east) to[out=0,in=180] (6.40,0.54);
+    \draw[link] (b6.east) to[out=0,in=180] (6.40,1.22);
+    \draw[link] (b7.east) to[out=0,in=180] (6.40,3.94);
+
+    \node[font=\scriptsize, align=center] at (6.90,-0.40) {secondary index on an unsorted field: one entry per value, pointing to a bucket of record pointers};
+\end{tikzpicture}

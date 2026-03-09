@@ -1,0 +1,24 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\scriptsize},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.55cm, inner xsep=4pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.55cm, inner xsep=4pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={->, thick, draw=blue!55!black}
+]
+    \node[inode] (root) at (6.5,3.85) {El Said | Mozart};
+
+    \node[leaf] (l1) at (1.5,1.65) {Brandt | Califieri | Crick | Einstein};
+    \node[leaf] (l2) at (6.5,1.65) {El Said | Gold | Katz | Kim};
+    \node[leaf] (l3) at (11.5,1.65) {Mozart | Singh | Srinivasan | Wu};
+
+    \draw[link] (root.south west) -- (l1.north);
+    \draw[link] (root.south) -- (l2.north);
+    \draw[link] (root.south east) -- (l3.north);
+
+    \draw[leaflink] (l1.east) -- (l2.west);
+    \draw[leaflink] (l2.east) -- (l3.west);
+
+    \node[font=\scriptsize] at (6.5,0.35) {order $6$: larger fan-out keeps the tree shallower};
+\end{tikzpicture}

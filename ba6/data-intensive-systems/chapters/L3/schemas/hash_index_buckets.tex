@@ -1,0 +1,59 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    header/.style={frame, fill=gray!12},
+    bucket/.style={frame, fill=blue!7},
+    link/.style={->, thick, draw=black!55},
+    spill/.style={->, thick, draw=orange!75!black}
+]
+    \node[draw=black!60, circle, line width=0.85pt, fill=orange!14, minimum size=1.2cm] (h) at (1.55,3.00) {$h(age)$};
+
+    \draw[bucket] (4.00,4.20) rectangle (6.95,5.90);
+    \draw[header] (4.00,5.35) rectangle (6.95,5.90);
+    \foreach \y in {4.97,4.59} {
+        \draw[black!40] (4.15,\y) -- (6.80,\y);
+    }
+    \node[font=\bfseries] at (5.48,5.63) {Bucket 00};
+    \node[font=\scriptsize] at (5.48,5.16) {(22, r1)};
+    \node[font=\scriptsize] at (5.48,4.78) {(44, r6)};
+    \node[font=\scriptsize] at (5.48,4.40) {(44, r9)};
+
+    \draw[bucket] (4.00,2.15) rectangle (6.95,3.85);
+    \draw[header] (4.00,3.30) rectangle (6.95,3.85);
+    \foreach \y in {2.92,2.54} {
+        \draw[black!40] (4.15,\y) -- (6.80,\y);
+    }
+    \node[font=\bfseries] at (5.48,3.58) {Bucket 01};
+    \node[font=\scriptsize] at (5.48,3.11) {(33, r2)};
+    \node[font=\scriptsize] at (5.48,2.73) {(65, r7)};
+    \node[font=\scriptsize] at (5.48,2.35) {(81, r8)};
+
+    \draw[bucket] (4.00,0.10) rectangle (6.95,1.80);
+    \draw[header] (4.00,1.25) rectangle (6.95,1.80);
+    \foreach \y in {0.87,0.49} {
+        \draw[black!40] (4.15,\y) -- (6.80,\y);
+    }
+    \node[font=\bfseries] at (5.48,1.53) {Bucket 10};
+    \node[font=\scriptsize] at (5.48,1.06) {(25, r3)};
+    \node[font=\scriptsize] at (5.48,0.68) {(58, r4)};
+    \node[font=\scriptsize] at (5.48,0.30) {(90, r5)};
+
+    \draw[bucket] (8.05,2.15) rectangle (10.70,3.85);
+    \draw[header] (8.05,3.30) rectangle (10.70,3.85);
+    \foreach \y in {2.92,2.54} {
+        \draw[black!40] (8.20,\y) -- (10.55,\y);
+    }
+    \node[font=\bfseries] at (9.38,3.58) {Overflow};
+    \node[font=\scriptsize] at (9.38,3.11) {(97, r10)};
+    \node[font=\scriptsize] at (9.38,2.73) {(113, r11)};
+    \node[font=\scriptsize] at (9.38,2.35) {(129, r12)};
+
+    \draw[link, dashed] (h.east) -- node[above, font=\scriptsize] {00} (4.00,5.05);
+    \draw[link, dashed] (h.east) -- node[above, font=\scriptsize] {01} (4.00,3.00);
+    \draw[link, dashed] (h.east) -- node[below, font=\scriptsize] {10} (4.00,0.95);
+    \draw[spill] (6.95,3.00) -- node[above, font=\scriptsize] {overflow} (8.05,3.00);
+
+    \node[font=\scriptsize, align=center] at (5.35,-0.45) {hash index: equality lookup computes one bucket; collisions create overflow pages};
+\end{tikzpicture}

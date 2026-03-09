@@ -1,0 +1,74 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    header/.style={frame, fill=gray!12},
+    idxentry/.style={frame, fill=orange!14, minimum width=2.10cm, minimum height=0.52cm},
+    link/.style={->, thick, draw=black!50}
+]
+    \draw[frame, fill=gray!4] (0.10,1.05) rectangle (2.95,4.95);
+    \draw[header] (0.10,4.40) rectangle (2.95,4.95);
+    \node[font=\bfseries] at (1.52,4.68) {Sparse index};
+    \node[idxentry] (i0) at (1.52,3.70) {10101};
+    \node[idxentry] (i1) at (1.52,2.90) {32343};
+    \node[idxentry] (i2) at (1.52,2.10) {76543};
+    \node[font=\scriptsize, align=center] at (1.52,1.30) {one anchor\\per page};
+
+    \node[inner sep=0pt] (p0) at (5.25,2.95) {
+        \scriptsize
+        \begin{tabular}{|C{0.95cm}|L{1.45cm}|}
+        \hline
+        \multicolumn{2}{|c|}{\cellcolor{gray!12}\textbf{Page 0}}\\
+        \hline
+        10101 & Srinivasan\\
+        \hline
+        12121 & Wu\\
+        \hline
+        15151 & Mozart\\
+        \hline
+        22222 & Einstein\\
+        \hline
+        \end{tabular}
+    };
+
+    \node[inner sep=0pt] (p1) at (8.90,2.95) {
+        \scriptsize
+        \begin{tabular}{|C{0.95cm}|L{1.45cm}|}
+        \hline
+        \multicolumn{2}{|c|}{\cellcolor{gray!12}\textbf{Page 1}}\\
+        \hline
+        32343 & El Said\\
+        \hline
+        33456 & Gold\\
+        \hline
+        45565 & Katz\\
+        \hline
+        58583 & Califieri\\
+        \hline
+        \end{tabular}
+    };
+
+    \node[inner sep=0pt] (p2) at (12.55,2.95) {
+        \scriptsize
+        \begin{tabular}{|C{0.95cm}|L{1.45cm}|}
+        \hline
+        \multicolumn{2}{|c|}{\cellcolor{gray!12}\textbf{Page 2}}\\
+        \hline
+        76543 & Singh\\
+        \hline
+        76766 & Crick\\
+        \hline
+        83821 & Brandt\\
+        \hline
+        98345 & Kim\\
+        \hline
+        \end{tabular}
+    };
+
+    \draw[link] (i0.east) -- (p0.west);
+    \draw[link] (i1.east) -- (p1.west);
+    \draw[link] (i2.east) -- (p2.west);
+
+    \node[font=\scriptsize] at (7.30,0.45) {to search for $K$, jump to the page with the largest anchor key $\leq K$ and scan forward};
+\end{tikzpicture}

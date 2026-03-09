@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    rec/.style={frame, fill=blue!7, minimum width=1.0cm, minimum height=1.0cm},
+    gap/.style={draw=red!70!black, rounded corners=3pt, line width=0.9pt, dashed, minimum width=1.0cm, minimum height=1.0cm},
+    >=Latex
+]
+    \draw[frame, fill=gray!4] (0,0) rectangle (5.9,1.8);
+    \node[font=\bfseries] at (2.95,2.15) {Contiguous records};
+
+    \node[rec] at (0.75,0.9) {R0};
+    \node[rec] at (1.90,0.9) {R1};
+    \node[gap] at (3.05,0.9) {delete};
+    \node[rec] at (4.20,0.9) {R3};
+    \node[rec] at (5.35,0.9) {R4};
+
+    \draw[->, thick, draw=black!55] (5.35,-0.25) -- (3.55,-0.25);
+    \node[font=\scriptsize, align=center] at (4.45,-0.70) {later records shift left};
+\end{tikzpicture}

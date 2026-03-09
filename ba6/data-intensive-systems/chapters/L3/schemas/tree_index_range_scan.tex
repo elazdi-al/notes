@@ -1,0 +1,30 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.86cm, inner xsep=10pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.86cm, inner xsep=8pt},
+    hit/.style={draw=black!60, rounded corners=3pt, line width=0.95pt, fill=green!12, minimum height=0.86cm, inner xsep=8pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={->, thick, draw=blue!60!black}
+]
+    \node[inode] (root) at (6.00,5.00) {40 \quad 60};
+
+    \node[leaf] (l1) at (2.00,1.50) {22 \quad 25 \quad 29};
+    \node[hit]  (l2) at (6.00,1.50) {33 \quad 40 \quad 44 \quad 50};
+    \node[hit]  (l3) at (10.00,1.50) {65 \quad 78};
+
+    \draw[link] (root.south west) -- node[pos=0.6, left, font=\scriptsize] {$age < 40$} (l1.north);
+    \draw[link] (root.south) -- node[pos=0.4, right, font=\scriptsize, xshift=2pt] {$40 \leq age < 60$} (l2.north);
+    \draw[link] (root.south east) -- node[pos=0.6, right, font=\scriptsize] {$age \geq 60$} (l3.north);
+
+    \draw[leaflink] (l1.east) -- (l2.west);
+    \draw[leaflink] (l2.east) -- (l3.west);
+
+    \node[font=\scriptsize, align=center, anchor=east] (start) at (4.60,5.00) {start search\\for $age \geq 40$};
+    \draw[->, thick, draw=orange!75!black] (start) -- (root);
+
+    \node[font=\scriptsize, anchor=east] (msg1) at (7.60,0.40) {after the first matching leaf,};
+    \node[font=\scriptsize, anchor=west] (msg2) at (8.80,0.40) {follow leaf links};
+    \draw[->, thick, draw=green!50!black] (msg1) -- (msg2);
+\end{tikzpicture}

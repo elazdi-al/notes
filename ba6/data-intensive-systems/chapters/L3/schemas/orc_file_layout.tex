@@ -1,0 +1,66 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    scale=0.94,
+    transform shape,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    meta/.style={frame, fill=gray!12},
+    rowdata/.style={frame, fill=blue!7},
+    footer/.style={frame, fill=yellow!18},
+    colindex/.style={frame, fill=cyan!10, minimum width=2.35cm, minimum height=0.58cm},
+    coldata/.style={frame, fill=green!10, minimum width=2.35cm, minimum height=0.58cm},
+    link/.style={->, thin, draw=black!55}
+]
+    \node[font=\bfseries] at (2.15,7.65) {File of row groups / stripes};
+    \node[font=\bfseries] at (8.25,7.65) {Inside one stripe};
+
+    \draw[frame, fill=gray!4] (0.35,5.35) rectangle (3.95,7.15);
+    \draw[meta]   (0.35,6.55) rectangle (3.95,7.15);
+    \draw[rowdata](0.35,5.95) rectangle (3.95,6.55);
+    \draw[footer] (0.35,5.35) rectangle (3.95,5.95);
+    \node[anchor=east] at (0.10,6.25) {stripe 1};
+    \node at (2.15,6.85) {Index data};
+    \node at (2.15,6.25) {Row data};
+    \node at (2.15,5.65) {Stripe footer};
+
+    \draw[frame, fill=gray!4] (0.35,3.10) rectangle (3.95,4.90);
+    \draw[meta]   (0.35,4.30) rectangle (3.95,4.90);
+    \draw[rowdata](0.35,3.70) rectangle (3.95,4.30);
+    \draw[footer] (0.35,3.10) rectangle (3.95,3.70);
+    \node[anchor=east] at (0.10,4.00) {stripe 2};
+    \node (idxsrc) at (2.15,4.60) {Index data};
+    \node (rowsrc) at (2.15,4.00) {Row data};
+    \node at (2.15,3.40) {Stripe footer};
+
+    \node at (2.15,2.55) {$\vdots$};
+
+    \draw[frame, fill=gray!4] (0.35,0.40) rectangle (3.95,2.20);
+    \draw[meta]   (0.35,1.60) rectangle (3.95,2.20);
+    \draw[rowdata](0.35,1.00) rectangle (3.95,1.60);
+    \draw[footer] (0.35,0.40) rectangle (3.95,1.00);
+    \node[anchor=east] at (0.10,1.30) {stripe $n$};
+    \node at (2.15,1.90) {Index data};
+    \node at (2.15,1.30) {Row data};
+    \node at (2.15,0.70) {Stripe footer};
+
+    \draw[footer] (0.35,-0.55) rectangle (3.95,0.05);
+    \node at (2.15,-0.25) {File footer};
+
+    \node[colindex] (i1) at (8.25,5.45) {Col 1 index};
+    \node[colindex] (i2) at (8.25,4.70) {Col 2 index};
+    \node[colindex] (i3) at (8.25,3.95) {Col 3 index};
+
+    \node[coldata] (d1) at (8.25,2.70) {Col 1 data};
+    \node[coldata] (d2) at (8.25,1.95) {Col 2 data};
+    \node[coldata] (d3) at (8.25,1.20) {Col 3 data};
+
+    \draw[link] (3.95,4.60) -- (i1.west);
+    \draw[link] (3.95,4.60) -- (i2.west);
+    \draw[link] (3.95,4.60) -- (i3.west);
+    \draw[link] (3.95,4.00) -- (d1.west);
+    \draw[link] (3.95,4.00) -- (d2.west);
+    \draw[link] (3.95,4.00) -- (d3.west);
+
+    \node[font=\scriptsize] at (8.25,0.35) {metadata and column streams are stored separately};
+\end{tikzpicture}

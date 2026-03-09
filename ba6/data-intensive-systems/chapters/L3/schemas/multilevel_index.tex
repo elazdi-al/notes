@@ -1,0 +1,61 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    header/.style={frame, fill=gray!12},
+    block/.style={frame, fill=gray!4},
+    data/.style={draw=black!55, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum width=2.00cm, minimum height=1.25cm},
+    link/.style={->, thick, draw=black!50}
+]
+    \draw[block] (0.20,1.00) rectangle (2.55,6.00);
+    \draw[header] (0.20,5.35) rectangle (2.55,6.00);
+    \node[font=\bfseries] at (1.38,5.68) {Outer index};
+    \foreach \y in {4.75,4.00,3.25,2.50} {
+        \draw[black!45] (0.35,\y) -- (2.40,\y);
+    }
+    \node at (1.38,4.38) {$\vdots$};
+    \node[font=\scriptsize, align=center] at (1.38,1.45) {sparse index\\on the index file};
+
+    \draw[block] (4.10,4.55) rectangle (6.55,6.00);
+    \draw[header] (4.10,5.45) rectangle (6.55,6.00);
+    \node[font=\bfseries] at (5.33,5.72) {\scriptsize Inner index 0};
+    \foreach \y in {5.10,4.75} {
+        \draw[black!45] (4.25,\y) -- (6.40,\y);
+    }
+    \node at (5.33,4.42) {$\vdots$};
+
+    \draw[block] (4.10,2.45) rectangle (6.55,3.90);
+    \draw[header] (4.10,3.35) rectangle (6.55,3.90);
+    \node[font=\bfseries] at (5.33,3.62) {\scriptsize Inner index 1};
+    \foreach \y in {3.00,2.65} {
+        \draw[black!45] (4.25,\y) -- (6.40,\y);
+    }
+    \node at (5.33,2.32) {$\vdots$};
+
+    \draw[block] (4.10,0.35) rectangle (6.55,1.80);
+    \draw[header] (4.10,1.25) rectangle (6.55,1.80);
+    \node[font=\bfseries] at (5.33,1.52) {\scriptsize Inner index 2};
+    \foreach \y in {0.90,0.55} {
+        \draw[black!45] (4.25,\y) -- (6.40,\y);
+    }
+
+    \node[data] (d0) at (8.75,5.28) {};
+    \node[data] (d1) at (8.75,3.18) {};
+    \node[data] (d2) at (8.75,1.08) {};
+    \node[data] (d3) at (11.25,2.13) {};
+
+    \node[font=\scriptsize] at (8.75,6.12) {data pages};
+    \node[font=\scriptsize] at (5.33,6.35) {inner index};
+
+    \draw[link] (2.55,5.00) -- (4.10,5.28);
+    \draw[link] (2.55,3.62) -- (4.10,3.18);
+    \draw[link] (2.55,2.12) -- (4.10,1.08);
+
+    \draw[link] (6.55,5.28) -- (7.75,5.28);
+    \draw[link] (6.55,3.18) -- (7.75,3.18);
+    \draw[link] (6.55,2.95) -- (10.20,2.38);
+    \draw[link] (6.55,1.08) -- (7.75,1.08);
+
+    \node[font=\scriptsize] at (5.75,-0.18) {if one index is too large, build a sparse index on top of it};
+\end{tikzpicture}

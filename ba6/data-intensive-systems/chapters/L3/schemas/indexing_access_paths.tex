@@ -1,0 +1,78 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    header/.style={frame, fill=gray!12},
+    idxframe/.style={frame, fill=gray!4},
+    idxentry/.style={frame, fill=orange!14, minimum width=2.10cm, minimum height=0.46cm, font=\scriptsize},
+    link/.style={->, thick, draw=orange!75!black}
+]
+    \draw[frame, fill=blue!3] (4.25,0.25) rectangle (12.35,5.05);
+    \draw[header] (4.25,4.45) rectangle (12.35,5.05);
+    \foreach \x in {5.75,7.95,10.45} {
+        \draw[black!45] (\x,0.25) -- (\x,5.05);
+    }
+    \foreach \y in {3.75,3.05,2.35,1.65,0.95} {
+        \draw[black!45] (4.25,\y) -- (12.35,\y);
+    }
+
+    \node[font=\scriptsize\bfseries] at (5.00,4.75) {ID};
+    \node[font=\scriptsize\bfseries] at (6.85,4.75) {name};
+    \node[font=\scriptsize\bfseries] at (9.20,4.75) {dept\_name};
+    \node[font=\scriptsize\bfseries] at (11.40,4.75) {salary};
+
+    \node[font=\scriptsize] at (5.00,4.10) {10101};
+    \node[font=\scriptsize] at (6.85,4.10) {Srinivasan};
+    \node[font=\scriptsize] at (9.20,4.10) {Comp.\ Sci.};
+    \node[font=\scriptsize] at (11.40,4.10) {65000};
+
+    \node[font=\scriptsize] at (5.00,3.40) {12121};
+    \node[font=\scriptsize] at (6.85,3.40) {Wu};
+    \node[font=\scriptsize] at (9.20,3.40) {Finance};
+    \node[font=\scriptsize] at (11.40,3.40) {90000};
+
+    \node[font=\scriptsize] at (5.00,2.70) {22222};
+    \node[font=\scriptsize] at (6.85,2.70) {Einstein};
+    \node[font=\scriptsize] at (9.20,2.70) {Physics};
+    \node[font=\scriptsize] at (11.40,2.70) {95000};
+
+    \node[font=\scriptsize] at (5.00,2.00) {33456};
+    \node[font=\scriptsize] at (6.85,2.00) {Gold};
+    \node[font=\scriptsize] at (9.20,2.00) {Physics};
+    \node[font=\scriptsize] at (11.40,2.00) {87000};
+
+    \node[font=\scriptsize] at (5.00,1.30) {83821};
+    \node[font=\scriptsize] at (6.85,1.30) {Brandt};
+    \node[font=\scriptsize] at (9.20,1.30) {Comp.\ Sci.};
+    \node[font=\scriptsize] at (11.40,1.30) {92000};
+
+    \node[font=\scriptsize] at (5.00,0.60) {98345};
+    \node[font=\scriptsize] at (6.85,0.60) {Kim};
+    \node[font=\scriptsize] at (9.20,0.60) {Elec.\ Eng.};
+    \node[font=\scriptsize] at (11.40,0.60) {80000};
+
+    \draw[idxframe] (0.25,2.85) rectangle (3.45,5.15);
+    \draw[header] (0.25,4.55) rectangle (3.45,5.15);
+    \node[font=\scriptsize\bfseries] at (1.85,4.85) {Index on ID};
+    \node[idxentry] (id22222) at (1.85,4.24) {22222};
+    \node[idxentry] (id33456) at (1.85,3.70) {33456};
+    \node[idxentry] (id83821) at (1.85,3.16) {83821};
+
+    \draw[idxframe] (0.25,0.15) rectangle (3.45,2.45);
+    \draw[header] (0.25,1.85) rectangle (3.45,2.45);
+    \node[font=\scriptsize\bfseries] at (1.85,2.15) {Index on Salary};
+    \node[idxentry] (sal90000) at (1.85,1.54) {90000};
+    \node[idxentry] (sal92000) at (1.85,1.00) {92000};
+    \node[idxentry] (sal95000) at (1.85,0.46) {95000};
+
+    \draw[link] (id22222.east) -- (4.25,2.70);
+    \draw[link] (id33456.east) -- (4.25,2.00);
+    \draw[link] (id83821.east) -- (4.25,1.30);
+
+    \draw[link] (sal90000.east) -- (4.25,3.40);
+    \draw[link] (sal92000.east) -- (4.25,1.30);
+    \draw[link] (sal95000.east) -- (4.25,2.70);
+
+    \node[font=\scriptsize] at (8.30,-0.18) {one physical order, multiple efficient access paths};
+\end{tikzpicture}

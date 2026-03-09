@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    slot/.style={frame, fill=blue!7, minimum width=1.15cm, minimum height=0.72cm},
+    hit/.style={frame, fill=orange!16, minimum width=1.15cm, minimum height=0.72cm},
+    >=Latex
+]
+    \draw[frame, fill=gray!4] (0,0) rectangle (5.8,3.3);
+    \draw[frame, fill=gray!14] (0,2.55) rectangle (5.8,3.3);
+    \node[font=\bfseries] at (2.9,2.93) {Page 42};
+    \node[font=\scriptsize] at (0.75,2.93) {header};
+
+    \node[slot] at (1.0,1.85) {slot 0};
+    \node[slot] at (2.35,1.85) {slot 1};
+    \node[slot] at (3.70,1.85) {slot 2};
+    \node[hit]  (rid) at (5.05,1.85) {slot 3};
+    \node[slot] at (1.0,0.85) {slot 4};
+    \node[slot] at (2.35,0.85) {slot 5};
+    \node[slot] at (3.70,0.85) {slot 6};
+    \node[slot] at (5.05,0.85) {slot 7};
+
+    \node[align=center] (label) at (3.8,-0.45) {$\mathrm{RID}=\langle 42,3\rangle$};
+    \draw[->, thick, draw=black!55] (label.north) to[out=110,in=-60] (rid.south);
+\end{tikzpicture}

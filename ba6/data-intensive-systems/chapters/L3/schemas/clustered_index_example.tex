@@ -1,0 +1,100 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    idx/.style={frame, fill=orange!14, minimum width=0.95cm, minimum height=0.5cm, font=\scriptsize},
+    link/.style={->, thick, draw=black!55},
+    page/.style={inner sep=0pt, outer sep=0pt}
+]
+    \node[idx] (e10101) at (0.75,3.35) {10101};
+    \node[idx] (e12121) at (1.85,3.35) {12121};
+    \node[idx] (e15151) at (3.05,3.35) {15151};
+    \node[idx] (e22222) at (4.15,3.35) {22222};
+    \node[font=\large] at (8.20,3.35) {$\cdots$};
+    \node[idx] (e83821) at (12.25,3.35) {83821};
+    \node[idx] (e98345) at (13.35,3.35) {98345};
+
+    \draw[black!30] (0.00,2.20) -- (14.10,2.20);
+
+    \node[page] (p0) at (1.30,0.78) {{
+        \setlength{\tabcolsep}{3pt}
+        \tiny
+        \begin{tabular}{|C{0.6cm}|L{1.1cm}|}
+        \hline
+        10101 & Srinivasan\\
+        \hline
+        12121 & Wu\\
+        \hline
+        \end{tabular}
+    }};
+
+    \node[page] (p1) at (3.60,0.78) {{
+        \setlength{\tabcolsep}{3pt}
+        \tiny
+        \begin{tabular}{|C{0.6cm}|L{1.1cm}|}
+        \hline
+        15151 & Mozart\\
+        \hline
+        22222 & Einstein\\
+        \hline
+        \end{tabular}
+    }};
+
+    \node[page] (p2) at (5.90,0.78) {{
+        \setlength{\tabcolsep}{3pt}
+        \tiny
+        \begin{tabular}{|C{0.6cm}|L{1.1cm}|}
+        \hline
+        32343 & El Said\\
+        \hline
+        33456 & Gold\\
+        \hline
+        \end{tabular}
+    }};
+
+    \node[page] (p3) at (8.20,0.78) {{
+        \setlength{\tabcolsep}{3pt}
+        \tiny
+        \begin{tabular}{|C{0.6cm}|L{1.1cm}|}
+        \hline
+        45565 & Katz\\
+        \hline
+        58583 & Califieri\\
+        \hline
+        \end{tabular}
+    }};
+
+    \node[page] (p4) at (10.50,0.78) {{
+        \setlength{\tabcolsep}{3pt}
+        \tiny
+        \begin{tabular}{|C{0.6cm}|L{1.1cm}|}
+        \hline
+        76543 & Singh\\
+        \hline
+        76766 & Crick\\
+        \hline
+        \end{tabular}
+    }};
+
+    \node[page] (p5) at (12.80,0.78) {{
+        \setlength{\tabcolsep}{3pt}
+        \tiny
+        \begin{tabular}{|C{0.6cm}|L{1.1cm}|}
+        \hline
+        83821 & Brandt\\
+        \hline
+        98345 & Kim\\
+        \hline
+        \end{tabular}
+    }};
+
+    \draw[link] (e10101.south) -- ([xshift=-0.25cm]p0.north);
+    \draw[link] (e12121.south) -- ([xshift=0.25cm]p0.north);
+    \draw[link] (e15151.south) -- ([xshift=-0.25cm]p1.north);
+    \draw[link] (e22222.south) -- ([xshift=0.25cm]p1.north);
+    \draw[link] (e83821.south) -- ([xshift=-0.25cm]p5.north);
+    \draw[link] (e98345.south) -- ([xshift=0.25cm]p5.north);
+
+    \node[font=\scriptsize] at (7.05,-0.15) {clustered index on \texttt{ID}: nearby index entries point to nearby data pages};
+\end{tikzpicture}

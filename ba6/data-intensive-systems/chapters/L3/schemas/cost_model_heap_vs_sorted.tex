@@ -1,0 +1,23 @@
+{\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\arrayrulecolor{black!60}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{|L{3.1cm}|C{2.0cm}|C{4.0cm}|L{4.5cm}|}
+\hline
+\rowcolor{gray!14}
+\textbf{Operation} & \textbf{Heap file} & \textbf{Sorted file} & \textbf{Notes} \\
+\hline
+Scan all records & $B$ & $B$ & $B$ = \# of data pages \\
+\hline
+Equality search & $0.5B$ & $\log_2 B$ & assumes exactly one matching record \\
+\hline
+Range search & $B$ & $\log_2 B + \#\text{match pages}$ & after the first match, keep reading forward \\
+\hline
+Insert & $2$ & $\log_2 B + 2\cdot(B/2)$ & must read and rewrite about half the file \\
+\hline
+Delete & $0.5B + 1$ & $\log_2 B + 2\cdot(B/2)$ & search first, then pay the same shifting cost \\
+\hline
+\end{tabular}
+\end{adjustbox}
+}

@@ -1,0 +1,727 @@
+\documentclass[../../dis.tex]{subfiles}
+\begin{document}
+\chapter{L3 - Storage, Files, and Indexing}\label{chap:l3}
+\newpage
+\section*{Extra: SQL in the era of AI}
+Large language models (LLMs) make one question unavoidable: will natural language (NL) replace SQL? Will people soon query databases in plain English?
+
+\begin{concept}{NL2SQL systems}
+AI systems that turn natural language into SQL queries. Examples include Palimpzest and Lotus. They act as a \emph{front-end}: they help users ask, draft, and explain queries, but they do not replace the database itself.
+\end{concept}
+
+Databases and LLMs play different roles:
+\begin{dashlist}
+    \item \textbf{DBMS (Back-end)}: Stores data, enforces constraints, manages transactions, controls access, and executes queries efficiently.
+    \item \textbf{LLM (Front-end)}: Turns prompts into text or code, but gives \textbf{no correctness guarantees}.
+\end{dashlist}
+\subsection*{Current limitations of NL2SQL}
+These tools are useful, but they still need careful checking:
+\begin{dashlist}
+    \item People still outperform the best current systems (for example, $93\%$ vs. $82\%$ on the BIRD benchmark).
+    \item Execution accuracy drops significantly as query difficulty increases.
+    \item Common AI errors include wrong joins, wrong aggregation level, missing \texttt{DISTINCT}, and wrong filter order.
+\end{dashlist}
+
+\subsection*{Why relational reasoning still matters}
+SQL and the relational model give \textbf{precision, composability, and optimization}. Even if natural language becomes the visible interface, the database still runs on these ideas.
+
+If you do not understand SQL and relational reasoning, you cannot:
+\begin{dashlist}
+    \item \textbf{Verify} the correctness of AI-generated queries.
+    \item \textbf{Debug} query failures or logical errors.
+    \item \textbf{Predict} and optimize database performance.
+\end{dashlist}
+\newpage
+\section{File and access layer}
+At the physical level, a database is a \textbf{file of records}. The DBMS stores these records in operating-system files and supports a small set of access operations.
+
+The main operations at this layer are:
+\begin{dashlist}
+    \item create and delete files,
+    \item insert, delete, and update records,
+    \item \textbf{point access}: retrieve one record via its identifier,
+    \item \textbf{range access}: retrieve all records satisfying a condition,
+    \item \textbf{scan}: read the entire file.
+\end{dashlist}
+
+\subsection{File organization and indexing}
+This layer answers three questions:
+\begin{dashlist}
+    \item how records are stored in files,
+    \item how indexes speed up access,
+    \item how pages are placed on storage.
+\end{dashlist}
+
+Metadata about these choices is stored in the \emph{system catalog}.
+
+\begin{concept}{Storage hierarchy}
+Database storage has levels:
+\begin{dashlist}
+    \item a \textbf{file} is a set of \textbf{pages} (blocks),
+    \item a \textbf{page} stores multiple \textbf{records},
+    \item a \textbf{record} is a sequence of \textbf{fields}.
+\end{dashlist}
+\end{concept}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/storage_hierarchy.tex}}\par}
+\end{figure}
+
+Physical design means choosing a file organization, managing free space, and adding indexes for fast access.
+\newpage
+\section{Page and record formats}
+Most databases use the N-ary storage model (row store): each page stores many complete tuples, one per slot.
+
+\begin{concept}{Record Identifier (RID)}
+A record is usually identified by its page id and slot number, often written $\langle \text{page\_id}, \text{slot\_number} \rangle$. Some systems show a logical identifier instead, but it still maps to a page and a slot.
+\end{concept}
+
+A page format must support search, insertion, and deletion efficiently. The first question is whether records are \textbf{fixed-length} or \textbf{variable-length}.
+
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.39\textwidth}
+Once the DBMS finds the right page, the slot number points to the record inside that page. \textbf{Keeping this identifier stable is one of the main goals of page design.}
+\end{minipage}
+\hfill
+\begin{minipage}{0.56\textwidth}
+{\centering\input{\subfix{schemas/page_rid.tex}}\par}
+\end{minipage}
+\end{figure}
+
+\subsection{Fixed-length records}
+If all fields have fixed size, for example integers or fixed-size \texttt{char} values, then every record has the same length:
+\begin{dashlist}
+    \item the schema is fixed and stored in the catalog,
+    \item field $i$ starts at a fixed offset,
+    \item pages can use very simple slot layouts.
+\end{dashlist}
+
+\subsubsection*{Fixed-length page layouts}
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\textbf{Packed page}
+\par\smallskip
+
+{\input{\subfix{schemas/fixed_packed_page.tex}}\par}
+\smallskip
+
+\raggedright
+Records are stored next to each other, so space usage is very good. The downside is that deleting one record shifts later records and changes their RIDs.
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\textbf{Bitmap page}
+\par\smallskip
+
+{\input{\subfix{schemas/fixed_bitmap_page.tex}}\par}
+\smallskip
+
+\raggedright
+A bitmap shows which fixed slots are in use. When a record is deleted, its bit is cleared. The empty slot can be reused later, and record positions stay stable.
+\end{minipage}
+\end{figure}
+
+\subsection{Variable-length records}
+We need variable-length layouts when records contain fields such as \texttt{varchar}, or when one file stores several record types.
+
+A common layout contains:
+\begin{dashlist}
+    \item fixed-size values at the front,
+    \item one $\langle \text{offset}, \text{length} \rangle$ entry per variable field,
+    \item the actual variable-length data at the end,
+    \item a small null bitmap for missing attributes.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/variable_record_layout.tex}}\par}
+\end{figure}
+
+\subsubsection*{Slotted page structure}
+To store variable-length records, most systems use a \textbf{slotted page}. The slot number stays fixed even if the record itself moves within the page.
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/slotted_page.tex}}\par}
+\end{figure}
+
+The header and slot directory grow from the front of the page. The records grow from the back. A free-space pointer marks the boundary between them. During compaction, the DBMS can move the record bytes without changing the slot number, so the RID stays the same.
+
+The header stores:
+\begin{dashlist}
+    \item the number of slot entries,
+    \item a free-space pointer,
+    \item one slot entry per record with its location and size.
+\end{dashlist}
+
+\subsubsection*{Operational issues}
+\begin{dashlist}
+    \item \textbf{record growth}: updating a field may force data to shift within the page,
+    \item \textbf{page overflow}: if the record no longer fits, it may move to another page, often with a forwarding pointer,
+    \item \textbf{oversized records}: some systems forbid records larger than a page, while others spill large values to overflow storage.
+\end{dashlist}
+
+\section{Row- and column-oriented layouts}
+The page layouts above use the classic row-store design: each slot points to one full tuple. This is also called the \textbf{N-ary storage model (NSM)}.
+
+\begin{concept}{Decomposition storage model (DSM)}
+A column-oriented layout where each attribute is stored separately. To rebuild a tuple, the system reads the values at the same logical position from the needed columns.
+\end{concept}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/row_vs_column_layout.tex}}\par}
+\end{figure}
+
+\subsection{Row store versus column store}
+Row stores keep all attributes of a tuple together. They work well when queries read or update whole records.
+\begin{dashlist}
+    \item \textbf{row-store advantages}: fast inserts, updates, and deletes; good when workloads read or rewrite full tuples; works well with clustered, index-based storage.
+    \item \textbf{row-store disadvantages}: inefficient when a query scans many tuples but needs only a few attributes; compression is weaker because one page mixes many value types.
+\end{dashlist}
+
+Column stores make the opposite trade-off. They optimize scans over attributes instead of full tuples.
+\begin{dashlist}
+    \item \textbf{column-store advantages}: reduced I/O when only some attributes are needed, better CPU cache locality, stronger compression, and efficient vectorized processing.
+    \item \textbf{column-store disadvantages}: full-tuple reconstruction is expensive, updates and deletions are harder, and compressed data may need decompression before processing.
+\end{dashlist}
+
+As a rule of thumb, \textbf{row stores} fit transactional workloads (\textbf{OLTP}), while \textbf{column stores} fit analytical workloads (\textbf{OLAP}). Some systems support both and act as \textbf{hybrid row/column stores}.
+
+\subsection{Partition Attributes Across (PAX)}
+Pure column stores separate attributes across the whole file. \textbf{PAX} is a middle ground: from the outside the page still looks like a row-store page, but inside the page the values are grouped by column.
+
+\begin{concept}{PAX}
+Within one page, values of the same attribute are stored together in column partitions. A tuple is rebuilt logically by taking the same offset in each partition.
+\end{concept}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/pax_layout.tex}}\par}
+\end{figure}
+
+A PAX page keeps:
+\begin{dashlist}
+    \item the same number of tuples per page as a traditional row page,
+    \item one contiguous partition per attribute inside the page,
+    \item logical rather than physical row boundaries.
+\end{dashlist}
+
+This improves cache behavior for scans over a few attributes without giving up the page-based design already used by row stores.
+
+\subsection{Columnar file formats}
+Modern analytical file formats apply the same idea at the file level. Formats such as \textbf{Parquet} and \textbf{ORC} group tuples into large row groups (or stripes) and store each group column by column.
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/orc_file_layout.tex}}\par}
+\end{figure}
+
+These formats are popular in big-data systems because:
+\begin{dashlist}
+    \item each column stream compresses well,
+    \item the engine can skip irrelevant columns and often entire groups,
+    \item scans over a subset of attributes avoid touching the rest of the file.
+\end{dashlist}
+
+\section{Alternative file organizations}
+So far, we looked at how records are stored \emph{inside} pages. Another design choice is how pages are arranged \emph{inside} a file.
+
+\begin{dashlist}
+    \item \textbf{heap files}: good when typical access is a full file scan or when insertion simplicity matters most,
+    \item \textbf{sorted files}: good when records are often read in order or by key range,
+    \item \textbf{index-based organizations}: discussed in the indexing part.
+\end{dashlist}
+
+\subsection{Heap files}
+\begin{concept}{Heap file}
+An unordered file organization: records are stored in no particular search order.
+\end{concept}
+
+Heap files are the simplest file organization.
+\begin{dashlist}
+    \item records can be scanned sequentially, or accessed directly if their RID is known,
+    \item inserts place a new record in any page with enough free space,
+    \item as the file grows or shrinks, pages are allocated and deallocated, so the DBMS must track free space.
+\end{dashlist}
+
+The DBMS usually finds heap pages in one of two ways:
+\begin{dashlist}
+    \item \textbf{linked lists}: a header page points to a list of free pages and a list of data pages,
+    \item \textbf{page directories}: directory pages store each data page location together with its remaining free space.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/heap_page_directory.tex}}\par}
+\end{figure}
+
+Heap files work well when most queries scan the file, because the DBMS does not maintain physical order.
+\newpage
+\subsection{Sorted (sequential) files}
+\begin{concept}{Search key}
+Attributes used to physically order records in a sorted file. They may be unique, but they do not have to be.
+\end{concept}
+
+In a sorted file, records appear in search-key order.
+\begin{dashlist}
+    \item this is good for scanning the whole file in order,
+    \item range queries are efficient because, after the first match, the DBMS can keep reading forward in order.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/sorted_file_overflow.tex}}\par}
+\end{figure}
+
+Keeping that order makes updates more expensive:
+\begin{dashlist}
+    \item \textbf{deletion}: systems often use pointer chains or tombstones so later records do not need to move right away,
+    \item \textbf{insertion}: the DBMS finds the right position; if the target page has room, it inserts there, otherwise it uses an overflow page and updates the chain,
+    \item over time, overflow pages accumulate, so the file must sometimes be reorganized to restore physical order.
+\end{dashlist}
+
+\subsection{Heap files versus sorted files}
+Which organization is better depends on the workload. Heap files make updates cheap. Sorted files make ordered search cheap. To compare them, we use a simple cost model.
+
+\begin{concept}{Simplified I/O cost model}
+Measure cost only in page I/Os. In this model, I/O dominates CPU work, so we ignore buffering, prefetching, and other system effects. We also focus only on the average case.
+\end{concept}
+
+Assumptions:
+\begin{dashlist}
+    \item $B$ is the number of data pages in the file.
+    \item Each operation inserts or deletes a single record.
+    \item An equality search returns exactly one matching record.
+    \item In a heap file, insertion appends at the end of the file.
+    \item In a sorted file, searches use the file-ordering attribute and deletions keep the file compacted.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/cost_model_heap_vs_sorted.tex}}\par}
+\end{figure}
+
+The main trade-off is:
+\begin{dashlist}
+    \item scans cost about the same in both organizations,
+    \item sorted files are much better for equality and range search on the ordering attribute,
+    \item heap files are much better for inserts and usually for deletes, because they avoid shifting many records.
+\end{dashlist}
+
+A sorted file gives one very good access path, but it pays heavily for updates. This is why indexes are useful.
+
+\section{Indexing}
+A sorted file helps only for one physical order. If the file is sorted on \texttt{ID}, then lookups on \texttt{ID} are efficient, but predicates on \texttt{salary} or \texttt{dept\_name} may still need a scan.
+
+\begin{concept}{Index}
+An auxiliary access structure that maps search-key values to records or pages, so the DBMS can answer selections with fewer I/Os than a full file scan.
+\end{concept}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/indexing_access_paths.tex}}\par}
+\end{figure}
+
+Indexes matter because:
+\begin{dashlist}
+    \item they give the same relation several efficient access paths,
+    \item they speed up selections on the index's search-key fields,
+    \item the search key does not need to be unique,
+    \item any subset of relation attributes can be used as a search key,
+    \item inserts, deletes, and updates must also maintain the affected indexes.
+\end{dashlist}
+
+\subsection{Index search conditions}
+\begin{concept}{Index search condition}
+A predicate of the form $\langle \text{search key}, \text{comparison operator} \rangle$.
+\end{concept}
+
+Examples:
+\begin{dashlist}
+    \item \textbf{\texttt{dept\_name = "CS"}}: search key = \texttt{dept\_name}, operator = equality.
+    \item \textbf{\texttt{gpa > 3}}: search key = \texttt{gpa}, operator = greater-than.
+\end{dashlist}
+
+Equality predicates ask for one exact key value. Inequality predicates such as $<$, $\leq$, $>$, and $\geq$ define ranges, so they benefit most from ordered access paths.
+
+\section{Index classification}
+Indexes are commonly described along four independent axes:
+\begin{dashlist}
+    \item \textbf{clustered vs. unclustered},
+    \item \textbf{dense vs. sparse},
+    \item \textbf{key vs. non-key search key},
+    \item \textbf{data file ordered vs. not ordered on the indexing field}.
+\end{dashlist}
+
+\subsection{Clustered and unclustered indexes}
+\begin{concept}{Clustered vs. unclustered}
+If the physical order of the data records follows the order of the index entries, the index is \textbf{clustered}. Otherwise it is \textbf{unclustered}.
+\end{concept}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/clustered_vs_unclustered.tex}}\par}
+\end{figure}
+
+This difference matters because:
+\begin{dashlist}
+    \item a clustered index keeps matching records on nearby pages, so range queries are efficient,
+    \item an unclustered index may jump to many unrelated pages, so large result sets become expensive,
+    \item a file can have many unclustered indexes, but only one clustered physical order at a time.
+\end{dashlist}
+
+Some textbooks use \emph{primary} for clustered and \emph{secondary} for unclustered indexes. That vocabulary is not universal across DBMSs, so the physical term \emph{clustered} is safer.
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/clustered_index_example.tex}}\par}
+\end{figure}
+
+In the example above, the data file is ordered on \texttt{ID}. Nearby index entries lead to nearby data pages, which is exactly the clustered case.
+
+\subsection{Dense and sparse indexes}
+\begin{concept}{Dense index}
+Has an index entry for every search-key value that appears in the data file.
+\end{concept}
+
+\begin{concept}{Sparse index}
+Has entries for only some search-key values, usually one entry per data page or page range.
+\end{concept}
+
+A sparse index uses less space and needs fewer updates, but it works well only when the data file is ordered on the search key. After the sparse index points to the right page, the DBMS still searches within that page.
+
+\subsubsection*{Range scans: why clustering matters}
+For range predicates, the difference between clustered and unclustered indexes becomes much larger:
+\begin{dashlist}
+    \item with a \textbf{clustered} index, cost is roughly the number of \textbf{data pages} containing matching records,
+    \item with an \textbf{unclustered} index, cost is closer to the number of \textbf{matching index entries}, because each match may lead to a different data page.
+\end{dashlist}
+
+So the trade-off is:
+\begin{dashlist}
+    \item \textbf{clustered advantage}: very efficient for range queries and ordered scans,
+    \item \textbf{clustered drawback}: expensive to maintain, because updates disturb the physical order,
+    \item \textbf{unclustered advantage}: easy to add as an extra access path without reorganizing the data file,
+    \item \textbf{unclustered drawback}: large result sets can cause many random I/Os.
+\end{dashlist}
+
+\subsubsection*{Dense index on a key attribute}
+If the search key is a key, each value identifies one record. Then a dense index has one entry per record, and each entry can point directly to one RID.
+
+\begin{figure}[htp]
+\centering
+{\resizebox{0.92\textwidth}{!}{\input{\subfix{schemas/dense_index_key.tex}}}\par}
+\end{figure}
+
+\subsubsection*{Dense index on a non-key attribute}
+If the file is sorted on a non-key attribute, equal values appear together. A dense index can then keep one entry for each \textbf{distinct} search-key value and point to the first record of that group.
+
+\begin{figure}[htp]
+\centering
+{\resizebox{0.92\textwidth}{!}{\input{\subfix{schemas/dense_index_nonkey.tex}}}\par}
+\end{figure}
+
+\subsubsection*{Sparse index files}
+Sparse indexes are most useful when the data file is already ordered on the search key. A common design keeps one anchor entry per data page.
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/sparse_index_file.tex}}\par}
+\end{figure}
+
+To locate a record with search-key value $K$:
+\begin{dashlist}
+    \item find the index entry with the largest key value $\leq K$,
+    \item follow that pointer to the corresponding data page,
+    \item scan forward in the file until $K$ is found or passed.
+\end{dashlist}
+
+Because this method relies on sequential order in the data file, a sparse index is normally clustered.
+
+\subsection{Key and non-key search keys}
+If the search key is a key, each value identifies at most one record, so an index entry can point to one RID directly. If the search key is not a key, duplicates are possible, so one entry may need to point to a list or bucket of RIDs.
+
+Physical order also matters. If the file is ordered on the indexing field, clustered and sparse organizations become possible. If it is not, the index is typically dense and unclustered.
+
+\subsection{Multilevel indexes}
+If an index itself spans many pages, finding the right index page can become expensive.
+
+\begin{concept}{Multilevel index}
+Treat the index file as a sorted file and build a sparse index on top of it. Repeat this until the top level is small enough to search very cheaply.
+\end{concept}
+
+In a two-level design:
+\begin{dashlist}
+    \item the \textbf{inner index} is the ordinary index on the data file,
+    \item the \textbf{outer index} is a sparse index on the pages of the inner index.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/multilevel_index.tex}}\par}
+\end{figure}
+
+Search descends level by level until it reaches the target data page. If the outer index also becomes too large, another level can be added. The downside is that insertions and deletions may force updates at several levels.
+
+\subsection{Secondary indexes}
+\begin{concept}{Secondary index}
+An index whose search key does not define the physical order of the data file. In practice, this means the index is unclustered.
+\end{concept}
+
+For a non-key search key, a secondary index usually works as follows:
+\begin{dashlist}
+    \item one index entry is stored for each search-key value,
+    \item the index entry points to a bucket (or list) of RIDs,
+    \item the bucket contains pointers to all matching records.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\resizebox{0.94\textwidth}{!}{\input{\subfix{schemas/secondary_index_example.tex}}}\par}
+\end{figure}
+
+Secondary indexes on unsorted columns must be dense. Otherwise some matching records would not be reachable from the index.
+
+\section{B+-tree index files}
+Sequential dense and sparse indexes explain the core ideas clearly, but real DBMSs usually prefer \mbox{$B^+$-trees} because they stay balanced under updates.
+
+\begin{concept}{B+-tree}
+A balanced search tree whose nodes are page-sized blocks. Internal nodes store separator keys and child pointers; leaf nodes store sorted search-key entries and are linked left-to-right for efficient range scans.
+\end{concept}
+
+For a tree of order $n$:
+\begin{dashlist}
+    \item all paths from the root to a leaf have the same length,
+    \item each non-root internal node has between $\lceil n/2 \rceil$ and $n$ children,
+    \item each leaf has between $\left\lceil (n-1)/2 \right\rceil$ and $n-1$ key values,
+    \item if the root is not a leaf, it has at least $2$ children,
+    \item if the root is also a leaf, it may contain between $0$ and $n-1$ values.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/bplustree_node_layout.tex}}\par}
+\end{figure}
+
+If an internal node has child pointers $P_1, \dots, P_q$, it stores separator keys $K_1, \dots, K_{q-1}$. Each key $K_i$ separates the subtree reached through $P_i$ from the subtree reached through $P_{i+1}$.
+
+\subsubsection*{Example: order $4$}
+\begin{figure}[htp]
+\centering
+{\resizebox{0.95\textwidth}{!}{\input{\subfix{schemas/bplustree_example_n4.tex}}}\par}
+\end{figure}
+
+With a small order, each node has limited fan-out, so the tree becomes wider and deeper more quickly. The leaf level is linked in sorted order, so once the first matching leaf is found, a range scan can continue sequentially.
+
+\subsubsection*{Example: order $6$}
+\begin{figure}[htp]
+\centering
+{\resizebox{0.95\textwidth}{!}{\input{\subfix{schemas/bplustree_example_n6.tex}}}\par}
+\end{figure}
+
+A larger order means more keys and child pointers fit in each node, so the same data can be indexed with fewer levels. This is why disk-based trees aim for high fan-out.
+
+\subsection{Revisiting clustered and unclustered terminology}
+To keep the vocabulary straight:
+\begin{dashlist}
+    \item \textbf{clustered / primary index}: the file is physically ordered on the indexing field; index entries may point to blocks or to individual records; the index can be sparse or dense,
+    \item \textbf{unclustered / secondary index}: the file is not physically ordered on the indexing field; index entries point to records or to buckets of record pointers; the index must be dense.
+\end{dashlist}
+
+So the core question is always physical order: does the data file itself follow the search-key order, or not?
+
+\section{Hash-based versus tree-based indexes}
+The two main index families solve different problems. Hash indexes optimize exact lookup. Tree indexes optimize ordered access.
+
+\subsection{Hash-based indexes}
+\begin{concept}{Hash-based index}
+Uses a hash function $h$ on the search-key value to choose a bucket. Each bucket has one primary page and may have overflow pages if collisions accumulate.
+\end{concept}
+
+Hash indexes are best for equality predicates:
+\begin{dashlist}
+    \item to evaluate \texttt{age = 44}, the DBMS computes $h(44)$ and reads the corresponding bucket,
+    \item duplicate values naturally land in the same bucket,
+    \item inserts and deletes usually affect one bucket only,
+    \item the entries are \textbf{not} kept in sorted order.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/hash_index_buckets.tex}}\par}
+\end{figure}
+
+Because order is lost, hash indexes are poor for range predicates such as \texttt{age > 40} or \texttt{3.0 <= gpa <= 3.5}. The DBMS would need to inspect many buckets, which is close to scanning the whole file.
+
+\subsection{Tree-based indexes}
+\begin{concept}{Tree-based index}
+Keeps entries sorted by search-key value. In practice, this is usually implemented as a \mbox{$B^+$-tree}.
+\end{concept}
+
+Tree indexes are good for range predicates:
+\begin{dashlist}
+    \item leaf entries are sorted by the search key,
+    \item all root-to-leaf paths have the same length, so access remains balanced,
+    \item after the first matching leaf is found, the DBMS follows the leaf links to continue the scan.
+\end{dashlist}
+
+\begin{figure}[htp]
+\centering
+{\input{\subfix{schemas/tree_index_range_scan.tex}}\par}
+\end{figure}
+
+A tree index is more flexible: the same structure supports equality search, ordered scans, prefix lookups on composite keys, and range scans.
+
+\subsection{Indexing decisions follow queries}
+\begin{sql}
+SELECT E.dno
+FROM Employees E
+WHERE E.age > 40
+\end{sql}
+
+This query already suggests the right index family:
+\begin{dashlist}
+    \item \texttt{age > 40} is a range predicate, so a tree index on \texttt{age} is the natural choice,
+    \item a hash index on \texttt{age} would not help, because it only groups equal values,
+    \item if many qualifying tuples are expected, a \textbf{clustered} tree index is much better than an unclustered one,
+    \item if the predicate matches a large fraction of the relation, a sequential scan may still be cheaper than using the index.
+\end{dashlist}
+
+\begin{concept}{Selective predicate}
+Matches a small fraction of the relation. Indexes help most in this case; if most records qualify, scanning is often cheaper.
+\end{concept}
+
+\section{Choosing a search key}
+\begin{sql}
+SELECT sid
+FROM Student
+WHERE sname = 'Mary'
+  AND gpa > 3.9
+\end{sql}
+
+A good search key depends on which part of the predicate does the filtering:
+\begin{dashlist}
+    \item \textbf{index on \texttt{sname}}: useful because \texttt{sname = 'Mary'} is an equality condition. A hash index is a reasonable choice if this kind of lookup dominates.
+    \item \textbf{index on \texttt{gpa}}: useful because \texttt{gpa > 3.9} is a range condition. This should be a tree index.
+    \item \textbf{index on $\langle \texttt{sname}, \texttt{gpa} \rangle$}: often the best single index for this query. A tree index first narrows to \texttt{sname = 'Mary'}, then scans only the qualifying GPA values inside that group.
+\end{dashlist}
+
+\begin{concept}{Lexicographic order}
+In a composite tree index on $\langle A, B \rangle$, entries are sorted first by $A$ and, among equal $A$ values, by $B$.
+\end{concept}
+
+\begin{figure}[htp]
+\centering
+{\resizebox{0.97\textwidth}{!}{\input{\subfix{schemas/composite_search_key.tex}}}\par}
+\end{figure}
+
+Field order matters. An index on $\langle \texttt{sname}, \texttt{gpa} \rangle$ is much better for the query above than an index on $\langle \texttt{gpa}, \texttt{sname} \rangle$.
+
+\subsection{Composite search keys}
+\begin{concept}{Composite search key}
+An index whose search key is a tuple of attributes rather than one single attribute.
+\end{concept}
+
+For composite keys, the shape of the predicate matters:
+\begin{dashlist}
+    \item \textbf{full equality}: with \texttt{age = 12 AND sal = 75}, both a hash index and a tree index on $\langle \texttt{age}, \texttt{sal} \rangle$ can work.
+    \item \textbf{prefix equality}: with \texttt{age = 12}, a tree index on $\langle \texttt{age}, \texttt{sal} \rangle$ still works because all entries with the same age are adjacent. A hash index on the full pair does not.
+    \item \textbf{prefix equality + range}: with \texttt{age = 12 AND sal > 20}, a tree index on $\langle \texttt{age}, \texttt{sal} \rangle$ is ideal. An index on $\langle \texttt{sal}, \texttt{age} \rangle$ is much less useful for that query.
+\end{dashlist}
+
+\begin{concept}{Leftmost-prefix rule}
+A composite tree index on $\langle A, B, C \rangle$ can be used efficiently only when the query constrains a prefix of the key: $A$, or $A$ and $B$, or $A$, $B$, and $C$.
+\end{concept}
+
+\subsection{Composite keys and index-only evaluation}
+\begin{sql}
+SELECT AVG(E.sal)
+FROM Employees E
+WHERE E.age = 25
+  AND E.sal BETWEEN 3000 AND 5000
+\end{sql}
+
+For this query:
+\begin{dashlist}
+    \item the right structure is a tree index, not a hash index, because \texttt{BETWEEN} is a range predicate,
+    \item the better order is $\langle \texttt{age}, \texttt{sal} \rangle$, because the search starts with one exact age and then scans only the salary interval inside that age group,
+    \item an index on $\langle \texttt{sal}, \texttt{age} \rangle$ would first scan the salary interval for \emph{all} ages and then filter \texttt{age = 25},
+    \item the query needs only \texttt{sal}, which already appears in the composite key.
+\end{dashlist}
+
+\begin{concept}{Index-only evaluation}
+If every attribute needed by the query is already present in the index entries, the DBMS can answer the query from the index alone, without fetching the full data records.
+\end{concept}
+
+This is also called a \textbf{covering index}. It is especially attractive for aggregates such as \texttt{AVG}, \texttt{COUNT}, \texttt{MIN}, and \texttt{MAX}.
+
+\section{System catalogs}
+\begin{concept}{System catalog}
+The DBMS's metadata repository. It stores information about relations, attributes, indexes, views, constraints, statistics, and access control.
+\end{concept}
+
+The catalog typically stores:
+\begin{dashlist}
+    \item \textbf{for each relation}: relation name, backing file, file organization, attribute names and types, and integrity constraints,
+    \item \textbf{for each index}: index name, structure (\mbox{$B^+$-tree}, hash, \dots), search-key fields, and clustering status,
+    \item \textbf{for each view}: view name and definition,
+    \item \textbf{for the optimizer and system}: statistics such as relation cardinality, page count, average row length, plus authorization and other metadata.
+\end{dashlist}
+
+Catalogs are themselves stored as relations, so the DBMS can query them like ordinary tables.
+
+\subsection{Example: Oracle system catalogs}
+Oracle exposes catalog information through views such as \texttt{USER\_TABLES} and \texttt{USER\_TAB\_COLUMNS}.
+
+\begin{sql}
+SELECT *
+FROM student
+\end{sql}
+
+{\small
+\begin{dbtable}{student}{L{2.0cm}L{4.0cm}C{1.6cm}}
+\textbf{SID} & \textbf{NAME} & \textbf{AGE} \\ \hline
+A1234 & John & 23 \\ \hline
+B1 & Xavier & 24 \\ \hline
+A21341 & Scott & 21 \\ \hline
+C12948291 & Benjamin & 25 \\ \hline
+1948 & Ben & 29 \\
+\end{dbtable}
+}
+
+\begin{sql}
+SELECT table_name, num_rows, blocks, avg_row_len
+FROM user_tables
+\end{sql}
+
+{\small
+\begin{dbtable}{}{L{3.0cm}C{2.0cm}C{1.7cm}C{2.2cm}}
+\shortstack{\textbf{TABLE\_}\\\textbf{NAME}} & \shortstack{\textbf{NUM\_}\\\textbf{ROWS}} & \textbf{BLOCKS} & \shortstack{\textbf{AVG\_ROW\_}\\\textbf{LEN}} \\ \hline
+STUDENT & 5 & 5 & 20 \\
+\end{dbtable}
+}
+
+\begin{sql}
+SELECT table_name, column_name, data_type, data_length
+FROM user_tab_columns
+WHERE table_name = 'STUDENT'
+\end{sql}
+
+{\small
+\begin{dbtable}{}{L{2.6cm}L{2.6cm}L{2.6cm}C{2.0cm}}
+\shortstack{\textbf{TABLE\_}\\\textbf{NAME}} & \shortstack{\textbf{COLUMN\_}\\\textbf{NAME}} & \shortstack{\textbf{DATA\_}\\\textbf{TYPE}} & \shortstack{\textbf{DATA\_}\\\textbf{LENGTH}} \\ \hline
+STUDENT & SID & CHAR & 10 \\ \hline
+STUDENT & NAME & VARCHAR2 & 32 \\ \hline
+STUDENT & AGE & NUMBER & 22 \\
+\end{dbtable}
+}
+
+These catalog views are what the optimizer and storage manager rely on: they describe the schema, give rough size estimates, and tell the system which access paths already exist.
+
+\end{document}

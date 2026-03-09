@@ -1,0 +1,47 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    scale=1.00,
+    transform shape,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    stage/.style={frame, fill=gray!5, minimum width=2.55cm, minimum height=2.25cm},
+    recordstage/.style={stage, minimum width=4.80cm},
+    filebox/.style={frame, fill=blue!6, minimum width=1.58cm, minimum height=0.38cm},
+    pagebox/.style={frame, fill=cyan!7, minimum width=1.58cm, minimum height=0.30cm},
+    recbox/.style={frame, fill=green!10, minimum width=1.58cm, minimum height=0.30cm},
+    fieldbox/.style={frame, fill=orange!14, minimum height=0.60cm, inner xsep=4pt},
+    flow/.style={->, thick, draw=black!55}
+]
+    \node[stage] (db) at (0,0) {};
+    \node[font=\bfseries] at (0,1.45) {Database};
+    \node[filebox] at (0,0.55) {File A};
+    \node[filebox] at (0,0.00) {File B};
+    \node[filebox] at (0,-0.55) {File C};
+
+    \node[stage] (file) at (3.65,0) {};
+    \node[font=\bfseries] at (3.65,1.45) {File};
+    \node[pagebox] at (3.65,0.68) {Page 0};
+    \node[pagebox] at (3.65,0.20) {Page 1};
+    \node[pagebox] at (3.65,-0.28) {Page 2};
+    \node[pagebox] at (3.65,-0.76) {Page 3};
+
+    \node[stage] (page) at (7.30,0) {};
+    \node[font=\bfseries] at (7.30,1.45) {Page};
+    \node[recbox] at (7.30,0.68) {Record 0};
+    \node[recbox] at (7.30,0.20) {Record 1};
+    \node[recbox] at (7.30,-0.28) {Record 2};
+    \node[recbox] at (7.30,-0.76) {Record 3};
+
+    \node[recordstage] (record) at (12,0) {};
+    \node[font=\bfseries] at (12,1.45) {Record};
+    \node[fieldbox] at (10.5,0) {id};
+    \node[fieldbox] at (11.5,0) {name};
+    \node[fieldbox] at (12.5,0) {dept};
+    \node[fieldbox] at (13.5,0) {gpa};
+    \node[font=\scriptsize] at (12,-0.78) {Fields};
+
+    \draw[flow] (db.east) -- (file.west);
+    \draw[flow] (file.east) -- (page.west);
+    \draw[flow] (page.east) -- (record.west);
+\end{tikzpicture}

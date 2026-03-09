@@ -1,0 +1,40 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\scriptsize},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.55cm, inner xsep=4pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.55cm, inner xsep=4pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={->, thick, draw=blue!55!black}
+]
+    \node[inode] (root) at (7.5,5.5) {Mozart};
+    \node[inode] (i1) at (3.7,3.5) {Einstein | Gold};
+    \node[inode] (i2) at (11.25,3.5) {Srinivasan};
+
+    \node[leaf] (l1) at (0.0,1.5) {Brandt | Califieri | Crick};
+    \node[leaf] (l2) at (3.7,1.5) {Einstein | El Said};
+    \node[leaf] (l3) at (6.9,1.5) {Gold | Katz | Kim};
+    \node[leaf] (l4) at (9.9,1.5) {Mozart | Singh};
+    \node[leaf] (l5) at (12.6,1.5) {Srinivasan | Wu};
+
+    \draw[link] (root.south west) -- (i1.north);
+    \draw[link] (root.south east) -- (i2.north);
+
+    \draw[link] (i1.south west) -- (l1.north);
+    \draw[link] (i1.south) -- (l2.north);
+    \draw[link] (i1.south east) -- (l3.north);
+
+    \draw[link] (i2.south west) -- (l4.north);
+    \draw[link] (i2.south east) -- (l5.north);
+
+    \draw[leaflink] (l1.east) -- (l2.west);
+    \draw[leaflink] (l2.east) -- (l3.west);
+    \draw[leaflink] (l3.east) -- (l4.west);
+    \draw[leaflink] (l4.east) -- (l5.west);
+
+    \node[font=\scriptsize, anchor=west] at (14.2,5.5) {root};
+    \node[font=\scriptsize, anchor=west] at (14.2,3.5) {internal nodes};
+    \node[font=\scriptsize, anchor=west] at (14.2,1.5) {leaf level};
+
+    \node[font=\scriptsize] at (7.5,0.3) {order $4$: small fan-out, more levels};
+\end{tikzpicture}

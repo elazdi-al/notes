@@ -1,0 +1,54 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    idx/.style={frame, fill=orange!14, minimum width=1.15cm, minimum height=0.62cm},
+    data/.style={frame, fill=blue!7, minimum width=0.92cm, minimum height=0.62cm},
+    link/.style={->, thick, draw=black!55}
+]
+    \node[font=\bfseries] at (3.40,4.45) {Clustered};
+    \node[font=\bfseries] at (10.60,4.45) {Unclustered};
+
+    \node[idx] (c10) at (1.40,3.35) {10};
+    \node[idx] (c20) at (3.40,3.35) {20};
+    \node[idx] (c30) at (5.40,3.35) {30};
+
+    \node[data] (cd1) at (0.90,1.15) {10};
+    \node[data] (cd2) at (1.90,1.15) {12};
+    \node[data] (cd3) at (2.90,1.15) {20};
+    \node[data] (cd4) at (3.90,1.15) {22};
+    \node[data] (cd5) at (4.90,1.15) {30};
+    \node[data] (cd6) at (5.90,1.15) {32};
+
+    \draw[link] (c10.south) -- (cd1.north);
+    \draw[link] (c10.south) -- (cd2.north);
+    \draw[link] (c20.south) -- (cd3.north);
+    \draw[link] (c20.south) -- (cd4.north);
+    \draw[link] (c30.south) -- (cd5.north);
+    \draw[link] (c30.south) -- (cd6.north);
+
+    \node[idx] (u10) at (8.60,3.35) {10};
+    \node[idx] (u20) at (10.60,3.35) {20};
+    \node[idx] (u30) at (12.60,3.35) {30};
+
+    \node[data] (ud1) at (8.10,1.15) {22};
+    \node[data] (ud2) at (9.10,1.15) {10};
+    \node[data] (ud3) at (10.10,1.15) {30};
+    \node[data] (ud4) at (11.10,1.15) {20};
+    \node[data] (ud5) at (12.10,1.15) {12};
+    \node[data] (ud6) at (13.10,1.15) {32};
+
+    \draw[link] (u10.south) -- (ud2.north);
+    \draw[link] (u10.south) -- (ud5.north);
+    \draw[link] (u20.south) -- (ud1.north);
+    \draw[link] (u20.south) -- (ud4.north);
+    \draw[link] (u30.south) -- (ud3.north);
+    \draw[link] (u30.south) -- (ud6.north);
+
+    \draw[black!30] (0.35,2.25) -- (6.45,2.25);
+    \draw[black!30] (7.55,2.25) -- (13.45,2.25);
+
+    \node[font=\scriptsize] at (3.40,0.25) {nearby index entries lead to nearby data};
+    \node[font=\scriptsize] at (10.60,0.25) {matching records are scattered across the file};
+\end{tikzpicture}
