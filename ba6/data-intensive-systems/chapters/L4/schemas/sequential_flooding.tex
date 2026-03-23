@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    scale=0.92,
+    transform shape,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    stack/.style={frame, fill=gray!12, minimum width=1.95cm, minimum height=3.35cm},
+    hot/.style={frame, fill=green!10, minimum width=1.3cm, minimum height=0.62cm},
+    scan/.style={frame, fill=blue!7, minimum width=1.3cm, minimum height=0.62cm},
+    once/.style={frame, fill=yellow!18, minimum width=1.3cm, minimum height=0.62cm},
+    note/.style={frame, fill=gray!12, align=left, text width=4.0cm},
+    link/.style={->, thick, draw=black!55}
+]
+    \node[font=\bfseries] at (1.7,4.55) {Before scan};
+    \node[stack] (before) at (1.7,2.3) {};
+    \foreach \y/\lab in {3.25/page 1,2.50/page 2,1.75/page 3,1.00/page 4} {
+        \node[hot] at (1.7,\y) {\lab};
+    }
+    \node[font=\bfseries] at (1.7,0.15) {working set};
+
+    \node[font=\bfseries] at (6.7,4.55) {Sequential scan};
+    
+    \draw[link] (3.0,1.05) -- (10.6,1.05);
+
+    \foreach \x/\lab/\sty in {3.8/page 5/once,5.25/page 6/scan,6.7/page 7/scan,8.15/page 8/once,9.6/page 9/scan} {
+        \node[\sty] at (\x,1.05) {\lab};
+    }
+
+    \node[font=\bfseries] at (11.75,4.55) {After scan under LRU};
+    \node[stack] (after) at (11.75,2.3) {};
+    \foreach \y/\lab/\sty in {3.25/page 9/scan,2.50/page 8/once,1.75/page 7/scan,1.00/page 6/scan} {
+        \node[\sty] at (11.75,\y) {\lab};
+    }
+
+    \node[note] at (6.7,2.8) {\textbf{Sequential flooding}\\[1mm]Read-once scan pages displace hot pages even though they are not reused later.};
+\end{tikzpicture}

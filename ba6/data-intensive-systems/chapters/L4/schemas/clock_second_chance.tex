@@ -1,0 +1,38 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    scale=0.92,
+    transform shape,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    pagea/.style={frame, fill=yellow!18, minimum width=1.85cm, minimum height=0.68cm},
+    pageb/.style={frame, fill=blue!7, minimum width=1.85cm, minimum height=0.68cm},
+    pagec/.style={frame, fill=green!10, minimum width=1.85cm, minimum height=0.68cm},
+    paged/.style={frame, fill=gray!12, minimum width=1.85cm, minimum height=0.68cm},
+    note/.style={frame, fill=gray!12, align=left, text width=3.25cm},
+    hand/.style={->, very thick, draw=black!55},
+    loop/.style={->, thin, draw=black!55}
+]
+    \node[font=\bfseries] at (4.0,5.15) {Clock / second-chance policy};
+
+    \node[paged] (p1) at (4.0,3.75) {page 1};
+    \node[pageb] (p2) at (6.35,2.10) {page 2};
+    \node[pagec] (p3) at (4.0,0.45) {page 3};
+    \node[pagea] (p4) at (1.65,2.10) {page 4};
+
+    \node[font=\bfseries, text=black!65] at (4.0,4.45) {ref \(=0\)};
+    \node[font=\bfseries, text=black!65] at (7.05,2.75) {ref \(=1\)};
+    \node[font=\bfseries, text=black!65] at (4.0,-0.25) {ref \(=0\)};
+    \node[font=\bfseries, text=black!65] at (0.95,2.75) {ref \(=1\)};
+
+    \draw[loop] (p1.south east) to[out=-20,in=80] (p2.north);
+    \draw[loop] (p2.south) to[out=-100,in=10] (p3.east);
+    \draw[loop] (p3.west) to[out=170,in=-80] (p4.south);
+    \draw[loop] (p4.north) to[out=100,in=200] (p1.south west);
+
+    \node[draw=black!60, circle, minimum size=0.18cm, fill=black!55] (hub) at (4.0,2.10) {};
+    \draw[hand] (hub) -- node[right] {clock hand} (p1.south);
+
+    \node[note] at (9.3,3.15) {\textbf{If ref \(=1\)}\\clear the bit and keep scanning.};
+    \node[note] at (9.3,1.20) {\textbf{If ref \(=0\)} and pin count \(=0\)\\evict this frame.};
+\end{tikzpicture}

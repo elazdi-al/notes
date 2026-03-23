@@ -1,0 +1,46 @@
+\begin{tikzpicture}[
+    x=1cm,y=1cm,
+    scale=0.92,
+    transform shape,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    box/.style={frame, fill=gray!12},
+    poolbox/.style={frame, fill=blue!7},
+    entry/.style={frame, fill=gray!4, minimum width=1.9cm, minimum height=0.65cm},
+    page/.style={frame, fill=gray!4, minimum width=1.6cm, minimum height=0.65cm},
+    resident/.style={frame, fill=green!10, minimum width=1.95cm, minimum height=0.65cm},
+    meta/.style={frame, fill=yellow!18, align=left, text width=2.0cm},
+    link/.style={->, thin, draw=black!55},
+    fetch/.style={->, thin, dashed, draw=black!55}
+]
+    \node[font=\bfseries] at (1.45,4.55) {Page table};
+    \node[box, minimum width=2.2cm, minimum height=2.85cm] (pt) at (1.45,2.8) {};
+    \node[entry] (e1) at (1.45,3.55) {\texttt{p1} $\mapsto$ \texttt{f1}};
+    \node[entry] (e2) at (1.45,2.80) {\texttt{p3} $\mapsto$ \texttt{f2}};
+    \node[entry] (e3) at (1.45,2.05) {\texttt{p2} $\mapsto$ \texttt{f3}};
+
+    \node[meta] at (1.45,0.45) {\textbf{Per-frame metadata}\\dirty flag\\pin count};
+
+    \node[font=\bfseries] at (5.55,4.55) {Buffer pool};
+    \node[poolbox, minimum width=2.35cm, minimum height=3.35cm] (bp) at (5.55,2.6) {};
+    \node[resident] (f1) at (5.55,3.75) {page 1};
+    \node[resident] (f2) at (5.55,3.00) {page 3};
+    \node[resident] (f3) at (5.55,2.25) {page 2};
+    \node[page]     (f4) at (5.55,1.50) {frame 4};
+
+    \draw[link] (e1.east) -- (f1.west);
+    \draw[link] (e2.east) -- (f2.west);
+    \draw[link] (e3.east) -- (f3.west);
+
+    \draw[dashed, draw=black!45, line width=0.9pt] (0.0,-0.25) -- (8.5,-0.25);
+    \node[font=\bfseries] at (5.55,-0.75) {On-disk file};
+
+    \foreach \x/\lab in {1.8/page 1,3.6/page 2,5.4/page 3,7.2/page 4} {
+        \node[page] at (\x,-1.40) {\lab};
+    }
+
+    \draw[fetch] (1.8,-1.08) to[out=60,in=-170] (f1.south west);
+    \draw[fetch] (3.6,-1.08) to[out=65,in=-170] (f3.south west);
+    \draw[fetch] (5.4,-1.08) to[out=90,in=-90] (f2.south);
+\end{tikzpicture}
