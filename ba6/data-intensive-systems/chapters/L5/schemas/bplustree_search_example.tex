@@ -1,0 +1,30 @@
+\begin{tikzpicture}[
+    x=1cm,y=0.9cm,
+    every node/.style={font=\small},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.84cm, inner xsep=10pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.84cm, inner xsep=8pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={<->, thick, draw=red!65!black}
+]
+    \node[inode] (root) at (7.0,4.8) {13 \quad 17 \quad 24 \quad 30};
+
+    \node[leaf] (l1) at (0.8,1.5) {2 \quad 3 \quad 5 \quad 7};
+    \node[leaf] (l2) at (4.0,1.5) {14 \quad 16};
+    \node[leaf] (l3) at (7.1,1.5) {19 \quad 20 \quad 22};
+    \node[leaf] (l4) at (10.4,1.5) {24 \quad 27 \quad 29};
+    \node[leaf] (l5) at (14.1,1.5) {33 \quad 34 \quad 38 \quad 39};
+
+    \draw[link] (root.south west) -- (l1.north);
+    \draw[link] ($(root.south west)!0.38!(root.south east)$) -- (l2.north);
+    \draw[link] (root.south) -- (l3.north);
+    \draw[link] ($(root.south west)!0.74!(root.south east)$) -- (l4.north);
+    \draw[link] (root.south east) -- (l5.north);
+
+    \draw[leaflink] (l1.east) -- (l2.west);
+    \draw[leaflink] (l2.east) -- (l3.west);
+    \draw[leaflink] (l3.east) -- (l4.west);
+    \draw[leaflink] (l4.east) -- (l5.west);
+
+    \node[font=\scriptsize] at (7.0,0.25) {exact search stops in one leaf; range search continues through sibling pointers};
+\end{tikzpicture}

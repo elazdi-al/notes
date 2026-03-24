@@ -1,0 +1,59 @@
+\begin{tikzpicture}[
+    x=1cm,y=0.92cm,
+    every node/.style={font=\small},
+    >=Latex,
+    frame/.style={draw=black!60, rounded corners=3pt, line width=0.85pt},
+    leaf/.style={frame, fill=gray!10, minimum width=0.9cm, minimum height=0.55cm},
+    page/.style={frame, fill=blue!7, minimum width=1.15cm, minimum height=0.72cm},
+    flow/.style={->, thick, draw=red!70!black},
+    toplink/.style={<->, thick, draw=red!65!black}
+]
+    \node[font=\bfseries] at (3.8,7.2) {Clustered scan};
+    \node[font=\bfseries] at (3.8,0.3) {Unclustered scan};
+
+    \node[leaf] (c1) at (1.0,5.8) {10};
+    \node[leaf] (c2) at (2.3,5.8) {20};
+    \node[leaf] (c3) at (3.6,5.8) {30};
+    \node[leaf] (c4) at (4.9,5.8) {40};
+    \node[leaf] (c5) at (6.2,5.8) {50};
+    \draw[toplink] (c1.east) -- (c2.west);
+    \draw[toplink] (c2.east) -- (c3.west);
+    \draw[toplink] (c3.east) -- (c4.west);
+    \draw[toplink] (c4.east) -- (c5.west);
+    \draw[flow, very thick] (0.3,6.7) -- node[above, font=\scriptsize] {scan direction} (6.9,6.7);
+
+    \node[page] (cp1) at (1.1,3.6) {101};
+    \node[page] (cp2) at (2.8,3.6) {102};
+    \node[page] (cp3) at (4.5,3.6) {103};
+    \node[page] (cp4) at (6.2,3.6) {104};
+    \draw[flow] (c1.south) to[out=-90,in=90] (cp1.north);
+    \draw[flow] (c2.south) to[out=-90,in=90] (cp1.north);
+    \draw[flow] (c3.south) to[out=-90,in=90] (cp2.north);
+    \draw[flow] (c4.south) to[out=-90,in=90] (cp3.north);
+    \draw[flow] (c5.south) to[out=-90,in=90] (cp4.north);
+
+    \node[font=\scriptsize] at (3.7,2.9) {leaf order and table-page order are close};
+
+    \node[leaf] (u1) at (1.0,1.6) {10};
+    \node[leaf] (u2) at (2.3,1.6) {20};
+    \node[leaf] (u3) at (3.6,1.6) {30};
+    \node[leaf] (u4) at (4.9,1.6) {40};
+    \node[leaf] (u5) at (6.2,1.6) {50};
+    \draw[toplink] (u1.east) -- (u2.west);
+    \draw[toplink] (u2.east) -- (u3.west);
+    \draw[toplink] (u3.east) -- (u4.west);
+    \draw[toplink] (u4.east) -- (u5.west);
+    \draw[flow, very thick] (0.3,2.2) -- node[above, font=\scriptsize] {scan direction} (6.9,2.2);
+
+    \node[page] (up1) at (1.1,-0.6) {101};
+    \node[page] (up2) at (2.8,-0.6) {102};
+    \node[page] (up3) at (4.5,-0.6) {103};
+    \node[page] (up4) at (6.2,-0.6) {104};
+    \draw[flow] (u1.south) to[out=-90,in=90] (up3.north);
+    \draw[flow] (u2.south) to[out=-90,in=90] (up1.north);
+    \draw[flow] (u3.south) to[out=-90,in=90] (up4.north);
+    \draw[flow] (u4.south) to[out=-90,in=90] (up2.north);
+    \draw[flow] (u5.south) to[out=-90,in=90] (up1.north);
+
+    \node[font=\scriptsize] at (3.7,-1.5) {leaf order points to scattered table pages};
+\end{tikzpicture}

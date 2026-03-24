@@ -1,0 +1,39 @@
+\begin{tikzpicture}[
+    x=0.95cm,y=0.87cm,
+    every node/.style={font=\small},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.82cm, inner xsep=9pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.82cm, inner xsep=7pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={<->, thick, draw=red!65!black}
+]
+    \node[inode] (root) at (7.6,5.7) {13 \quad 30};
+    \node[inode] (lefti) at (3.7,3.5) {5 \quad 7};
+    \node[inode] (righti) at (11.7,3.5) {20 \quad 23};
+
+    \node[leaf] (l1) at (0.5,1.1) {2 \quad 3};
+    \node[leaf] (l2) at (3.1,1.1) {5 \quad 6};
+    \node[leaf] (l3) at (5.7,1.1) {7 \quad 8 \quad 11};
+    \node[leaf] (l4) at (9.1,1.1) {14 \quad 16};
+    \node[leaf] (l5) at (11.8,1.1) {21 \quad 22};
+    \node[leaf] (l6) at (15.0,1.1) {23 \quad 25 \quad 28};
+
+    \draw[link] (root.south west) -- (lefti.north);
+    \draw[link] (root.south east) -- (righti.north);
+
+    \draw[link] (lefti.south west) -- (l1.north);
+    \draw[link] (lefti.south) -- (l2.north);
+    \draw[link] (lefti.south east) -- (l3.north);
+
+    \draw[link] (righti.south west) -- (l4.north);
+    \draw[link] (righti.south) -- (l5.north);
+    \draw[link] (righti.south east) -- (l6.north);
+
+    \draw[leaflink] (l1.east) -- (l2.west);
+    \draw[leaflink] (l2.east) -- (l3.west);
+    \draw[leaflink] (l3.east) -- (l4.west);
+    \draw[leaflink] (l4.east) -- (l5.west);
+    \draw[leaflink] (l5.east) -- (l6.west);
+
+    \node[font=\scriptsize] at (7.6,-0.1) {final tree after inserting 28, 6, and 25};
+\end{tikzpicture}

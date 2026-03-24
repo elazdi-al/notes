@@ -1,0 +1,66 @@
+\begin{tikzpicture}[
+    x=0.88cm,y=0.80cm,
+    every node/.style={font=\small},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.82cm, inner xsep=8pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.82cm, inner xsep=7pt},
+    fullleaf/.style={draw=orange!80!black, rounded corners=3pt, line width=1.05pt, fill=orange!12, minimum height=0.82cm, inner xsep=7pt},
+    newleaf/.style={draw=green!45!black, rounded corners=3pt, line width=1.0pt, fill=green!12, minimum height=0.82cm, inner xsep=7pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={<->, thick, draw=red!65!black},
+    promote/.style={->, dashed, very thick, draw=red!70!black}
+]
+    \node[font=\bfseries] at (7.6,8.2) {Before inserting 21};
+    \node[inode] (r0) at (7.6,7.0) {5 \quad 13 \quad 17 \quad 24};
+
+    \node[leaf] (a0) at (0.4,4.7) {2 \quad 3};
+    \node[leaf] (b0) at (3.2,4.7) {5 \quad 7 \quad 8};
+    \node[leaf] (c0) at (6.1,4.7) {14 \quad 16};
+    \node[fullleaf] (d0) at (10.1,4.7) {19 \quad 20 \quad 22 \quad 23};
+    \node[leaf] (e0) at (14.2,4.7) {24 \quad 27 \quad 29};
+
+    \draw[link] (r0.south west) -- (a0.north);
+    \draw[link] ($(r0.south west)!0.25!(r0.south east)$) -- (b0.north);
+    \draw[link] ($(r0.south west)!0.50!(r0.south east)$) -- (c0.north);
+    \draw[link] ($(r0.south west)!0.75!(r0.south east)$) -- (d0.north);
+    \draw[link] (r0.south east) -- (e0.north);
+
+    \draw[leaflink] (a0.east) -- (b0.west);
+    \draw[leaflink] (b0.east) -- (c0.west);
+    \draw[leaflink] (c0.east) -- (d0.west);
+    \draw[leaflink] (d0.east) -- (e0.west);
+
+    \node[font=\scriptsize, text=orange!80!black] at (10.1,3.9) {target leaf is full};
+
+    \node[font=\bfseries] at (7.6,2.2) {After split propagation};
+    \node[inode] (r1) at (7.6,1.0) {17};
+    \node[inode] (i1) at (4.1,-1.0) {5 \quad 13};
+    \node[inode] (i2) at (11.0,-1.0) {21 \quad 24};
+
+    \node[leaf] (a1) at (0.3,-3.4) {2 \quad 3};
+    \node[leaf] (b1) at (3.0,-3.4) {5 \quad 7 \quad 8};
+    \node[leaf] (c1) at (5.9,-3.4) {14 \quad 16};
+    \node[leaf] (d1) at (9.0,-3.4) {19 \quad 20};
+    \node[newleaf] (e1) at (12.0,-3.4) {21 \quad 22 \quad 23};
+    \node[leaf] (f1) at (15.1,-3.4) {24 \quad 27 \quad 29};
+
+    \draw[link] (r1.south west) -- (i1.north);
+    \draw[link] (r1.south east) -- (i2.north);
+
+    \draw[link] (i1.south west) -- (a1.north);
+    \draw[link] (i1.south) -- (b1.north);
+    \draw[link] (i1.south east) -- (c1.north);
+
+    \draw[link] (i2.south west) -- (d1.north);
+    \draw[link] (i2.south) -- (e1.north);
+    \draw[link] (i2.south east) -- (f1.north);
+
+    \draw[leaflink] (a1.east) -- (b1.west);
+    \draw[leaflink] (b1.east) -- (c1.west);
+    \draw[leaflink] (c1.east) -- (d1.west);
+    \draw[leaflink] (d1.east) -- (e1.west);
+    \draw[leaflink] (e1.east) -- (f1.west);
+
+    \draw[promote] (e1.north) to[bend left=15] node[midway, right, font=\scriptsize] {copy up 21} (i2.south);
+    \draw[promote] (i1.north) to[bend left=18] node[midway, left, font=\scriptsize] {push up 17} (r1.south);
+\end{tikzpicture}

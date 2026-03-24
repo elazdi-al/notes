@@ -1,0 +1,36 @@
+\begin{tikzpicture}[
+    x=1cm,y=0.9cm,
+    every node/.style={font=\small},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.82cm, inner xsep=12pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.82cm, inner xsep=10pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={<->, thick, draw=red!65!black}
+]
+    \node[inode] (root) at (6.0,5.2) {20};
+    \node[inode] (lefti) at (3.1,3.3) {10};
+    \node[inode] (righti) at (8.9,3.3) {35};
+
+    \node[leaf] (l1) at (0.9,1.2) {6};
+    \node[leaf] (l2) at (3.5,1.2) {10};
+    \node[leaf] (l3) at (6.6,1.2) {20 \quad 31};
+    \node[leaf] (l4) at (10.0,1.2) {38 \quad 44};
+
+    \draw[link] (root.south west) -- node[pos=0.55, above left, font=\scriptsize] {$< 20$} (lefti.north);
+    \draw[link] (root.south east) -- node[pos=0.55, above right, font=\scriptsize] {$\geq 20$} (righti.north);
+
+    \draw[link] (lefti.south west) -- node[pos=0.55, above left, font=\scriptsize] {$< 10$} (l1.north);
+    \draw[link] (lefti.south east) -- node[pos=0.55, above right, font=\scriptsize] {$\geq 10$} (l2.north);
+
+    \draw[link] (righti.south west) -- node[pos=0.55, above left, font=\scriptsize] {$< 35$} (l3.north);
+    \draw[link] (righti.south east) -- node[pos=0.55, above right, font=\scriptsize] {$\geq 35$} (l4.north);
+
+    \draw[leaflink] (l1.east) -- (l2.west);
+    \draw[leaflink] (l2.east) -- (l3.west);
+    \draw[leaflink] (l3.east) -- (l4.west);
+
+    \node[anchor=west, font=\scriptsize] at (11.8,5.2) {root node};
+    \node[anchor=west, font=\scriptsize] at (11.8,3.3) {inner nodes};
+    \node[anchor=west, font=\scriptsize] at (11.8,1.2) {leaf nodes};
+    \node[font=\scriptsize] at (6.0,0.15) {leaf links preserve key order for range scans};
+\end{tikzpicture}

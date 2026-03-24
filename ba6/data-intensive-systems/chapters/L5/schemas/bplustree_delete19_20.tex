@@ -1,0 +1,63 @@
+\begin{tikzpicture}[
+    x=0.92cm,y=0.84cm,
+    every node/.style={font=\small},
+    >=Latex,
+    inode/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!10, minimum height=0.82cm, inner xsep=8pt},
+    leaf/.style={draw=black!60, rounded corners=3pt, line width=0.85pt, fill=blue!7, minimum height=0.82cm, inner xsep=7pt},
+    link/.style={->, thick, draw=black!55},
+    leaflink/.style={<->, thick, draw=red!65!black}
+]
+    \node[font=\bfseries] at (7.4,8.0) {After deleting 19};
+    \node[inode] (r0) at (7.4,6.8) {17};
+    \node[inode] (i0l) at (3.7,4.8) {5 \quad 13};
+    \node[inode] (i0r) at (11.2,4.8) {24 \quad 30};
+
+    \node[leaf] (a0) at (0.5,2.4) {2 \quad 3};
+    \node[leaf] (b0) at (3.1,2.4) {5 \quad 7 \quad 8};
+    \node[leaf] (c0) at (5.9,2.4) {14 \quad 16};
+    \node[leaf] (d0) at (10.0,2.4) {20 \quad 22};
+    \node[leaf] (e0) at (12.8,2.4) {24 \quad 27 \quad 29};
+    \node[leaf] (f0) at (16.2,2.4) {33 \quad 34 \quad 38 \quad 39};
+
+    \draw[link] (r0.south west) -- (i0l.north);
+    \draw[link] (r0.south east) -- (i0r.north);
+    \draw[link] (i0l.south west) -- (a0.north);
+    \draw[link] (i0l.south) -- (b0.north);
+    \draw[link] (i0l.south east) -- (c0.north);
+    \draw[link] (i0r.south west) -- (d0.north);
+    \draw[link] (i0r.south) -- (e0.north);
+    \draw[link] (i0r.south east) -- (f0.north);
+
+    \draw[leaflink] (a0.east) -- (b0.west);
+    \draw[leaflink] (b0.east) -- (c0.west);
+    \draw[leaflink] (c0.east) -- (d0.west);
+    \draw[leaflink] (d0.east) -- (e0.west);
+    \draw[leaflink] (e0.east) -- (f0.west);
+
+    \node[font=\bfseries] at (7.4,-0.2) {After deleting 20 and redistributing};
+    \node[inode] (r1) at (7.4,-1.4) {17};
+    \node[inode] (i1l) at (3.7,-3.4) {5 \quad 13};
+    \node[inode] (i1r) at (11.2,-3.4) {27 \quad 30};
+
+    \node[leaf] (a1) at (0.5,-5.8) {2 \quad 3};
+    \node[leaf] (b1) at (3.1,-5.8) {5 \quad 7 \quad 8};
+    \node[leaf] (c1) at (5.9,-5.8) {14 \quad 16};
+    \node[leaf] (d1) at (10.0,-5.8) {22 \quad 24};
+    \node[leaf] (e1) at (12.8,-5.8) {27 \quad 29};
+    \node[leaf] (f1) at (16.2,-5.8) {33 \quad 34 \quad 38 \quad 39};
+
+    \draw[link] (r1.south west) -- (i1l.north);
+    \draw[link] (r1.south east) -- (i1r.north);
+    \draw[link] (i1l.south west) -- (a1.north);
+    \draw[link] (i1l.south) -- (b1.north);
+    \draw[link] (i1l.south east) -- (c1.north);
+    \draw[link] (i1r.south west) -- (d1.north);
+    \draw[link] (i1r.south) -- (e1.north);
+    \draw[link] (i1r.south east) -- (f1.north);
+
+    \draw[leaflink] (a1.east) -- (b1.west);
+    \draw[leaflink] (b1.east) -- (c1.west);
+    \draw[leaflink] (c1.east) -- (d1.west);
+    \draw[leaflink] (d1.east) -- (e1.west);
+    \draw[leaflink] (e1.east) -- (f1.west);
+\end{tikzpicture}
