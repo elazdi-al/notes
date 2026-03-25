@@ -56,7 +56,6 @@
   \lstset{style=CStyle, autogobble=true, #1}
 }{}
 %
-\usepackage{minted}
 \raggedbottom
 \setlist[itemize]{leftmargin=1em}
 \newcommand{\dist}[2]{\left\langle #1,\, #2 \right\rangle}
@@ -77,10 +76,6 @@
 % Adjust vertical centering of the existing \warning symbol
 \let\oldwarning\warning
 \renewcommand{\warning}{\raisebox{0.3ex}{\oldwarning}}
-
-\makeatletter
-\renewcommand{\hline}{\noalign{\vskip 2px}\hrule\@height\arrayrulewidth\@width\linewidth\noalign{\vskip 2px}}
-\makeatother
 
 \renewenvironment{textblock}[2][]{%
     \originaltextblock[#1]{#2}%
@@ -122,6 +117,226 @@
 
 \small
 \begin{minipage}[t]{0.495\textwidth}
+\textbf{DFA.} $A=\langle \Sigma, Q, q_0, \delta, F\rangle$ where:\\
+$\Sigma$: alphabet \quad $Q$: finite set of states \quad $q_0 \in Q$: start state\\
+$\delta: Q \times \Sigma \to Q$: transition function \quad $F \subseteq Q$: accepting states\\
+Accepts $w$ if unique path $q_0 \xrightarrow{w} q_f \in F$.\\
+\textbf{NFA.} $A=\langle \Sigma, Q, q_0, \delta, F\rangle$ where:\\
+$\delta: Q \times (\Sigma \cup \{\varepsilon\}) \to 2^Q$: transition function (allows $\varepsilon$-transitions).\\
+Accepts $w$ if $\exists$ path $q_0 \xrightarrow{w} q_f \in F$. \\
+\textbf{Determinization.} NFA $\to$ DFA via subset construction where $Q_{\text{DFA}} \subseteq 2^{Q_{\text{NFA}}}$. \\
+\textbf{Running NFA.} Track state set $S_0=\{q_0\}$, $S_{i+1} = \bigcup_{q\in S_i} \delta(q, w_{i+1})$. Accept $\iff S_n \cap F \neq \emptyset$. \\
+\textbf{Regex $\equiv$ Automata.} $L$ is regular $\iff \exists$ regex $e$ s.t. $L(e)=L \iff \exists$ FA $\mathcal{A}$ s.t. $L(\mathcal{A})=L$. \\
+\textbf{Derivatives $\equiv$ Automata.} States represent residual languages: $q \approx \partial_w L$. \\
+\textbf{Limits.} FAs have finite memory $\implies$ must loop on long words. Cannot do unbounded counting or nesting (e.g. balanced '()', $a^n b^n$). \hrule
+\textbf{Pumping Lemma.} If $L$ is a regular language, then there exists a positive integer $p$ (the pumping length) such that every string $s \in L$ for which $|s| \ge p$, can be partitioned into three pieces, $s = x y z$, such that:
+\begin{itemize}[leftmargin=1.2em, itemsep=0pt, topsep=0pt]
+    \item $|y| > 0$
+    \item $|xy| \leq p$
+    \item $\forall i \geq 0.\ xy^iz \in L$
+\end{itemize}
+\hrule
+\textbf{Induction on Strings.} To prove $P(s)$ for all strings $s$, prove the base case $P(\varepsilon)$, then assume $P(s')$ (\textbf{IH}) to prove $P(x\cdot s')$.\\
+\textbf{Application to $\text{matchR}$:} Reduce $P(r,s)$ using $\text{matchR}(r,s) \iff \text{nullable}(\partial_s(r))$, where:
+\[
+\partial_\varepsilon(r)=r, \qquad \partial_{x\cdot s'}(r)=\partial_{s'}(\partial_x(r)).
+\]
+\textbf{Base case} ($s=\varepsilon$) \quad Evaluate $P(r,\varepsilon)$ using $\text{nullable}(r)$. \\
+\textbf{Inductive step} ($s=x\cdot s'$) \quad Assume $P(r',s')$ (\textbf{IH}). Unfold $\text{matchR}(r, x\cdot s') = \text{matchR}(\delta_x(r), s')$. 
+\hrule
+\textbf{Language.} A set $L \subseteq A^*$ of words over an alphabet $A$. \\
+\textbf{Concatenation.} $L_1 \cdot L_2 = \{w_1 w_2 \mid w_1 \in L_1,\; w_2 \in L_2\}$. \\
+\textbf{Exponentiation.} $L^0 = \{\varepsilon\}$, \; $L^{n+1} = L \cdot L^n$, so $L^n = \{w_1 \cdots w_n \mid w_i \in L\}$. \\
+\textbf{Kleene star.} $L^* = \bigcup_{n \geq 0} L^n$, all finite concatenations of words from $L$, including $\varepsilon$. \\
+\textbf{Kleene star finiteness.} $L^*$ is finite only when $L = \emptyset$ or $L \subseteq \{\varepsilon\}$. \\
+\textbf{Characteristic function.} $f_L : A^* \to \{0,1\}$ where $f_L(w) = 1$ iff $w \in L$\\
+\textbf{Common Regex Functions:}\\
+$\text{nullable}(e)$: true iff $\varepsilon \in L(e)$.\\
+$\text{first}(e) = \{a \in A \mid \exists v.\; av \in L(e)\}$: valid first characters in $L(e)$.\\
+$\text{prefix}(e)$: regex matching all prefixes of words in $L(e)$.\\
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Regex $e$} & \textbf{nullable$(e)$} & \textbf{first$(e)$} & \textbf{prefix$(e)$} \\
+\midrule
+$\emptyset$ & False & $\emptyset$ & $\emptyset$ \\
+$\varepsilon$ & True & $\emptyset$ & $\varepsilon$ \\
+$a \in A$ & False & $\{a\}$ & $\varepsilon \mid a$ \\
+$[a_1\!-\!a_2]$ & False & $\{a \mid a_1 \le a \le a_2\}$ & $\varepsilon \mid [a_1\!-\!a_2]$ \\
+$e_1 \mid e_2$ & $\text{nullable}(e_1) \lor \text{nullable}(e_2)$ & $\text{first}(e_1) \cup \text{first}(e_2)$ & $\text{prefix}(e_1) \mid \text{prefix}(e_2)$ \\
+$e_1 e_2$ & $\text{nullable}(e_1) \land \text{nullable}(e_2)$ & $\text{first}(e_1) \cup (\text{first}(e_2) \text{ if null}(e_1) \text{ else } \emptyset)$ & $\text{prefix}(e_1) \mid e_1 \text{prefix}(e_2)$ \\
+$e^*$ & True & $\text{first}(e)$ & $e^* \text{prefix}(e)$ \\
+$e^+$ & $\text{nullable}(e)$ & $\text{first}(e)$ & $e^* \text{prefix}(e)$ \\
+$e?$ & True & $\text{first}(e)$ & $\text{prefix}(e)$ \\
+$e^n$ ($n>0$) & $n=0 \lor \text{nullable}(e)$ & $\text{first}(e)$ & $\bigcup_{i=0}^{n-1} e^i \text{prefix}(e)$ \\
+\bottomrule
+\end{tabular}%
+}
+\textbf{Token priority.} When the same string matches multiple token classes, the one listed first (highest priority) wins. \\
+\textbf{Language derivative.} $\partial_x L = \{w \in A^* \mid xw \in L\}$: remove leading $x$ from words of $L$ that start with $x$.\\
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}ll|ll@{}}
+\toprule
+\textbf{Operation} & \textbf{Derivative} & \textbf{Operation} & \textbf{Derivative} \\
+\midrule
+\textbf{Word} $\partial_v L$ & $\{w \in A^* \mid vw \in L\}$ & \textbf{Union} $L_1 \cup L_2$ & $\partial_x L_1 \cup \partial_x L_2$ \\
+\textbf{Word chain} $\partial_{\varepsilon}L = L$ & $\partial_{av}L = \partial_v(\partial_a L)$ & \textbf{Intersect} $L_1 \cap L_2$ & $\partial_x L_1 \cap \partial_x L_2$ \\
+\textbf{Empty language} $\varnothing$ & $\varnothing$ & \textbf{Difference} $L_1 \setminus L_2$ & $\partial_x L_1 \setminus \partial_x L_2$ \\
+\textbf{Empty word} $\{\varepsilon\}$ & $\varnothing$ & \textbf{Complement} $\overline{L}$ & $\overline{\partial_x L}$ \\
+\textbf{Single letter} $\{y\}$ & $\{\varepsilon\}$ if $x=y$ else $\varnothing$ & \textbf{Universal} $A^*$ & $A^*$ \\
+\textbf{Kleene star} $L^*$ & $(\partial_x L)L^*$ & & \\
+\textbf{Concat} $L_1 L_2$ & $(\partial_x L_1)L_2 \cup (\partial_x L_2 \text{ if } \varepsilon \in L_1 \text{ else } \varnothing)$ & & \\
+\bottomrule
+\end{tabular}%
+}\\
+\textbf{Language decomposition.} Over $A=\{a,b\}$: $L = (a\partial_a L) \cup (b\partial_b L) \cup \{\varepsilon \mid \text{nullable}(L)\}$. A language is split by its possible first letters.\\
+\textbf{Regex derivative rules.} $\partial_a\varepsilon=\emptyset$, $\partial_a\emptyset=\emptyset$. $\partial_a b=\varepsilon$ if $b=a$ else $\emptyset$. $\partial_a(r_1 \mid r_2)=\partial_a r_1 \mid \partial_a r_2$. $\partial_a(r^*)=(\partial_a r)r^*$. $\partial_a(r_1r_2)= (\partial_a r_1)r_2 \mid \partial_a r_2$ (if $\text{nullable}(r_1)$) else $(\partial_a r_1)r_2$.\\
+\textbf{Membership test via derivatives.} $w \in L \iff \varepsilon \in \partial_w L \iff \text{nullable}(\partial_w L)$. So to test a word, derive successively along its letters, then check nullable.\\
+\textit{Example.}\\
+\textbf{1.} \(r=(a\mid b)^*,\ s=abc\)
+\[
+\begin{aligned}
+r_0&=(a\mid b)^*\\
+r_1&=\partial_a(r_0)=(a\mid b)^*\\
+r_2&=\partial_b(r_1)=(a\mid b)^*\\
+r_3&=\partial_c(r_2)=\emptyset
+\end{aligned}
+\]
+\[
+\text{nullable}(r_3)=\text{false}
+\quad\Longrightarrow\quad
+abc\notin L\big((a\mid b)^*\big).
+\]
+\end{minipage}
+\hfill
+\noindent
+\begin{minipage}[t]{0.495\textwidth}
+\textbf{Context-Free Grammar (CFG).} A formal way to describe how strings are built. $G=(V,\Sigma,P,S)$ where:\\
+$V$: variables / nonterminals \quad $\Sigma$: terminals (actual symbols in final words)\\
+$P$: production rules \quad $S$: start symbol\\
+\textbf{Constructing CFGs.} Detect pattern $\to$ define base case (smallest word) + recursive growth rule.\\
+\textbf{Regex to CFG \& Common Patterns.}\\
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}ll|ll@{}}
+\toprule
+\textbf{Pattern} & \textbf{CFG Rule ($S$)} & \textbf{Pattern} & \textbf{CFG Rule ($S$)} \\
+\midrule
+\textbf{Union} $A \mid B$ & $S \to A \mid B$ & \textbf{Option} $A?$ & $S \to A \mid \varepsilon$ \\
+\textbf{Concat} $A B$ & $S \to A \, B$ & \textbf{Matching} $a^n b^n$ & $S \to aSb \mid \varepsilon$ \\
+\textbf{Star} $A^*$ & $S \to A \, S \mid \varepsilon$ & \textbf{Even Palindr.} & $S \to aSa \mid bSb \mid \varepsilon$ \\
+\textbf{Plus} $A^+$ & $S \to A \, S \mid A$ & \textbf{Odd Palindr.} & $S \to aSa \mid bSb \mid a \mid b$ \\
+\textbf{Any word} $\Sigma^*$ & $S \to aS \mid bS \mid \varepsilon$ & \textbf{Balanced ()} & $S \to (S)S \mid \varepsilon$ \\
+\textbf{$\ge$ Match} $a^n b^m (n \ge m)$ & $S \to aS \mid aSb \mid \varepsilon$ & \textbf{Nested 3} $a^n b^m c^{n+m}$ & $S \to aSc \mid T, \ T \to bTc \mid \varepsilon$ \\
+\textbf{$\le$ Match} $a^n b^m (m \ge n)$ & $S \to Sb \mid aSb \mid \varepsilon$ & \textbf{Nested 3} $a^{n+m} b^n c^m$ & $S \to aSc \mid T, \ T \to aTb \mid \varepsilon$ \\
+\textbf{Double} $a^n b^{2n}$ & $S \to aSbb \mid \varepsilon$ & \textbf{Equal Counts} $\#a=\#b$ & $S \to aSb \mid bSa \mid SS \mid \varepsilon$ \\
+\textbf{Middle $a$} & $S \to aSa \mid aSb \mid bSa \mid bSb \mid a$ & \textbf{Copying} $w w$ & \textbf{NOT CFG!} \\
+\textbf{Triple} $a^n b^n c^n$ & \textbf{NOT CFG!} & \textbf{Prefix} $a^i b^j c^k, i=j+k$ & $S \to aSc \mid T, \ T \to aTb \mid \varepsilon$ \\
+\bottomrule
+\end{tabular}%
+}\hrule
+\textit{Example.} \( L = \{a^n b^m c^{n+m} \mid n, m \ge 0\} \)
+$
+\begin{aligned}
+S&\to aSc \mid T\\
+T&\to bTc \mid \varepsilon
+\end{aligned}
+$\hrule
+\textbf{Parse Tree.} A visual representation of how a string is derived using a Grammar $G = (A, N, S, R)$. A tree $t$ is a valid parse tree if it has ordered children where:
+\begin{itemize}[leftmargin=1.2em, itemsep=0pt, topsep=0pt]
+\item[-] \textbf{Root} is the start symbol $S$. \textbf{Leaves} are terminal characters ($A$).
+\item[-] \textbf{Inner nodes} are non-terminal variables ($N$).
+\item[-] \textbf{Branches} match the rules: if node $n$ has children $p_1\dots p_k$ (left-to-right), then $(n \to p_1\dots p_k)$ must be a rule in $R$.
+\end{itemize}
+\textbf{Yield:} The final string formed by reading the leaves from left to right.\\
+\textbf{Language} $L(G)$: The set of all possible yields (words) from all valid parse trees.\\
+\textit{Note:} Checking if $t$ is a valid tree is easy, but given just a word $w$, finding if a parse tree exists is much harder (Parsing).\\
+\textbf{Precedence Hints.} \\
+\textbf{Tighter binding} = Evaluated First = Deeper in parse tree (near leaves). \textbf{Looser binding} = Evaluated Last = Higher in parse tree (near root).\\
+\textit{Example Schema.} For grammar rules $S \to aSb \mid \varepsilon$, the yield is the word $aab$:
+\begin{center}
+\vspace{-4pt}
+\begin{tikzpicture}[level distance=20pt, sibling distance=25pt, every node/.style={inner sep=1pt}]
+\node {$S$}
+  child {node {$a$}}
+  child {node {$S$}
+    child {node {$a$}}
+    child {node {$S$} child {node {$\varepsilon$}} }
+    child {node {$b$}}
+  }
+  child {node {$b$}};
+\end{tikzpicture}
+\vspace{-4pt}
+\end{center}
+\hrule
+\textbf{Ambiguity Resolution for} $G: A \to -A \mid A-\text{id} \mid \text{id}$. Parse trees for \texttt{-id-id}:\\[2pt]
+\noindent\begin{minipage}[t]{0.495\textwidth}
+\textbf{Infix priority ($G_i$):} $-(\text{id}-\text{id})$\\
+$G_i: A \to C \mid -A$\\
+$\phantom{G_i: } C \to \text{id} \mid C - \text{id}$
+\vspace{-4pt}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Ambiguous} & \textbf{Solution (}$G_i$\textbf{)} \\
+\begin{tikzpicture}[level distance=16pt, sibling distance=12pt, every node/.style={inner sep=1pt}]
+\node {$A$}
+  child {node {$-$}}
+  child {node {$A$}
+    child {node {$A$} child {node {$\text{id}$}}}
+    child {node {$-$}}
+    child {node {$\text{id}$}}
+  };
+\end{tikzpicture}
+&
+\begin{tikzpicture}[level distance=16pt, sibling distance=12pt, every node/.style={inner sep=1pt}]
+\node {$A$}
+  child {node {$-$}}
+  child {node {$A$}
+    child {node {$C$}
+      child {node {$C$} child {node {$\text{id}$}}}
+      child {node {$-$}}
+      child {node {$\text{id}$}}
+    }
+  };
+\end{tikzpicture}
+\end{tabular}
+\vspace{-4pt}
+\end{center}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.495\textwidth}
+\textbf{Prefix priority ($G_p$):} $(-\text{id})-\text{id}$\\
+$G_p: A \to B \mid A - \text{id}$\\
+$\phantom{G_p: } B \to -B \mid \text{id}$
+\vspace{-4pt}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Ambiguous} & \textbf{Solution (}$G_p$\textbf{)} \\
+\begin{tikzpicture}[level distance=16pt, sibling distance=12pt, every node/.style={inner sep=1pt}]
+\node {$A$}
+  child {node {$A$}
+    child {node {$-$}}
+    child {node {$A$} child {node {$\text{id}$}}}
+  }
+  child {node {$-$}}
+  child {node {$\text{id}$}};
+\end{tikzpicture}
+&
+\begin{tikzpicture}[level distance=16pt, sibling distance=12pt, every node/.style={inner sep=1pt}]
+\node {$A$}
+  child {node {$A$}
+    child {node {$B$}
+      child {node {$-$}}
+      child {node {$B$} child {node {$\text{id}$}}}
+    }
+  }
+  child {node {$-$}}
+  child {node {$\text{id}$}};
+\end{tikzpicture}
+\end{tabular}
+\end{center}
+\end{minipage}\\
+$L(G) = L(-^*\text{id}(-\text{id})^*)$
+\hrule
 \textbf{Divisibility check.}\\
 For binary string $(b_k b_{k-1}\dots b_0)$, to check divisibility by integer $n$:\\
 1. Initialize $r=0$ \quad 2. Scan bits from left to right, updating $r \leftarrow (2r + b_i)\bmod n$\\
@@ -160,441 +375,21 @@ $q_3$               & $q_2$ & $q_3$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-\end{minipage}
-\end{minipage}
-\hfill
-\noindent
-\begin{minipage}[t]{0.495\textwidth}
-	\noindent \textbf{Harm.} The bad thing that could happen when the \textbf{threat} materializes. \textit{(adversary steals the money, learns my password\dots)}\\
-	\noindent \textbf{Security Policy.} high level description of the security properties that must hold in the system in relation to assets and principals.\\
-	- \textbf{Assets (objects).} anything with value (data, files, memory) needing protection.\\
-	- \textbf{Principals (subjects).} people, computer programs, services.\\
-	\noindent \textbf{Security Mechanism.} Technical mechanism used to ensure that the security policy is not violated by an adversary within the threat model, \textbf{we can only prepare for threats we're aware of} \\\textit{(Policy. ensure messages cannot be read by anyone but the sender and the receiver, Mechanism. encrypt the message before sending)}\\
-	\noindent \textbf{Composition of Security Mechanisms}
-	\begin{itemize}
-		\item[-] \textbf{Defence in depth.} As long as one remains unbroken the Security Policy isn't broken) \textit{(two-factor auth)}
-		\item[-] \textbf{Weakest Link.} if anyone fails the Security Policy, it is broken. \textit{(security questions for a lost password $\rightarrow$ just need to know the answer.\dots)}
-	\end{itemize}
-	\textit{Humans can be vulnerabilities - phishing attacks, bad use of passwords\dots)}\\
-	\noindent \textbf{To show a system is secure. (under a \textit{specific} threat model)}
-	\begin{itemize}
-		\item[] Attacker - Just one way to violate \textbf{one} security property is enough.
-		\item[] Defender - No adversary strategy can violate the security policy.
-	\end{itemize}
-	\noindent \textbf{Security Argument.} Rigorous argument that security mechanisms in place are effective in maintaining security policy subject to assumptions on Threat Model.
-\end{minipage}
-\hline
-\noindent \begin{minipage}[t]{0.495\textwidth}
-	\noindent \textbf{Principles of CompSec.}\\
-	1. \textbf{Economy of mechanism}
-	Keep security mechanism design simple and small $\Rightarrow$ Easier to audit and verify, testing is \textbf{not} appropriate to evaluate security.\\
-	\noindent - \textbf{Trusted Computing Base (TCB).} Every component of the system on which the security policy relies upon \textit{hardware, firmware, software}. \\The TCB is trusted to operate correctly for the security policy to hold. $\to$ If something goes wrong in it, the security policy may be violated\\
-	\textbf{must} be kept small to easy verification / diminish the attack surface\\
-	2. \textbf{Fail-safe defaults.} Base access decisions on permission rather than exclusion. \textit{(Whitelist, do not blacklist)} \\
-	If something fails, be as secure as it does not fail errors / uncertainty should error on the side of the security policy.\\
-	3. \textbf{Complete mediation.}. \textbf{Every} access to every object must be checked for authority. A \textbf{Reference Monitor} mediates all actions from subjects on objects and ensures they are according to the policy. \textit{\warning time to check vs. time to use}\\
-	4. \textbf{Open design} The design should not be secret \textit{Always design as if the enemy knows the system. (Crypto-only secret is key.Authentication-Only secret is password.for Obfuscation-Only used secret is noise.)}.\textbf{assuming the thread model can't get a hold of the system is unrealistic (employee corruption, ...)}
-\end{minipage}
-\hfill
-\noindent \begin{minipage}[t]{0.495\textwidth}
-	5. \textbf{Separation of privilege.}	No single accident, deception, or breach of trust is sufficient to compromise the protected information\\
-	- \textbf{Privilege.} A privilege allows a user to perform an action on a computer system that may have security consequences. \textit{(create a file in a directory\dots)}\\
-	6. \textbf{Least Privilege.} Every program and every user of the system should operate using the least set of privileges necessary to complete the job. \textit{Rights are added on need, discarded after use. Users should only know about things if they \textbf{have} to.}\\
-	7. \textbf{Least Common Mechanism} Minimize the amount of mechanism common to more than one user and depended on by all users. Every shared mechanism represents a potential information path between users.\\
-	8. \textbf{Psychological acceptability.}
-	It is essential that the human interface be designed for ease of use, so that users routinely and automatically apply the protection mechanisms correctly. \textit{(hide complexity, cultural acceptability\dots)}\\
-	9. \textbf{Work Factor}\\
-	Compare the cost of breaking the mechanism with the resources of a potential attacker. \textit{(cost of compromising insiders, cost of finding a bug, monetization\dots)}\\
-	10. \textbf{Compromise recording} Detect and record security breaches with tamper-evident logs, ensuring traceability, integrity, confidentiality, and availability of recorded data.
-\end{minipage}
-\hline
-\begin{minipage}[t]{0.495\textwidth}
-	\textbf{Access Control.}
-	Security mechanism that ensures all accesses and actions on objects by principals are within the security policy.\\
-	\textbf{no} \textit{chicken soup (checks everywhere in code), use a reference monitor, module used all over code checking for \textbf{subjects} and \textbf{actions}}\\[1px]
-	\textbf{Discretionary Access Control (DAC).}
-	Object owners assign permissions, ownership of resources. \textit{Linux, Social Networks}\\[1px]
-	\textbf{Mandatory Access Control (MAC).} Central security policy assigns permissions, usually for organizations with need for central control. \textit{Military, Hospital,\ldots}.\\[1px]
-	\textbf{Access Control Matrix.} \textbf{abstract representation} of all permitted triplets of (subject, object, access right) within a system.\\
-	\begin{center} \vspace*{-11px} \includegraphics[width=0.8\textwidth]{assets/access-control-matrix.png} \vspace{-6px}\end{center}\\
-	\textit{Complexity.} $O(f\cdot u)$\\[1px]
-	\textbf{Access Control List (ACL).} associate permissions to objects, stores permissions close to the resource.\\
-	\textit{file1: {(Alice,read/write)}},
-	\textit{file2: {(Bob, read/write)}},\\
-	\textit{file3: {(Alice,read),(Bob,read/write)}}\\
-	$\oplus$ easy to determine who can access a resource and to revoke rights by resource.\\
-	$\ominus$ hard to check all users rights, to remove all perms. for a user, delegate perms.\\[1px]
-	\textbf{Role Based Access Control (RBAC).} access granted based on user roles and predefined permissions. systems have too many subjects (that come and go) $\rightarrow$ large dynamic ACLs.\\
-	Subjects are often similar to each other and get assigned the same rights.\\
-	1. Assign permissions to roles, \quad 2. Assign roles to subjects\\
-	3. Subjects have the permissions of their assigned role\\
-	$\ominus$ role explosion (temptation to create fine grained roles), limited expressiveness, difficult to implement separation of privilege + least privilege.\\
-	\textbf{Group Based Access Control (GBAC).} access granted based on user group membership. \textbf{exactly like RBAC but instead of roles, permissions are assigned to groups.} groups are broader, represent organizational units instead than specific functions.\\
-	1. Assign permissions to groups \quad 2. Assign subjects to groups\\
-	3. Subjects have the combined permissions of all their groups\\
-	$\ominus$ coarse granularity, overlapping group memberships, inconsistent permissions, difficult to manage if users belong to many groups.\\
-	\textit{In case of \textbf{Negative Permissions} check negative permissions first before group, \warning system crashes before negative checks.}\\[1px]
-	\textbf{Ambient Authority.} an action succeeds if the subject only specifies the \textit{operation} and the \textit{object name}, not the specific authority used. \\
-	$\ominus$ leads to accidental misuse of authority, programs may act with more rights than intended. $\rightarrow$ Confused Deputy Problem.\\
-	\textbf{Confused Deputy Problem.} when a program (deputy) is tricked into misusing its authority on behalf of another subject.\\
-	\textit{Alice runs compiler(input, bill) $\Rightarrow$ compiler (with write access to bill) overwrites billing file.} $\Rightarrow$ Alice uses compiler’s authority to modify bill indirectly.\\
-	$\ominus$ ambient authority allows unintended privilege use.\\
-	\textbf{Solutions:}\\
-	1. Restrict privileged process access.\\
-	2. Make privileged process check user’s authorization.\\
-	3. Use \textbf{Capabilities} to explicitly delegate rights.\\
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.495\textwidth}
-	\textbf{User \& Group Identities.} Most modern systems rely on DAC.\\[1px]
-	\textbf{UIDs / GIDs.} numerical identifiers for users and groups.\\
-	\textit{/etc/passwd:} \texttt{username:password:UID:GID:info:home:shell}\\
-	\textit{/etc/group:} defines secondary groups.\\
-	Each user has a home directory and belongs to one or more groups.\\[1px]
-	\textbf{UNIX Model.} Everything is a file.\\[1px]
-	\includegraphics[width=0.9\textwidth]{assets/permissions.png}\\[-1px]
-	\textbf{Directories.} Read → list files; Write → add/remove files; Exec → traverse (cd).\\[1px]
-	\textbf{Permission check order:} 1. If process UID = file owner → check owner bits.\\
-	2. Else if GID matches → check group bits.\\
-	3. Else → check “other” bits.\\
-	\textit{Root (UID 0.} bypasses all checks.\\[1px]
-	\textbf{Changing Permissions.}\\
-	\textbf{chmod.} modify permission bits. \texttt{chmod +r file}, \texttt{chmod 666 file}.\\
-	\textbf{chown.} change file owner/group(opt.) \texttt{chown root:staff /srv/config}\\
-	\textbf{chgrp.} change file group. \texttt{chgrp www-data /var/www}\\[1px]
-	\textbf{Special Rights.}\\
-	\textbf{suid (set user ID).} run program with owner’s privileges. \textit{puts s in owner's x field}\\
-	\texttt{chmod u+s filename}\\
-	\textit{allows normal users to change passwords without full root access.}\\[1px]
-	\textbf{sgid (set group ID).} run program with group’s privileges.\\
-	\textit{on a directory - creating a file inside gets folder's group}\\
-	\texttt{d rwx r-s r-x 2 root staff /srv/shared}\\[1px]
-	\textbf{sticky bit.} on directories, prevents deleting/renaming files you don’t own.\\
-	\texttt{d rwx rwx rwt 10 root tmp /tmp}\\
-	\textbf{Special Users.}\\
-	\textit{root:} UID 0, full privileges, bypasses checks, in TCB.\\
-	\texttt{sudo} run as root \quad \texttt{su [username]} switch to account(default is root)\\
-	\textit{nobody:} UID -2, owns no files, minimal privileges, safer for untrusted code.(least privilege)\\
-	$\oplus$ flexible, simple model, widely adopted.\\
-	$\ominus$ relies on \textbf{ambient authority}, prone to Confused Deputy attacks.\\[1px]
-	\fbox{
-		\begin{minipage}[t]{0.95\textwidth}
-			\textbf{Windows: DACL.} Controls access to objects via list of ACEs.\\
-			\textbf{ACE (Acces Control Entry).} \texttt{<Type, Principal, Permissions, Flags>}.
-			\begin{itemize}
-				\item[-] \textbf{Types.} \texttt{Allow / Deny} (negative / positive). Deny takes precedence and ordered with Denied permissions first.
-				\item[-] \textbf{Principal.} User or group (SID).
-				\item[-] \textbf{Permissions.} Fine-grained rights\textit{(Read, Write, Execute, Delete...)}
-				\item[-] \textbf{Flags.} Inheritance, propagation, object-specific.
-			\end{itemize}
-			\textbf{Access Tokens.} Thread/process carries user + group SIDs checked against DACL.\\
-			\textbf{Least Privilege.} Users run limited by default; elevation via “Run as admin.”
-		\end{minipage}}\\[1px]
-	\noindent \textbf{Capabilities.} associate permissions to \textit{subjects}\\
-	\textit{Alice: \{(file1, read/write)\}} \; \textit{Bob: \{(file2, read/write), (file3, read/write)\}}
-	\\
-	$\oplus$ easy to determine all permissions of a user and to delegate rights by subject.\\
-	$\ominus$ hard to determine who can access a resource or to revoke rights by resource.
-\end{minipage}
-\footnotesize
-\newpage
-\begin{minipage}[t]{0.495\textwidth}
-	\textbf{Security Model.} a design pattern for a set of properties. (\warning not covered by model - who are the subjects? what are the objects? what mechanisms to use to implement it?)
-	\hline
-	\begin{minipage}[t]{0.5\textwidth}
-		\textbf{Bell-La Padula (BLP).} \\security model where Subjects S and objects O are associated to a level of \textbf{Confidentiality}. \\
-		\textbf{Access rights.} Execute, Read, Append, Write.\\
-		- Objects are associated to a Security Level = (Classification, {set of categories}).\\
-		\textit{\{(Unclassified < Confidentiality < Secret < Top Secret), \{NATO, Crypto, Nuclear\}\}}\\
-		\textbf{Dominance Relationship.} \\
-		Transitive, There always is a Top and Bottom, \\Only partial ordering (some pairs of elements can't be compared). \\
-		A security level $(l_1, c_1.$ dominates $(l_2, c_2.$ if and only if $l_{2} \leq l_{1}$ and $c_{2} \subseteq c_{1}$.\\
-		\textit{eg.$(\text{Secret}, \{ \text{Nuclear, Army} \}) \geq (\text{Confidential}, \{ \text{Army} \})$}\\
-		\textbf{Clearance.} max security level a subject has been assigned. \textit{clearance-level($S_i$).}\\
-		\textbf{Current Security level.} subjects can operate at lower security levels. \textit{current-level($S_{i}$)}.
-	\end{minipage}
-	\begin{minipage}[t]{0.5\textwidth}
-		\textbf{BLP to create Confidentiality Policies.}
-		\begin{itemize}[itemsep=2pt]
-			\item[] \textbf{Simple Security Property.}\\
-			      if (subject, object, w/r) is a current access, $\implies$ level(subject) dominates level(object). \\\textbf{(SUBJECTS CAN'T READ UP)}
-			\item[] \textbf{Star Property.} If a subject has simultaneous "observe" (r,w) access $O_{1}$ and "alter" $(a, w)$  access to $O_2$ then level $O_2$ dominates level $O_1$.\\
-			      \textbf{(SUBJECTS CAN'T WRITE DOWN)}. \textit{changing object's perms is write-like}.
-			\item[] \textbf{Discretionary Property.}
-			      A subject may only access an object if it has explicit permission for that specific type of access (r, w, x, etc.) defined by the access control matrix.
-			\item[] \textbf{Basic Security Theorem(induction).} if all state transitions are secure, and the initial state is secure, then every subsequent state is secure regardless of the input.
-		\end{itemize}
-	\end{minipage}\\
-	\textbf{Declassification.} Removing classification labels from information so it can be shared with lower security levels. \textit{soldier (S) with \textit{Secret} clearance shares sanitized info like “We’ve seen tanks moving” with a lower-level user (U).}
-	\hline
-	\textbf{Covert Channels.} Any channel that allows information flows contrary to the security policy, \textit{Storage channels(shared counters, \dots), Timing channels(queuing time\dots).} \\\warning Least Common Mechanism.
-	\textit{mitigated by adding noise or isolation(no high $\leftrightarrow$ low level communication).}
-	\hline
-	\begin{minipage}[t]{0.5\textwidth}
-		\textbf{BIBA (Integrity).} \\Security model where subjects $S$ and objects $O$ are associated to a level of \textbf{Integrity} (trustworthiness). \textbf{Access rights.} Read (Observe), Write (Modify)\\
-		\textbf{BIBA to create Integrity Policies.}
-		\begin{itemize}[itemsep=2pt]
-			\item[] \textbf{Simple Integrity Property.}\\
-			      If $(s,o,r)$ is a current access, then $\text{level}(o)$ dominates $\text{level}(s)$.\\
-			      \textbf{(SUBJECTS CAN'T READ DOWN)} $\Rightarrow$ prevents contamination from low to high.
-			\item[]\textbf{$\ast$-Integrity Property.}\\ If $(s,o,w)$ is a current access, then $\text{level}(s)$ dominates $\text{level}(o)$.\\
-			      \textbf{(SUBJECTS CAN'T WRITE UP)} $\Rightarrow$ prevents low from corrupting high state.
-			\item[] \textbf{Discretionary Property (DAC).} Subject must still have explicit permission for the access (r, w, x) per the access control matrix.
-			\item[]	\textbf{Basic Integrity Theorem (induction).} If the initial state is integrity-secure and all state transitions satisfy BIBA properties, then all reachable states preserve integrity.
-		\end{itemize}
-	\end{minipage}
-	\begin{minipage}[t]{0.5\textwidth}
-		\textbf{BIBA Low-Water-Mark Variants (taint-tracking).}
-		\begin{itemize}[itemsep=1pt, leftmargin=10pt]
-			\item[1.] \textit{For Subjects.}\\ Subjects start at their max integrity, \textbf{on read}:\\ $\text{current-level}(s) = \min(\text{current-level}(s), \text{level}(o))$.	\\$\Rightarrow$ once tainted, subject sinks; prevents writing up thereafter.
-			\item[2.] \textit{For Objects.} \textbf{On write} by $s$:\\$\text{level}(o) = \min(\text{level}(o), \text{level}(s))$.\\
-			      $\Rightarrow$ objects “sink” easily; can cause integrity collapse.
-		\end{itemize}
-		\textit{Mitigation:} replicate high/low objects; sanitize before promotion; detect/flag unexpected level drops.\\
-		\textbf{BIBA Addtional Actions - Invoke.}\\
-		\textbf{Simple Invocation.} only allow subjects to invoke subjects with a label they dominate.\\
-		$\oplus$ protect high integrity data from misues by low integrity principals\\
-		$\ominus$ what level is the output ?\\
-		\textbf{Controlled Invocation.} Only allow subjects to invoke subjects that dominate them.\\
-		$\oplus$ prevents corruption of high integrity data\\
-		$\ominus$ hard to detect polluting information.
-	\end{minipage}\\
-	\begin{minipage}[t]{0.44\textwidth}
-		\textbf{Sanitization (lifting low $\rightarrow$ high).}\\
-		- \textit{Fail-safe default:} deny by default; elevate only after checks pass.
-	\end{minipage}
-	\fbox{
-		\hspace{-4px}
-		\begin{minipage}[t]{0.54\textwidth}
-			\textbf{\textit{BIBA Dominance.}}\\
-			(\textit{Reads Most})$L_{\min}=(\textit{Unclassified},\{\})$\\
-			(\textit{Writes Most})$L_{\max}=(\textit{Top Secret},\{\textit{NATO},\textit{Crypto},\textit{Nuclear}\})$
-		\end{minipage}}\\
-	- \textit{Whitelist over blacklist:} validate that \emph{all} required properties of “good” hold.\\
-	- \textit{Context-aware:} encoding, schema, range, semantics, and provenance checks.\\
-	\textit{Note:} Sanitization bugs commonly break integrity guarantees.\\
-	\textbf{Principles for Integrity.}\\
-	- \textbf{Seperation of Duties.} Require multiple principals to perform an operation\\
-	- \textbf{Rotation of Duties.} Allow a principal only a limited time on any particular role and limit other actions while in this role\\
-	- \textbf{Secure Logging.} Tamper evident log to recover from integrity failures. Consistency of log across multiple entities is key.
-	\hline
-	\textbf{Chinese Wall Model.} All objects are associated with a label denoting their origin.\\
-	\textit{(Pepsi, Coca-Cola, Microsoft Audit, Microsoft Investments)}\\
-	Define \textbf{conflict sets} of labels.
-	\{\textit{Pepsi, Coca-Cola}\}, \{\textit{Microsoft Audit, Microsoft Investments}\}.\\
-	Subjects are associated with a \textbf{history} of their accesses to objects and their labels.\\
-	\textbf{Access Rules.} A subject can access an object (read or write) \textbf{only if} the access does not allow information flow between items with labels in the same conflict set.\\
-	\begin{minipage}[t]{0.38\textwidth}
-		\textbf{Example (Direct Flow).}\\
-		1. Access to Pepsi (\textit{OK})\\
-		2. Access to Microsoft Invest (\textit{OK})\\
-		3. Access to Coca-Cola (\textit{Denied})
-	\end{minipage}
-	\begin{minipage}[t]{0.63\textwidth}
-		\textbf{Example (Indirect Flow).}\\
-		1. Alice accesses Pepsi\\
-		2. Bob accesses Coca-Cola and IBM\\
-		3. Alice tries to access IBM (\textit{Denied.indirect link via Bob})
-	\end{minipage}\\[2px]
-	\textbf{Sanitization.}\\
-	Allows more flexibility by “un-labeling” some items$\to$controlled sharing/reuse of data.
-	\hline
-	\textbf{All together (Asymmetric Cryptography) - Bob sends a message to Alice}\\
-	\begin{minipage}[t]{0.49\textwidth}
-		\textbf{1. Get public keys (via PKI).}\\
-		Bob retrieves Alice’s encryption public key $PK_{\text{Alice}}$ and verification public key $PK_{\text{Alice}}$.\\
-		\textbf{2. Prepare the message.}\\
-		Bob has message $M$ and computes its hash $h(M)$.
-		Allows: the signature to cover the exact content of $M$ while keeping computation efficient.\\
-		\textbf{3. Sign the message hash.}\\
-		Bob uses his secret signing key $SK_{\text{Bob}}$ to generate a digital signature. $\text{Sign}_{SK_{\text{Bob}}}(h(M))$.\\
-		\textbf{4. Encrypt the message.}\\
-		Bob encrypts the message using Alice’s encryption public key $PK_{\text{Alice}}$: $E_{PK_{\text{Alice}}}(M)$.\\
-		Allows: only Alice, who holds the matching secret key $SK_{\text{Alice}}$, to read the message.
-	\end{minipage}\hfill
-	\begin{minipage}[t]{0.49\textwidth}
-		\textbf{5. Send encrypted message and signature.}\\
-		Bob sends $E_{PK_{\text{Alice}}}(M)$,$\text{Sign}_{SK_{\text{Bob}}}(h(M))$ to Alice.\\
-		Allows: transmission over untrusted channels while maintaining confidentiality and authenticity.\\
-		\textbf{6. Decrypt the message}\\
-		Alice uses her secret encryption key $SK_{\text{Alice}}$ to decrypt. $D_{SK_{\text{Alice}}}(E_{PK_{\text{Alice}}}(M)) = M$.\\
-		\textbf{7. Verify the signature.}\\
-		Alice computes $h(M)$ and verifies Bob’s signature with his verification public key $PK_{\text{Bob}}$:\\
-		$V_{PK_{\text{Bob}}}(M, S) = \text{True}$ if valid.\\
-		Allows: Alice to confirm the message was indeed sent by Bob and was not modified.
-	\end{minipage}\\
-	\textbf{Authenticity.} only sender can generate a valid signature, allowing the server to verify the sender’s identity and preventing impersonation. \textbf{Integrity.} Any message change invalidates signature, ensuring tampering is detectable. \textbf{Non-repudiation.} only sender can produce the valid signature $\rightarrow$ they can't deny later having sent the message.	\hline
-	\begin{minipage}[t]{0.45\textwidth}
-		\textbf{Block Cipher - Electronic Code Block (ECB).}\\ encrypt each message block independently using the same key.\\
-		1. The message $M$ is divided into blocks.\\$M = M_1 M_2 M_3 M_4$.\\
-			2. Each block is encrypted separately $C_i = E_K(M_i)$.\\
-			3. Decryption. $M_i = D_K(C_i)$.\\
-			\warning If ($M_i = M_j$) $\Rightarrow$ ($C_i = C_j$) $\Rightarrow$ (freq. analysis)
-	\end{minipage}\hfill
-	\begin{minipage}[t]{0.53\textwidth}
-		\textbf{Block Cipher - Cipher Block Chaining (CBC)} \\
-		add randomness/inter-block dependence by chaining blocks.\\
-		$C_0 = \text{IV}$ \quad	\textbf{Encryption.} $ C_i = E_K(M_i \oplus C_{i-1})$\\
-		\textbf{Decryption.}$M_i = D_K(C_i) \oplus C_{i-1}$\\
-		IV must be random / isn't a ciphertext block but needed for decryption.\\
-		- If IV incorrect, only first plaintext block will decrypt incorrectly, later blocks remain unaffected.
-	\end{minipage}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.495\textwidth}
-	\vspace*{-7px}
-	\textbf{Cryptography.}\\
-	\textbf{Data in transit.} Securing communications. \textbf{Data at rest.} Securing stored informations\\
-	Let C the Ciphertext, K the Key, M the Message/Plaintext.
-	$C = E_K(M)$ and $M = D_K(C)$\\
-	\textbf{Keyspace.} Number of possible keys that can be used in an encryption algorithm.\\
-	\textbf{Invertibility Requirment.}$\forall K, M | D_K(E_K(M)) = M$ (otherwise can't recover message)\\
-	\textbf{Security Requirement.} Functions should be hard to invert without knowing K.\\
-	Ideal Case - adversary must try every possible combination of keys (bruteforce).\\[1px]
-	\begin{minipage}[t]{0.6\textwidth}
-		\textit{Caesar's Cipher}\\
-		- Encryption. Shift each letter by a fixed number (K)\\
-		- Decryption. Shift each letter by a fixed number (-K)\\
-		Keyspace. Only 25 possible keys. \\$\log_{2}(25.=4.6$ bits of security (too small).
-	\end{minipage}
-	\begin{minipage}[t]{0.4\textwidth}
-		\textit{The Substitution Cipher message}\\
-		Each Letter is mapped to a unique, different letter, defined by a permutation of a 26 letters alphabet.\\
-		Keyspace. $26! \approxeq 4.03*10^{26}$
-	\end{minipage}\\
-	Both can be broken using \textbf{Frequency Analysis Attack}.
-	\hline
-	\textbf{Frequency Analysis.} Use statistical properties of the language.\\
-	1. Most frequent letter in English is 'e'.\; 2. Identify most frequent letter in Ciphertext. \; 3. Map it to 'e'.\\
-	\textbf{Ideally}, An N-bit key should offer security as close to N bits as possible (require $2^n$ attempts), if not the algorithm is considered \textbf{broken}.\\
-	\textbf{Types of Adversaries.} security models
-	\begin{itemize}
-		\item[-] Passive Eavesdropper - adversary can only read the ciphertext
-		\item[-] Active Attacker - adversary can influence the system \textit{(corruption of one of parties, \ldots)}
-	\end{itemize}
-	\begin{minipage}[t]{0.4\textwidth}
-		\textbf{Known Plaintext Attack (KPA).}\\Active security model. Attacker gets access to some pairs, (message, ciphertext), all encrypted with secret K.\\
-		\textbf{From these pairs, she tries to guess key K to decrypt other messages}\\
-		\textit{realistic because of message headers, message headers ("From:...", timestamps...)}
-	\end{minipage}
-	\begin{minipage}[t]{0.6\textwidth}
-		\textbf{Chosen Plaintext Attack (CPA).}\\
-		- Suppose Eve convinces Alice to encrypt chosen messages with the secret key\\
-		- $\text{For all } m, \text{Eve gets access to } E_{K}(m)$. Eve has access to an Encryption Oracle.\\
-		\textit{(realistic, she could get access to an encrypted messaging app for limited time, or to an encryption api). \\
-			\warning if Eve encrypts entire alphahabet she can reveal the key instantly.}
-	\end{minipage}\\
-	\textbf{Side-Channels Attacks}\\
-	- Timing attack - Eve measure how long it takes for a given message to get encrypted or a ciphertext to be decrypted\\
-	- Power Analysis - Eve observes the energy consumed by the device doing the crypto.
-	\hline\\
-	\begin{minipage}[t]{0.45\textwidth}
-		\textbf{One-Time-Pad (OTP).}\\
-		\textit{Goal - Remove frequency analysis}\\
-		- Use a key of random bits as along as the message.\\
-		- $Enc(k, m) = m \oplus k$\\
-		- $Dec(k, m) = Enc(k, m) \oplus k$\\
-		Key should be random for every sent message.
-		Otherwise attacker can collect information about the message.
-	\end{minipage}
-	\begin{minipage}[t]{0.55\textwidth}
-		OTP is \textbf{Perfectly Secure}.\\
-		- For any ciphertext C, every possible plaintext M is equally likely\\
-		- Key K is uniformly random, so C gives the adversary zero new information about M.\\
-		\textbf{Perfect Secrecy.}\\$\forall m, c, P(M = m | E_{k}(m)=c) = P(M = m)$.\\
-			Guarantees \textbf{confidentiality} \\ $\ominus$ message-length/used once keys.
-	\end{minipage}\\
-	\begin{minipage}[t]{0.6\textwidth}
-		\textit{Integrity Attack Example (Eve flips the first bit of M)}:\\
-		1. Eve flips the first of C to get C'\\
-		2. Bob decrypts C': $M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K  = M \oplus \Delta$
-	\end{minipage}
-	\begin{minipage}[t]{0.4\textwidth}
-		\textit{Reuse of key Attack.}
-		Send two messages of length 5 with key reuse.\\
-		$C_1 \oplus C_2 = M_1 \oplus M_2$
-	\end{minipage}\\
-	\begin{minipage}[t]{0.39\textwidth}
-		\textbf{Symmetric Cryptography Schemes}\\Encryption/decryption done with the \textbf{same key}\\
-		- \textbf{Block Ciphers.} Operate on fixed-size blocks.\\
-		- \textbf{Stream Ciphers.} Operate on bit/byte at a time, like pseudo-OTP.
-	\end{minipage}\hfill
-	\begin{minipage}[t]{0.59\textwidth}
-		\textbf{Symmetric Cryptographic key}\\
-		-\textbf{Known to both parties.} Partners must agree on the key before starting using the primitive\\
-		-\textbf{Reused.} The keys is pre-shared once and then reused \textit{(but keys have a "duration")}\\
-		-\textbf{Must be secret.} Reveling the key eliminates any protection provided by the primitive
-	\end{minipage}\\\hline
-	\textbf{Stream Ciphers - The pseudo-OTP.} emulate OTP while solving key-length problem.\\
-	\textbf{1.} Secret short Key (K) shared between Alice and Bob \quad \textbf{2.} Key Stream Generator - Uses K and Initialization Vector (IV) $\rightarrow$ an arbitrary long, pseudo-random bit stream (S). \quad \textbf{3.} Encryption. $C = M \oplus S$\\
-	\textit{(generator needs a key as main seed to generate a predictable random sequence, an iv for the sequence to start differently on each run)}\\
-	$\oplus$ Speed, Low Error propagation(errors in one bit do not affect subsequent symbols)\\
-	$\ominus$ Low Diffusion (a change in a bit only affects one bit), Susceptibility to Modification (low diffusion makes it easier to tamper)\\
-	$\ominus$ key stream generators are periodic because seed is finite. Thus, we need period long enough to not an issue (avoiding frequency analysis)\\
-	\fbox{
-		\begin{minipage}[htp]{0.97\textwidth}	\textbf{Linear Feedback Shift Register for Key Stream Generators.} build a """random""" sequence of bits using a linear recurrence relation on a sequence of bit. \\\textit{Example: Starting with state $a_{0}, a_{1}, a_{2}, a_{3}$|$a_{n} = a_{n-3} \oplus a_{n-4}$\;($\oplus$ Easy to build/analyze.)}\\
-			\begin{minipage}[t]{0.44\textwidth}
-				\textbf{Randomness of LFSR.}\\if characteristic polynomial of the recurrence relation of the LFSR is primitive. The maximum possible number of states before repeating. For an L-bit register, the maximum period is $2^L -1$ states
-			\end{minipage}\hfill
-			\begin{minipage}[t]{0.54\textwidth}
-				\textbf{Distribution property.}\\ As a consequence, the sequence generated exhibit good distribution properties. Every possible non-zero state appears exactly once in a cycle.\\
-				$\ominus$ underlying operation is \textbf{linear}. \textit{(some algorithms can recover this with a stream subsequence)}
-			\end{minipage}
-		\end{minipage}
-	}\\
-	Symmetric ciphers are fast, but require a \textbf{pre-shared secret key}\\
-	\textbf{Diffie-Hellman Setup.} Alice, Bob (and Eve) know large public parameters:prime p/generator g\\
-	\begin{minipage}[htp]{0.5\textwidth}
-		\textit{Alice's Actions}\\
-		1. Chooses \textbf{private} secret a.\\
-		2. Computes Public Value $A = g^a \text{mod}p$\\
-		3. Sends A to Bob.
-	\end{minipage}
-	\begin{minipage}[htp]{0.5\textwidth}
-		\textit{Bob's Actions}\\
-		1. Chooses \textbf{private} secret b.\\
-		2. Computes Public Value $B = g^b \text{(mod p)}$\\
-		3. Sends B to Alice
-	\end{minipage}\\
-	Eve sees A, B, g, and p, but can't find a/b due to the \textit{Distrete Log Problem}.\\
-	Both Alice and Bob can compute a shared secret K:
-	$K = B^{\alpha} (\text{mod}\;p) = (g^b)^a \text{mod} p = A^b (\text{mod} \; p)$\\
-	this is uses \textbf{Trapdoor functions}, easy to compute but hard to revert.
-	\hline\\
-	\begin{minipage}[t]{0.47\textwidth}
-		\textbf{Man-In-The-Middle (MITM).} \\Vanilla DH is Vulnerable to Active Attack,\\
-		DH guarantees key agreement, \textbf{not} authenticity.\\
-		\textbf{Attacker could intercept A from Alice and B from Bob, and then impersonate.}
-	\end{minipage}
-	\begin{minipage}[t]{0.53\textwidth}
-		1. Eve sends $E_{B}$ to Alice. Alice computes $K_{AE}$\\
-		2. Eve sends $E_{A}$. Bob computes $K_{BE}$\\
-		3. Creates an Alice-Eve channel and Eve-Bob channel\\
-		\textit{she can read, modify, and relay all communication.}
-	\end{minipage}\hline
-	\textbf{Asymetric Cryptography.} Encryption using a public–private key pair. Public key can be stored on a public server, the \textbf{Public Key Infrastructure (PKI)}.\\
-	\textbf{Hash Functions.} maps any-length message to a fixed-size output using a hash function. $h(M) = H$
-	\textbf{Security properties.}
-	1. \textbf{Pre-image resistance.} Given $H = h(M)$, it is hard to find $M$.\\
-	2. \textbf{Second pre-image resistance.} Given $M$, it is hard to find another $M' \ne M$ such that $h(M') = h(M)$.\\
-	3. \textbf{Collision resistance.} It is hard to find any two values $M$ and $M'$ such that $h(M) = h(M')$.
-	\hline
-	\begin{minipage}[t]{0.35\textwidth}
-		\textbf{Block Cipher - Counter Mode}\\add randomness per-block without inter-block dependencies. \\\textbf{(parallel)}\\
-		\textbf{Encrypt.} $C_i = M_i \oplus E_K(\text{Nonce}+i)$.\\
-		\textbf{Decrypt.} $M_i = C_i \oplus E_K(\text{Nonce}+i)$.\\
-		Nonce must be unique (never with same key) reuse leaks keystream.\hline
-		\textbf{Message Authentication Code (MAC).} short tag computed from a message and secret key(pre-shared) to verify message \textbf{integrity} and \textbf{authenticity}.\\
-	\end{minipage}
-	\begin{minipage}[t]{0.65\textwidth}
-		\textbf{Block Cipher - CBC-MAC.} turns block cipher into MAC by chaining message blocks with encryption.\\
-		$C_0 = IV $\;\textbf{Encrypt.} $C_i = E_K(M_i \oplus C_{i-1})$\;$\text{MAC}_K(M_1, \ldots, M_n) = C_n$\\
-		deterministic. fixed IV $\rightarrow$ same message/same MAC.\\
-		\warning message length must be known and fixed; otherwise, extension attacks are possible (e.g., using $M | (T \oplus M')$).
-		\hline
-		\textbf{1. Encrypt-and-MAC.} send $E_K(P_1P_2)$ and $MAC_K(P_1P_2)$. integrity of plaintext but no integrity on ciphertext/may reveal info on ciphertext. \textbf{2. MAC-then-Encrypt} send $E_K(P_1P_2||MAC_K(P_1P_2))$. hides MAC and provides confidentiality/integrity on plaintext but no integrity ciphertext.\\
-		\textbf{3. Encrypt-then-MAC} send $E_K(P_1P_2)||MAC_K(E_K(P_1P_2))$. \textbf{authenticates} ciphertext, ensures \textbf{confidentiality/integrity} \checkmark
-	\end{minipage}
+\end{minipage}\\
+\textit{Example.}\; $e_2 = [+\!\mid\!-]?\Big(\big([0\text{-}9]^+(.[0\text{-}9]^*)?\;\big|\;.[0\text{-}9]^+\big)\big([eE][+\!\mid\!-]?[0\text{-}9]^+\big)?\Big)$\\[4pt]
+Inside-out:
+\[
+\begin{aligned}
+A &= [+\!\mid\!-]? &&\to \text{true} \quad\text{(optional)}\\
+B &= [0\text{-}9]^+ &&\to \text{false} \quad\text{(one-or-more, base not nullable)}\\
+C &= (.[0\text{-}9]^*)? &&\to \text{true} \quad\text{(optional)}\\
+D &= .[0\text{-}9]^+ &&\to \text{false} \land \text{false} = \text{false}\\
+BC\mid D &: \;(\text{false}\land\text{true})\lor\text{false} &&= \text{false}\\
+E &= ([eE][+\!\mid\!-]?[0\text{-}9]^+)? &&\to \text{true} \quad\text{(optional)}\\
+\text{body} &= (BC\mid D)\cdot E &&= \text{false}\land\text{true} = \text{false}\\[2pt]
+\text{nullable}(e_2) &= A \land \text{body} &&= \text{true}\land\text{false} = \boxed{\textbf{false}}
+\end{aligned}
+\]
 \end{minipage}
 \end{document}
 
