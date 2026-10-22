@@ -145,3 +145,10 @@ sympy-plots-for-*.tex/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor settings
+.vscode/
