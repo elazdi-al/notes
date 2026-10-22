@@ -1,0 +1,16 @@
+\documentclass{article}
+\usepackage{booktabs}
+\let\oldhrule\hrule
+\renewcommand{\hrule}{\vspace{3pt}\oldhrule\vspace{3pt}}
+\begin{document}
+Test.
+\hrule
+Test 2.
+\begin{tabular}{ll}
+\toprule
+A & B \\
+\midrule
+C & D \\
+\bottomrule
+\end{tabular}
+\end{document}

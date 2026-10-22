@@ -2,7 +2,7 @@
 
 Course notes, summaries, and cheatsheets from EPFL.
 
-**View all notes:** [elazdi-al.vercel.app](https://elazdi-al.vercel.app/)
+**Website:** [elazdi.com](https://elazdi.com)
 
 ## Structure
 
